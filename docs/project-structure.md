@@ -1,118 +1,75 @@
 # 🗂️ Project Structure - Lumbung Mesari Frontend
 
-This document outlines the directory structure, file naming conventions, and organizational patterns for the Lumbung Mesari frontend application built with Nuxt 3.
+This document describes the folder and file structure of the Nuxt 3 frontend project using Tailwind CSS and Volt UI. All organization choices are intended to support modularity, readability, and AI assistant compatibility.
 
 ---
 
-## 1. Directory Structure
+## 📁 Root Structure
 
 ```
-/ (project root)
-├── /assets            # Static assets like images, fonts
-├── /components        # Reusable Vue components
+/ (root)
+├── app.vue
+├── nuxt.config.ts
+├── tailwind.config.ts
+├── tsconfig.json
+├── package.json
+├── public/
+├── assets/
+│   └── css/
+│       └── main.css        # Imports Volt UI and Tailwind base styles
+├── components/
 │   ├── BaseCard.vue
 │   ├── FormField.vue
 │   ├── StatusBadge.vue
-│   └── ToastNotification.vue
-├── /composables       # Shared logic using the Composition API
+│   ├── ToastNotification.vue
+│   └── LoanCalculator.vue
+├── composables/
 │   ├── useAuth.ts
 │   ├── useSavings.ts
-│   └── useLoans.ts
-├── /layouts           # Page layouts
-│   ├── default.vue     # Main layout
-│   └── auth.vue        # Layout for login/register pages
-├── /middleware        # Navigation guards (e.g., auth checks)
+│   ├── useLoans.ts
+├── layouts/
+│   ├── default.vue
+│   └── auth.vue
+├── middleware/
 │   └── auth.ts
-├── /pages             # Page components mapped to routes
-│   ├── index.vue       # Redirect or landing
+├── pages/
+│   ├── index.vue           # redirects to /dashboard based on role
 │   ├── login.vue
 │   ├── register.vue
 │   ├── dashboard.vue
-│   ├── profile.vue
 │   ├── savings.vue
 │   ├── loans.vue
-│   └── /admin
+│   └── admin/
 │       ├── members.vue
 │       └── loans.vue
-├── /public            # Static files (robots.txt, favicon, etc.)
-├── /stores            # Pinia stores (if any needed)
-│   └── auth.ts
-├── /types             # TypeScript interfaces and models
-│   ├── user.ts
-│   ├── loan.ts
-│   └── savings.ts
-├── nuxt.config.ts     # Nuxt configuration
-└── tsconfig.json      # TypeScript configuration
+├── stores/
+│   ├── auth.ts
+│   └── user.ts
+├── types/
+│   └── index.ts            # exports shared types like User, Loan, etc
+├── utils/
+│   └── formatters.ts       # number/date formatting utils
+├── docs/
+│   ├── frontend-requirements.md
+│   ├── project-structure.md
+│   ├── component-sketches.md
+│   ├── ui-ux-guidelines.md
+│   ├── api-endpoints.md
+│   ├── types-and-models.md
+│   ├── git-strats.md
+│   └── development-roadmap.md
 ```
 
 ---
 
-## 2. Naming Conventions
+## 📦 Conventions
 
-- Use `PascalCase` for Vue component filenames (e.g., `BaseCard.vue`)
-    
-- Use `camelCase` for composables and stores (e.g., `useAuth.ts`, `auth.ts`)
-    
-- Use `kebab-case` for route-based Vue files (e.g., `dashboard.vue`)
-    
-- Group admin pages under `/pages/admin/`
-    
+- Use `Base*` prefix for abstract layout components
+- Group feature-specific logic in `composables/`
+- Use `stores/` for global state via Pinia
+- Tailwind utility classes preferred over scoped CSS
+- Follow Volt UI style tokens in all custom components
 
 ---
 
-## 3. File Standards
-
-- All Vue components are in `<script setup lang="ts">` format
-    
-- Use `<template>` and `<style scoped>` for styling
-    
-- All styles use Tailwind CSS utility classes
-    
-- Ensure composables are stateless and reusable
-    
-- Layouts should include slots and minimal logic
-    
-
----
-
-## 4. Store and State Management
-
-- Use Pinia for global state (authentication, user info, etc.)
-    
-- Auth state managed in `stores/auth.ts`
-    
-- Other stores to be added only as needed
-    
-
----
-
-## 5. Middleware
-
-- Auth protection via `/middleware/auth.ts`
-    
-- Automatically redirects to `/login` if JWT token is not valid
-    
-
----
-
-## 6. API Client
-
-- Axios instance configured globally with JWT in headers
-    
-- Use composables for all API interactions
-    
-- No direct API calls inside Vue components
-    
-
----
-
-## 7. Testing (Optional)
-
-- Unit tests placed in `__tests__` folder next to the components
-    
-- End-to-end tests (if any) placed in `/e2e/`
-    
-
----
-
-This structure ensures consistency, scalability, and makes collaboration with AI agents and teammates more efficient.
+> 📘 This structure may evolve but should prioritize clarity and collaboration.
