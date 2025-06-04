@@ -140,4 +140,17 @@ This document outlines the development roadmap for the Lumbung Mesari frontend p
 
 ---
 
+## 🧠 Developer Working Approach
+
+This project follows a flexible and pragmatic approach to development:
+
+- Tools, libraries, and modules will only be installed when actually needed by a feature.
+- Priority is placed on functional progress and visible UI before setup or testing.
+- AI agents should:
+  - Suggest minimal setups when helping build a feature.
+  - Avoid recommending boilerplate if not yet necessary.
+  - Ask whether a setup should be done now or deferred.
+
+This working model supports learning-by-doing and is suitable for the current developer capacity.
+
 > ✅ This roadmap is dynamic and should be updated weekly.
