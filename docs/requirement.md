@@ -1,273 +1,112 @@
-# 🧩 Front-end Requirements - Lumbung Mesari
+# 📄 Frontend Requirements - Lumbung Mesari
 
-## 1. Overview
-
-This document outlines the front-end requirements for the **Lumbung Mesari** savings and loans cooperative system. The front-end is built using **Nuxt 3**, **Tailwind CSS**, and **Volt UI**, and interacts with a RESTful API backend developed using NestJS. The goal is to deliver an MVP that focuses on core features such as user authentication, member management, savings tracking, and loan processing.
+This document defines the functional and technical requirements of the **Lumbung Mesari frontend system**, focusing on building a responsive, modular, and maintainable Nuxt 3-based application for cooperative savings and loans.
 
 ---
 
-## 2. Technology Stack
+## 🔧 Technical Stack
 
-- **Framework**: Nuxt 3 (Vue 3 + Composition API)
-    
-- **Styling**: Tailwind CSS
-    
-- **UI Kit**: Volt UI
-    
-- **State Management**: Pinia
-    
-- **HTTP Client**: Axios
-    
-- **Auth Strategy**: JWT-based authentication via API
-    
-- **Routing**: File-based routing with middleware support
-    
-- **Testing (optional)**: Vitest / Cypress
-    
+| Category              | Technology                     |
+|-----------------------|---------------------------------|
+| Framework            | Nuxt 3 (Vue 3 + Composition API) |
+| Styling              | Tailwind CSS + Volt UI          |
+| State Management     | Pinia (global store)            |
+| HTTP Client          | Nuxt `$fetch`                   |
+| Form Validation      | Zod or composable-based         |
+| Authentication       | JWT + 2FA                       |
+| Testing              | Nuxt Test Utils                 |
 
 ---
 
-## 3. User Roles
+## 🔐 Authentication & Session
 
-### Member
-
-- Register and manage their account
-    
-- View balance and transaction history
-    
-- Apply for loans
-    
-
-### Administrator
-
-- Approve member registrations
-    
-- Approve or reject loan applications
-    
-- View and manage member data and reports
-    
+- Supports member and admin roles
+- Login uses username/password and optional 2FA
+- Registration allows uploading member ID photo
+- Session persisted using cookies/localStorage
+- Route protection via Nuxt middleware (`auth.ts`)
+- Token refresh handled via `useAuth` composable
 
 ---
 
-## 4. Application Pages and Routes
+## 🗺️ Page Requirements
 
-### Page List
+### `/login`
+- Username, password input
+- 2FA code if required
+- Error and toast handling
 
-- `/login`
-    
-- `/register`
-    
-- `/dashboard`
-    
-- `/profile`
-    
-- `/savings`
-    
-- `/loans`
-    
-- `/admin/members`
-    
-- `/admin/loans`
-    
+### `/register`
+- Form: name, phone, email, password
+- File upload: KTP or member card
+- Agreement checkbox
+- Redirects to `/login` upon success
 
-### Page Details
+### `/dashboard`
+**Member:**
+- Summary cards: Total Balance, Active Loans, Savings
+- Recent transaction table
 
-#### `/login`
+**Admin:**
+- Member count, Pending loan count
+- Shortcuts to manage members/loans
 
-- Login form
-    
-- 2FA code input
-    
-- Redirect to dashboard on success
-    
-- Error handling for invalid credentials or 2FA
-    
+### `/savings`
+- Balance display
+- Deposit / Withdraw form
+- Transaction history table (filterable)
 
-#### `/register`
-
-- Registration form:
-    
-    - Username, Full Name, Email, Password
-        
-    - Upload ID card photo and selfie
-        
-- Status message after submission
-    
-- Form validation feedback
-    
-
-#### `/dashboard`
-
-- Member:
-    
-    - Display savings summary, active loans, recent transactions
-        
-- Admin:
-    
-    - Overview of member stats and loan approvals
-        
-    - Shortcuts to member/loan management
-        
-
-#### `/profile`
-
-- View and edit profile data
-    
-- Account status (pending/approved/rejected)
-    
-- Transaction history
-    
-- Optional: PDF download of monthly statements
-    
-
-#### `/savings`
-
-- Deposit and withdrawal form
-    
-- Current balance display
-    
-- Transaction history list
-    
-- Optional: Simulated Midtrans payment status
-    
-
-#### `/loans`
-
-- Loan application form:
-    
-    - Tenor options: 6, 12, 18 months
-        
-    - Auto-calculate installments
-        
-- Loan list with status indicators
-    
-- Late payment notifications
-    
-
-#### `/admin/members`
-
-- Table of all members
-    
-- Filter by status
-    
-- Actions: approve, reject, view details
-    
-
-#### `/admin/loans`
-
-- List of loan applications
-    
-- Actions: approve, reject
-    
-- View loan details and installment schedules
-    
-
----
-
-## 5. Component Guidelines
-
-- Use Volt UI components where available
-    
-- Style with Tailwind CSS for consistency
-    
-- Recommended reusable components:
-    
-    - `BaseCard.vue`
-        
-    - `FormField.vue`
-        
-    - `StatusBadge.vue`
-        
-    - `ToastNotification.vue`
-        
-    - `LoanCalculator.vue`
-        
-
----
-
-## 6. API Integration
-
-- Use Axios instance with JWT header
-    
-- Implement route protection via auth middleware
-    
-- Suggested API composables:
-    
-    ```
-    /composables/useAuth.ts
-    /composables/useSavings.ts
-    /composables/useLoans.ts
-    ```
-    
-
-### Example Endpoints (assumed from backend spec)
-
-- `POST /auth/login`
-    
-- `GET /me`
-    
-- `POST /register`
-    
-- `GET /savings`
-    
-- `POST /loans`
-    
-- `GET /admin/members`
-    
-- `POST /admin/approve-loan`
-    
-
----
-
-## 7. Authentication & Session Flow
-
-- Login generates JWT token (stored in cookie/localStorage)
-    
-- Manual 2FA verification via email
-    
-- Protected routes use middleware (`auth.ts`)
-    
-- Logout clears session and redirects to login
-    
-
----
-
-## 8. Feature Prioritization
-
-### ✅ Phase 1 - MVP
-
-- Authentication (login, register, 2FA)
-    
-- Member dashboard
-    
-- Savings (without Midtrans integration)
-    
+### `/loans`
 - Loan application form
-    
-- Admin member and loan approval
-    
+- Loan calculator preview
+- Loan status history
 
-### ⏳ Phase 2 - Optional
+### `/admin/members`
+- Table of pending/active members
+- Approve / reject flow
+- View KTP/documents in modal
 
-- Midtrans integration
-    
-- Monthly PDF reports
-    
-- Transaction history download
-    
-- Email notification visuals
-    
+### `/admin/loans`
+- List of loan applications
+- Approve/reject
+- Filter by status
 
 ---
 
-## 9. AI Agent Notes
+## 🔁 Component Expectations
 
-- Preferred file formats: `.vue`, `.ts`, `.md`
-    
-- Pages use `default.vue` layout, except auth uses `auth.vue`
-    
-- Use responsive and modular components
-    
-- Prefer Volt UI and Tailwind for design consistency
-    
-- Use mock data only if API is not ready
+- **FormField.vue**: label, input, error message
+- **StatusBadge.vue**: Volt `Tag` component with color states
+- **BaseCard.vue**: unified layout for card sections
+- **ToastNotification.vue**: handles `$toast.add()` on success/error
+- **LoanCalculator.vue**: shows estimate based on amount and tenor
+
+---
+
+## 📡 API Integration
+
+- All HTTP requests use Nuxt `$fetch`
+- Each major module has composables: `useAuth.ts`, `useSavings.ts`, `useLoans.ts`
+- Handle errors via composable or Nuxt error boundary
+
+---
+
+## 📋 Role Access Summary
+
+| Page                | Member | Admin |
+|---------------------|--------|--------|
+| `/login`, `/register` | ✅      | ✅      |
+| `/dashboard`        | ✅      | ✅      |
+| `/savings`, `/loans`| ✅      | ❌      |
+| `/admin/*`          | ❌      | ✅      |
+
+---
+
+## 🧪 Testing Notes
+
+- Use `Nuxt Test Utils` for unit test & E2E skeletons
+- Cover key flows: login, apply loan, approve member
+
+---
+
+> ✅ This file should evolve with feature additions and backend alignment.

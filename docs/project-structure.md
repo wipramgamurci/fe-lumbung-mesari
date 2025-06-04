@@ -68,6 +68,7 @@ This document describes the folder and file structure of the Nuxt 3 frontend pro
 - Group feature-specific logic in `composables/`
 - Use `stores/` for global state via Pinia
 - Tailwind utility classes preferred over scoped CSS
+- Use `$fetch` (Nuxt 3) for all API calls instead of axios
 - Follow Volt UI style tokens in all custom components
 
 ---
