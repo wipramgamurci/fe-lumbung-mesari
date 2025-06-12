@@ -1,103 +1,203 @@
-# 🧩 Component Sketches - Lumbung Mesari (Volt UI-Based)
+# 🧩 Component Sketches - Lumbung Mesari (Volt UI)
 
-This document provides layout and component sketches using Volt UI components and Tailwind CSS utilities. Update this as new pages and components are added.
-
----
-
-## `/dashboard` (Member)
-
-- **Header**: Dashboard
-- **Summary Section**:
-  - `Card` components:
-    - Total Balance
-    - Active Loans
-    - Total Savings
-- **Recent Transactions**:
-  - `DataTable`: Date | Type | Amount | StatusBadge
+This document provides implementation examples and patterns for using Volt UI components in the Lumbung Mesari application.
 
 ---
 
-## `/dashboard` (Admin)
+## 🎯 Component Usage Examples
 
-- **Header**: Admin Dashboard
-- **Overview Section**:
-  - `Card`: Total Members
-  - `Card`: Pending Loans
-- **Quick Actions**:
-  - `Button`: Manage Members
-  - `Button`: Review Loans
+### Buttons
+```vue
+<template>
+  <div class="flex gap-4">
+    <Button label="Primary Action" />
+    <SecondaryButton label="Secondary" />
+    <DangerButton label="Delete" />
+    <ContrastButton label="Cancel" />
+  </div>
+</template>
+
+<script setup>
+import Button from '@/src/volt/Button.vue';
+import SecondaryButton from '@/src/volt/SecondaryButton.vue';
+import DangerButton from '@/src/volt/DangerButton.vue';
+import ContrastButton from '@/src/volt/ContrastButton.vue';
+</script>
+```
+
+### Form with Validation
+```vue
+<template>
+  <Card>
+    <template #title>New Transaction</template>
+    <template #content>
+      <FormField label="Amount" :error="errors.amount">
+        <InputNumber 
+          v-model="form.amount" 
+          mode="currency" 
+          currency="IDR" 
+          :class="{ 'p-invalid': errors.amount }"
+        />
+      </FormField>
+      
+      <FormField label="Transaction Type" class="mt-4">
+        <Select 
+          v-model="form.type" 
+          :options="['Deposit', 'Withdraw']" 
+          placeholder="Select type"
+        />
+      </FormField>
+      
+      <div class="flex justify-end gap-3 mt-6">
+        <ContrastButton label="Cancel" @click="onCancel" />
+        <Button 
+          label="Submit" 
+          :loading="isSubmitting" 
+          @click="handleSubmit" 
+        />
+      </div>
+    </template>
+  </Card>
+</template>
+
+<script setup>
+import { ref } from 'vue';
+import Card from '@/src/volt/Card.vue';
+import Button from '@/src/volt/Button.vue';
+import ContrastButton from '@/src/volt/ContrastButton.vue';
+import InputNumber from '@/src/volt/InputNumber.vue';
+import Select from '@/src/volt/Select.vue';
+import FormField from '@/components/ui/FormField.vue';
+
+const form = ref({
+  amount: null,
+  type: ''
+});
+
+const errors = ref({});
+const isSubmitting = ref(false);
+
+async function handleSubmit() {
+  // Form submission logic
+}
+
+function onCancel() {
+  // Handle cancel
+}
+</script>
+```
+
+### Status Badge
+```vue
+<template>
+  <div class="flex items-center gap-2">
+    <span>Status:</span>
+    <Badge 
+      :value="statusLabel" 
+      :severity="statusSeverity" 
+    />
+  </div>
+</template>
+
+<script setup>
+import { computed } from 'vue';
+import Badge from '@/src/volt/Badge.vue';
+
+const props = defineProps({
+  status: {
+    type: String,
+    required: true,
+    validator: (value) => ['pending', 'approved', 'rejected'].includes(value)
+  }
+});
+
+const statusMap = {
+  pending: { label: 'Pending', severity: 'warning' },
+  approved: { label: 'Approved', severity: 'success' },
+  rejected: { label: 'Rejected', severity: 'danger' }
+};
+
+const statusLabel = computed(() => statusMap[props.status]?.label || props.status);
+const statusSeverity = computed(() => statusMap[props.status]?.severity || 'info');
+</script>
+```
 
 ---
 
-## `/savings`
+## 🏗️ Page Layouts
 
-- **Header**: My Savings
-- **Balance Info**: `Card` with current balance
-- **Form Section**:
-  - `FormField`: Amount
-  - `Dropdown`: Transaction Type (Deposit / Withdraw)
-  - `Button`: Submit
-- **Transaction History**:
-  - `DataTable`: Date | Amount | Type | Status
-
----
-
-## `/loans`
-
-- **Header**: Loan Center
-- **Loan Application Form**:
-  - `FormField`: Amount
-  - `Dropdown`: Tenor
-  - `LoanCalculator.vue`: Show monthly estimate
-  - `Button`: Submit
-- **Loan List**:
-  - `DataTable`: Amount | Tenor | StatusBadge | CreatedAt
-
----
-
-## `/admin/members`
-
-- **Header**: Manage Members
-- **Member Table**:
-  - `DataTable`: Name | Email | StatusBadge | Actions (Approve / Reject / View)
-
----
-
-## `/admin/loans`
-
-- **Header**: Loan Applications
-- **Application Review Table**:
-  - `DataTable`: Member | Amount | Tenor | StatusBadge | Actions
-
----
-
-## 🔧 Custom Components (Volt UI themed)
-
-### `BaseCard.vue`
-
-- Wrapper around Volt UI `Card`
-- Uses `p-6` padding and consistent border radius
-
-### `FormField.vue`
-
-- Label, input, and error message
-- Optional `icon-left` slot
-
-### `StatusBadge.vue`
-
-- Uses Volt `Tag` with color props
-- Green = approved, Yellow = pending, Red = rejected
-
-### `ToastNotification.vue`
-
-- Wrapper around Volt `Toast`
-- Can be reused for success/error messages
-
-### `LoanCalculator.vue`
-
-- Accepts amount & tenor
-- Displays monthly payment and total interest
+### Dashboard Layout
+```vue
+<template>
+  <div class="space-y-6">
+    <div class="flex items-center justify-between">
+      <h1 class="text-2xl font-bold">Dashboard</h1>
+      <Button 
+        label="New Transaction" 
+        icon="pi pi-plus" 
+        @click="showTransactionModal = true" 
+      />
+    </div>
+    
+    <div class="grid gap-6 md:grid-cols-3">
+      <Card v-for="stat in stats" :key="stat.label">
+        <template #title>{{ stat.label }}</template>
+        <template #content>
+          <p class="text-2xl font-semibold">{{ stat.value }}</p>
+          <p class="text-sm text-gray-500 mt-1">{{ stat.change }}</p>
+        </template>
+      </Card>
+    </div>
+    
+    <Card>
+      <template #title>Recent Transactions</template>
+      <template #content>
+        <DataTable :value="transactions" :rows="5" paginator>
+          <Column field="date" header="Date" />
+          <Column field="description" header="Description" />
+          <Column field="amount" header="Amount" />
+          <Column field="status" header="Status">
+            <template #body="{ data }">
+              <StatusBadge :status="data.status" />
+            </template>
+          </Column>
+        </DataTable>
+      </template>
+    </Card>
+  </div>
+</template>
+```
 
 ---
 
-> ✍️ Update this document as the system evolves or more screens are designed.
+## 🎨 Styling Guidelines
+
+1. **Spacing**: Use Tailwind's spacing scale (e.g., `p-4`, `mb-6`, `space-y-4`)
+2. **Colors**: Use semantic color classes from Volt UI (e.g., `text-primary`, `bg-success`)
+3. **Responsive**: Use responsive prefixes (e.g., `md:grid-cols-2`, `lg:flex`)
+4. **Dark Mode**: Components automatically support dark mode
+
+## 🔧 Best Practices
+
+1. **Component Imports**:
+   ```javascript
+   // Good
+   import Button from '@/src/volt/Button.vue';
+   
+   // Avoid
+   import { Button } from '@/src/volt';
+   ```
+
+2. **Form Handling**:
+   - Use `v-model` for two-way binding
+   - Implement proper validation
+   - Show loading states during submission
+
+3. **State Management**:
+   - Use Pinia for global state
+   - Keep component state local when possible
+   - Use composables for reusable logic
+
+---
+
+> ✍️ Update this document as new patterns and components are added to the system.

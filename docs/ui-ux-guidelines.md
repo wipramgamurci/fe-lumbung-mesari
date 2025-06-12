@@ -7,33 +7,38 @@ This guide defines the design principles and interface rules for building a clea
 ## ✏️ Design Philosophy
 
 - Prioritize clarity, readability, and action-based layouts
-- Use visual hierarchy to guide user focus (cards, badges, icons)
-- Favor native form behavior with minimal distraction
+- Use Volt UI components as the foundation for consistent styling
+- Create wrapper components for common patterns and customizations
 - Build for responsiveness and accessibility from the start
 
 ---
 
 ## 🎨 Color and Theme Guidelines
 
-Volt UI uses CSS variables for consistent theme styling:
+### Volt UI Theme
+We use Volt UI's built-in theming system. The main theme colors are:
 
-### Primary
+- **Primary**: `--p-primary-500` (main brand color)
+- **Success**: `--p-success-500` (green)
+- **Warning**: `--p-warning-500` (yellow)
+- **Danger**: `--p-danger-500` (red)
+- **Text**: `--p-text-color`
+- **Background**: `--p-surface-0` to `--p-surface-1000`
 
-- `--p-primary-color` → main accent color
-- `--p-primary-hover-color` → hover state
-- `--p-primary-active-color` → active/clicked
+### Status Colors
+- Success: `--p-success-500` (approved, completed)
+- Warning: `--p-warning-500` (pending, in-progress)
+- Danger: `--p-danger-500` (rejected, error)
+- Info: `--p-primary-500` (information)
 
-### Surface
-
-- `--p-surface-0` to `--p-surface-950` → used for background layers
-- `--p-content-border-color` → card and section outlines
-
-### Text
-
-- `--p-text-color` → default readable text
-- `--p-text-muted-color` → for secondary or label text
-
-These variables are styled through Tailwind via class bindings or direct CSS (e.g. `bg-[var(--p-surface-100)]`).
+### Usage in Components
+```vue
+<template>
+  <div class="bg-surface-50 text-text">
+    <!-- Your component -->
+  </div>
+</template>
+```
 
 ---
 
@@ -48,51 +53,84 @@ These variables are styled through Tailwind via class bindings or direct CSS (e.
 
 ## 🧩 Component Usage Guidelines
 
-### Buttons
+### Component Wrapping Strategy
+We create wrapper components around Volt UI to:
+1. Enforce consistent styling
+2. Reduce code duplication
+3. Make future theming easier
 
-- Use Volt `Button` component
+### Buttons (`BaseButton`)
+- Wraps Volt's `Button`
 - Default: primary variant
-- Add icons with `icon-left` or `icon-right` if needed
+- Sizes: `sm`, `md` (default), `lg`
+- Variants: `primary`, `secondary`, `outline`, `ghost`
+- Icons: Use `icon` prop with icon name
 
-### Form Inputs
+### Form Inputs (`BaseInput`, `BaseSelect`, etc.)
+- Wraps Volt's form components
+- Always include labels and error handling
+- Use `FormField` for layout and validation messages
+- Standard spacing: `space-y-2` per field
 
-- Wrap all inputs with `FormField.vue`
-- Label, input, error message included
-- Use Tailwind spacing: `space-y-2` per field
+### Status Indicators (`StatusBadge`)
+- Wraps Volt's `Badge` component
+- Status types:
+  - `success`: Approved, Completed
+  - `warning`: Pending, In Progress
+  - `danger`: Rejected, Error
+  - `info`: Information
 
-### Badges/Tags
+### Data Display (`DataTable`)
+- Use Volt's `DataTable` directly
+- Add pagination for > 10 rows
+- Include loading states
+- Make rows clickable for details
 
-- Use `StatusBadge.vue` that wraps Volt `Tag`
-- Status colors:
-  - Green = Approved
-  - Yellow = Pending
-  - Red = Rejected
+### Feedback (`ToastNotification`)
+- Wraps Volt's `Toast`
+- Auto-dismiss after 5s
+- Stack multiple toasts
+- Types: `success`, `error`, `warning`, `info`
 
-### Tables
+### Layout Components
+- `BaseCard`: Consistent card styling
+- `PageHeader`: Standard page headers with optional actions
+- `Section`: Content sections with consistent spacing
 
-- Use Volt `DataTable`
-- Add action buttons per row if needed (View, Approve, Reject)
-- Use `Paginator` component for more than 10 rows
-
-### Notifications
-
-- Use `ToastNotification.vue` (wrapping Volt `Toast`)
-- For success/error/status messaging only
+### Form Patterns
+- Use `FormField` wrapper for all form controls
+- Group related fields with `fieldset`
+- Show validation messages below fields
+- Disable submit buttons during submission
 
 ---
 
 ## 🌙 Dark Mode
 
-- Dark mode auto-applies via `prefers-color-scheme`
-- You can override styles with:
+Volt UI handles dark mode automatically via `prefers-color-scheme`. No additional setup is needed.
+
+### Custom Dark Mode Overrides
+If you need to adjust dark mode styles, use:
 
 ```css
 @media (prefers-color-scheme: dark) {
-  :root {
-    --p-primary-color: var(--p-primary-300);
-    --p-text-color: var(--p-surface-0);
+  .custom-element {
+    background-color: var(--p-surface-900);
+    color: var(--p-text-color);
   }
 }
+```
+
+### Component-Specific Adjustments
+Some components might need specific dark mode overrides. Add these to your component's style section:
+
+```vue
+<style scoped>
+/* Dark mode overrides */
+:global(.dark) .my-component {
+  /* Dark mode styles */
+}
+</style>
 ```
 
 ---
