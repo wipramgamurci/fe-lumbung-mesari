@@ -25,7 +25,88 @@ import ContrastButton from '@/src/volt/ContrastButton.vue';
 </script>
 ```
 
-### Form with Validation
+### Login Form with Validation
+```vue
+<template>
+  <form @submit.prevent="handleLogin" class="space-y-6">
+    <div>
+      <label for="email" class="block text-sm font-medium text-gray-700">
+        Email address
+      </label>
+      <div class="mt-1">
+        <InputText
+          id="email"
+          v-model="form.email"
+          type="email"
+          autocomplete="email"
+          required
+          class="w-full"
+        />
+      </div>
+    </div>
+
+    <div>
+      <div class="flex justify-between">
+        <label for="password" class="block text-sm font-medium text-gray-700">
+          Password
+        </label>
+        <a href="#" class="text-sm font-medium text-primary-600 hover:text-primary-500">
+          Forgot your password?
+        </a>
+      </div>
+      <div class="mt-1">
+        <Password
+          v-model="form.password"
+          :feedback="false"
+          toggle-mask
+          class="w-full"
+          placeholder="Enter your password"
+          autocomplete="current-password"
+          required
+        />
+      </div>
+    </div>
+
+    <div class="flex items-center">
+      <Checkbox
+        input-id="remember-me"
+        v-model="form.rememberMe"
+        :binary="true"
+      />
+      <label for="remember-me" class="ml-2 block text-sm text-gray-900 cursor-pointer">
+        Remember me
+      </label>
+    </div>
+
+    <div>
+      <Button type="submit" :loading="isLoading" class="w-full">
+        Sign in
+      </Button>
+    </div>
+  </form>
+</template>
+
+<script setup>
+const form = ref({
+  email: "",
+  password: "",
+  rememberMe: false,
+});
+
+const isLoading = ref(false);
+
+const handleLogin = () => {
+  isLoading.value = true;
+  // TODO: Implement login logic
+  console.log("Login form submitted:", form.value);
+  setTimeout(() => {
+    isLoading.value = false;
+  }, 1000);
+};
+</script>
+```
+
+### Transaction Form Example
 ```vue
 <template>
   <Card>
@@ -47,7 +128,7 @@ import ContrastButton from '@/src/volt/ContrastButton.vue';
           placeholder="Select type"
         />
       </FormField>
-      
+
       <div class="flex justify-end gap-3 mt-6">
         <ContrastButton label="Cancel" @click="onCancel" />
         <Button 
