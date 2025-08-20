@@ -17,6 +17,7 @@
                 v-model="formState.firstName"
                 placeholder="Enter first name"
                 required
+                class="w-full"
               />
             </UFormField>
 
@@ -25,6 +26,7 @@
                 v-model="formState.lastName"
                 placeholder="Enter last name"
                 required
+                class="w-full"
               />
             </UFormField>
           </div>
@@ -35,6 +37,7 @@
               type="email"
               placeholder="Enter your email"
               required
+              class="w-full"
             />
           </UFormField>
 
@@ -44,6 +47,7 @@
               type="tel"
               placeholder="Enter phone number"
               required
+              class="w-full"
             />
           </UFormField>
 
@@ -52,44 +56,18 @@
               v-model="formState.idNumber"
               placeholder="Enter ID card number"
               required
+              class="w-full"
             />
           </UFormField>
 
           <!-- ID Card Upload -->
           <UFormField label="ID Card Photo" name="idCardPhoto">
-            <div class="space-y-2">
-              <UInput
-                ref="fileInput"
-                type="file"
-                accept="image/*"
-                @change="handleFileChange"
-                class="hidden"
-              />
-              
-              <div 
-                class="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center cursor-pointer hover:border-gray-400 transition-colors"
-                @click="$refs.fileInput.click()"
-              >
-                <div v-if="!selectedFile" class="space-y-2">
-                  <UIcon name="i-heroicons-photo" class="mx-auto h-12 w-12 text-gray-400" />
-                  <p class="text-sm text-gray-600">
-                    Click to upload ID card photo
-                  </p>
-                  <p class="text-xs text-gray-500">
-                    PNG, JPG up to 10MB
-                  </p>
-                </div>
-                <div v-else class="space-y-2">
-                  <UIcon name="i-heroicons-check-circle" class="mx-auto h-12 w-12 text-green-500" />
-                  <p class="text-sm text-gray-600">
-                    {{ selectedFile.name }}
-                  </p>
-                  <p class="text-xs text-gray-500">
-                    Click to change file
-                  </p>
-                </div>
-              </div>
-            </div>
+            <UInput
+              type="file"
+              accept="image/*"
+              @change="handleFileChange"
+              class="w-full"
+            />
           </UFormField>
 
           <UFormField label="Password" name="password">
@@ -98,6 +76,7 @@
               type="password"
               placeholder="Create a password"
               required
+              class="w-full"
             />
           </UFormField>
 
@@ -107,6 +86,7 @@
               type="password"
               placeholder="Confirm your password"
               required
+              class="w-full"
             />
           </UFormField>
 

@@ -16,6 +16,7 @@
               type="email"
               placeholder="Enter your email"
               required
+              class="w-full"
             />
           </UFormField>
 
@@ -25,6 +26,7 @@
               type="password"
               placeholder="Enter your password"
               required
+              class="w-full"
             />
           </UFormField>
 
