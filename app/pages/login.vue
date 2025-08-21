@@ -72,17 +72,19 @@ const handleLogin = async () => {
   isLoading.value = true
   
   try {
-    // TODO: Connect to /auth/login API
-    console.log('Login attempt:', formState.value)
+    const response = await $fetch('/api/auth/login', {
+      method: 'POST',
+      body: { email: formState.value.email, password: formState.value.password }
+    })
     
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000))
+    // Store token
+    useState('authToken', () => response.token)
     
-    // TODO: Handle successful login
-    // navigateTo('/dashboard')
-    
+    // Navigate on success
+    navigateTo('/dashboard')
   } catch (error) {
     console.error('Login error:', error)
+    alert('Login failed: ' + (error.data?.message || 'Please try again'))
   } finally {
     isLoading.value = false
   }

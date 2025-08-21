@@ -60,16 +60,6 @@
             />
           </UFormField>
 
-          <!-- ID Card Upload -->
-          <UFormField label="ID Card Photo" name="idCardPhoto">
-            <UInput
-              type="file"
-              accept="image/*"
-              @change="handleFileChange"
-              class="w-full"
-            />
-          </UFormField>
-
           <UFormField label="Password" name="password">
             <UInput
               v-model="formState.password"
@@ -131,53 +121,34 @@ const formState = ref({
   confirmPassword: ''
 })
 
-const selectedFile = ref(null)
 const isLoading = ref(false)
-
-const handleFileChange = (event) => {
-  const file = event.target.files[0]
-  if (file) {
-    // Validate file type and size
-    if (!file.type.startsWith('image/')) {
-      alert('Please select an image file')
-      return
-    }
-    if (file.size > 10 * 1024 * 1024) { // 10MB limit
-      alert('File size must be less than 10MB')
-      return
-    }
-    selectedFile.value = file
-  }
-}
 
 const handleRegister = async () => {
   if (formState.value.password !== formState.value.confirmPassword) {
     alert('Passwords do not match')
     return
   }
-
-  if (!selectedFile.value) {
-    alert('Please upload your ID card photo')
-    return
-  }
-
+  
   isLoading.value = true
   
   try {
-    // TODO: Connect to registration API
-    console.log('Registration attempt:', {
-      ...formState.value,
-      idCardPhoto: selectedFile.value
+    const response = await $fetch('/api/auth/register', {
+      method: 'POST',
+      body: {
+        firstName: formState.value.firstName,
+        lastName: formState.value.lastName,
+        email: formState.value.email,
+        phone: formState.value.phone,
+        idNumber: formState.value.idNumber,
+        password: formState.value.password
+      }
     })
     
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1000))
-    
-    // TODO: Handle successful registration
-    // navigateTo('/login')
-    
+    // Navigate on success
+    navigateTo('/login')
   } catch (error) {
     console.error('Registration error:', error)
+    alert('Registration failed: ' + (error.data?.message || 'Please try again'))
   } finally {
     isLoading.value = false
   }
