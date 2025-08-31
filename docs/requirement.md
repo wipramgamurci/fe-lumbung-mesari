@@ -66,7 +66,7 @@ A week-by-week development focus to achieve our MVP target.
 
 - **Week 3: Core Loan Features**
 
-  - [ ] Create the **Loan Application Page** for members (`/loans`).
+  - [x] Create the **Loan Application Page** for members (`/loans`).
   - [ ] Create the **Admin Page for Loan Approval** (`/admin/loans`).
 
 - **Week 4: Savings & Finalization**
