@@ -77,10 +77,10 @@ A week-by-week development focus to achieve our MVP target.
 
 Links to the supporting documents we use.
 
-- [API Contract](docs-v2/api-endpoints.md)
-- [Data Dictionary](docs-v2/types-and-models.md)
-- [Git Strategy](docs-v2/git-strats.md)
-- [AI Guidelines](docs-v2/ai-guidelines.md)
+- [API Contract](./api-endpoints.md)
+- [Data Dictionary](./types-and-models.md)
+- [Git Strategy](./git-strats.md)
+- [AI Guidelines](./ai-guidelines.md)
 
 ## 6. UI/UX Principles
 
