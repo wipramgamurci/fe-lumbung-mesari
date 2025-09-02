@@ -88,6 +88,16 @@ const navItems = ref([
     label: "Admin Members",
     to: "/admin/members",
   },
+  {
+    icon: "i-heroicons-banknotes",
+    label: "My Loans",
+    to: "/loans",
+  },
+  {
+    icon: "i-heroicons-clipboard-document-list",
+    label: "Loan Management",
+    to: "/admin/loans",
+  },
   // Add more items like 'Loans' here as needed
 ]);
 </script>
