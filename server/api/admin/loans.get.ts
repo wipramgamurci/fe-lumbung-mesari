@@ -1,5 +1,5 @@
 export default defineEventHandler(() => {
-  function generateInstallments(amount, tenor) {
+  function generateInstallments(amount: number, tenor: number) {
     const installments = [];
     const principalPerMonth = amount / tenor;
     const interestPerMonth = amount * 0.01;
