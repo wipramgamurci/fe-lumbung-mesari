@@ -11,7 +11,7 @@
         <UCard v-for="member in members" :key="member.id">
           <div class="flex flex-col sm:flex-row sm: justify-between gap-4">
             <div>
-              <p class="font-medium text-gray-900">{{ member.name }}</p>
+              <p class="font-medium text-gray-900">{{ member.fullname }}</p>
               <p class="text-sm text-gray-600">{{ member.email }}</p>
               <p class="text-sm text-gray-500">
                 {{ new Date(member.createdAt).toLocaleDateString() }}
@@ -57,6 +57,9 @@
       </div>
     </UCard>
   </div>
+  <pre>
+  {{ data }}
+  </pre>
 </template>
 
 <script setup>
@@ -66,33 +69,13 @@ definePageMeta({
   layout: "default",
 });
 
-// Dummy data based on types-and-models.md
-const members = ref([
-  {
-    id: "1",
-    name: "John Doe",
-    email: "john@example.com",
-    role: "member",
-    status: "pending",
-    createdAt: "2024-01-15T10:30:00Z",
-  },
-  {
-    id: "2",
-    name: "Jane Smith",
-    email: "jane@example.com",
-    role: "member",
-    status: "pending",
-    createdAt: "2024-01-14T15:45:00Z",
-  },
-  {
-    id: "3",
-    name: "Bob Johnson",
-    email: "bob@example.com",
-    role: "member",
-    status: "approved",
-    createdAt: "2024-01-13T09:20:00Z",
-  },
-]);
+const { data } = await useAsyncData("members", () =>
+  $fetch("/api/users", {
+    query: { role: "member", page: 1, limit: 10 },
+  })
+);
+
+const members = computed(() => data.value?.data || []);
 
 const handleApprove = (id) => {
   // TODO: Connect to /admin/members/:id/approve API
