@@ -2,8 +2,10 @@
   <div>
     <!-- Logo/Header -->
     <div class="text-center">
-      <h2 class="text-3xl font-bold text-gray-900 mb-2">Lumbung Mesari</h2>
-      <p class="text-gray-600">Sign in to your account</p>
+      <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+        Lumbung Mesari
+      </h2>
+      <p class="text-gray-600 dark:text-gray-300">Sign in to your account</p>
     </div>
 
     <!-- Login Form -->
@@ -30,12 +32,7 @@
             />
           </UFormField>
 
-          <UButton
-            type="submit"
-            color="primary"
-            block
-            :loading="isLoading"
-          >
+          <UButton type="submit" color="primary" block :loading="isLoading">
             Sign In
           </UButton>
         </div>
@@ -43,9 +40,12 @@
 
       <!-- Register Link -->
       <div class="mt-6 text-center">
-        <p class="text-sm text-gray-600">
+        <p class="text-sm text-gray-600 dark:text-gray-300">
           Don't have an account?
-          <NuxtLink to="/register" class="font-medium text-primary-600 hover:text-primary-500">
+          <NuxtLink
+            to="/register"
+            class="font-medium text-primary-600 hover:text-primary-500 dark:text-primary-400 dark:hover:text-primary-300"
+          >
             Register here
           </NuxtLink>
         </p>
@@ -55,38 +55,41 @@
 </template>
 
 <script setup>
-import { UCard, UForm, UFormField, UInput, UButton } from '#components'
+import { UCard, UForm, UFormField, UInput, UButton } from "#components";
 
 definePageMeta({
-  layout: 'auth'
-})
+  layout: "auth",
+});
 
 const formState = ref({
-  email: '',
-  password: ''
-})
+  email: "",
+  password: "",
+});
 
-const isLoading = ref(false)
+const isLoading = ref(false);
 
 const handleLogin = async () => {
-  isLoading.value = true
-  
+  isLoading.value = true;
+
   try {
-    const response = await $fetch('/api/auth/login', {
-      method: 'POST',
-      body: { email: formState.value.email, password: formState.value.password }
-    })
-    
+    const response = await $fetch("/api/auth/login", {
+      method: "POST",
+      body: {
+        email: formState.value.email,
+        password: formState.value.password,
+      },
+    });
+
     // Store token
-    useState('authToken', () => response.token)
-    
+    useState("authToken", () => response.token);
+
     // Navigate on success
-    navigateTo('/dashboard')
+    navigateTo("/dashboard");
   } catch (error) {
-    console.error('Login error:', error)
-    alert('Login failed: ' + (error.data?.message || 'Please try again'))
+    console.error("Login error:", error);
+    alert("Login failed: " + (error.data?.message || "Please try again"));
   } finally {
-    isLoading.value = false
+    isLoading.value = false;
   }
-}
+};
 </script>

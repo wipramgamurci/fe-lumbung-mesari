@@ -1,19 +1,29 @@
 <template>
   <div>
-    <h1 class="text-3xl font-bold text-gray-900 mb-8">Member Management</h1>
+    <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-8">
+      Member Management
+    </h1>
     <UCard>
       <div class="flex items-center justify-between mb-6">
-        <h2 class="text-xl font-semibold text-gray-900">Pending Approvals</h2>
-        <span class="text-sm text-gray-600">{{ members.length }} members</span>
+        <h2 class="text-xl font-semibold text-gray-900 dark:text-white">
+          Pending Approvals
+        </h2>
+        <span class="text-sm text-gray-600 dark:text-gray-300"
+          >{{ members.length }} members</span
+        >
       </div>
 
       <div class="space-y-4">
         <UCard v-for="member in members" :key="member.id">
           <div class="flex flex-col sm:flex-row sm: justify-between gap-4">
             <div>
-              <p class="font-medium text-gray-900">{{ member.fullname }}</p>
-              <p class="text-sm text-gray-600">{{ member.email }}</p>
-              <p class="text-sm text-gray-500">
+              <p class="font-medium text-gray-900 dark:text-white">
+                {{ member.fullname }}
+              </p>
+              <p class="text-sm text-gray-600 dark:text-gray-300">
+                {{ member.email }}
+              </p>
+              <p class="text-sm text-gray-500 dark:text-gray-400">
                 {{ new Date(member.createdAt).toLocaleDateString() }}
               </p>
             </div>

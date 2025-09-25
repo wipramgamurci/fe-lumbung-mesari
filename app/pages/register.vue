@@ -2,8 +2,10 @@
   <div>
     <!-- Logo/Header -->
     <div class="text-center">
-      <h2 class="text-3xl font-bold text-gray-900 mb-2">Lumbung Mesari</h2>
-      <p class="text-gray-600">Create your account</p>
+      <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+        Lumbung Mesari
+      </h2>
+      <p class="text-gray-600 dark:text-gray-300">Create your account</p>
     </div>
 
     <!-- Registration Form -->
@@ -80,12 +82,7 @@
             />
           </UFormField>
 
-          <UButton
-            type="submit"
-            color="primary"
-            block
-            :loading="isLoading"
-          >
+          <UButton type="submit" color="primary" block :loading="isLoading">
             Create Account
           </UButton>
         </div>
@@ -93,9 +90,12 @@
 
       <!-- Login Link -->
       <div class="mt-6 text-center">
-        <p class="text-sm text-gray-600">
+        <p class="text-sm text-gray-600 dark:text-gray-300">
           Already have an account?
-          <NuxtLink to="/login" class="font-medium text-primary-600 hover:text-primary-500">
+          <NuxtLink
+            to="/login"
+            class="font-medium text-primary-600 hover:text-primary-500 dark:text-primary-400 dark:hover:text-primary-300"
+          >
             Sign in here
           </NuxtLink>
         </p>
@@ -105,52 +105,54 @@
 </template>
 
 <script setup>
-import { UCard, UForm, UFormField, UInput, UButton, UIcon } from '#components'
+import { UCard, UForm, UFormField, UInput, UButton, UIcon } from "#components";
 
 definePageMeta({
-  layout: 'auth'
-})
+  layout: "auth",
+});
 
 const formState = ref({
-  firstName: '',
-  lastName: '',
-  email: '',
-  phone: '',
-  idNumber: '',
-  password: '',
-  confirmPassword: ''
-})
+  firstName: "",
+  lastName: "",
+  email: "",
+  phone: "",
+  idNumber: "",
+  password: "",
+  confirmPassword: "",
+});
 
-const isLoading = ref(false)
+const isLoading = ref(false);
 
 const handleRegister = async () => {
   if (formState.value.password !== formState.value.confirmPassword) {
-    alert('Passwords do not match')
-    return
+    alert("Passwords do not match");
+    return;
   }
-  
-  isLoading.value = true
-  
+
+  isLoading.value = true;
+
   try {
-    const response = await $fetch('/api/auth/register', {
-      method: 'POST',
+    const response = await $fetch("/api/auth/register", {
+      method: "POST",
       body: {
         firstName: formState.value.firstName,
         lastName: formState.value.lastName,
         email: formState.value.email,
         phone: formState.value.phone,
         idNumber: formState.value.idNumber,
-        password: formState.value.password
-      }
-    })
-    
+        password: formState.value.password,
+      },
+    });
+
     // Navigate on success
-    navigateTo('/login')
+    navigateTo("/login");
   } catch (error) {
-    console.error('Registration error:', error)
-    alert('Registration failed: ' + (error.data?.message || 'Please try again'))
+    console.error("Registration error:", error);
+    alert(
+      "Registration failed: " + (error.data?.message || "Please try again")
+    );
   } finally {
-    isLoading.value = false
+    isLoading.value = false;
   }
-}
+};
 </script>

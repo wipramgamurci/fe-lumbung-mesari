@@ -1,26 +1,32 @@
 <template>
   <div>
-    <h1 class="text-3xl font-bold text-neutral-900 mb-8">Loan Management</h1>
+    <h1 class="text-3xl font-bold text-neutral-900 dark:text-white mb-8">
+      Loan Management
+    </h1>
     <UCard>
       <div class="flex items-center justify-between mb-6">
-        <h2 class="text-xl font-semibold text-neutral-900">
+        <h2 class="text-xl font-semibold text-neutral-900 dark:text-white">
           Loan Applications
         </h2>
-        <span class="text-sm text-neutral-600">{{ loans.length }} loans</span>
+        <span class="text-sm text-neutral-600 dark:text-gray-300"
+          >{{ loans.length }} loans</span
+        >
       </div>
 
       <div class="space-y-4">
         <UCard v-for="loan in loans" :key="loan.id">
           <div class="flex flex-col sm:flex-row sm:justify-between gap-4">
             <div>
-              <p class="font-medium text-neutral-900">Loan #{{ loan.id }}</p>
-              <p class="text-sm text-neutral-600">
+              <p class="font-medium text-neutral-900 dark:text-white">
+                Loan #{{ loan.id }}
+              </p>
+              <p class="text-sm text-neutral-600 dark:text-gray-300">
                 Amount: {{ loan.amount.toLocaleString() }} IDR
               </p>
-              <p class="text-sm text-neutral-600">
+              <p class="text-sm text-neutral-600 dark:text-gray-300">
                 Tenor: {{ loan.tenor }} months
               </p>
-              <p class="text-sm text-neutral-500">
+              <p class="text-sm text-neutral-500 dark:text-gray-400">
                 Created: {{ new Date(loan.createdAt).toLocaleDateString() }}
               </p>
             </div>

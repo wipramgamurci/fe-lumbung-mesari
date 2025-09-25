@@ -2,11 +2,15 @@
   <div class="container mx-auto p-4">
     <UCard>
       <template #header>
-        <h1 class="text-2xl font-bold">Loan Application</h1>
+        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
+          Loan Application
+        </h1>
       </template>
       <div class="flex flex-col md:flex-row gap-6 md:gap-12">
         <div class="w-full">
-          <h2 class="text-xl font-bold">Loan Application</h2>
+          <h2 class="text-xl font-bold text-gray-900 dark:text-white">
+            Loan Application
+          </h2>
           <UForm :state="form" @submit="submitLoan" class="mt-2">
             <UFormField label="Base Loan Amount" name="value">
               <UInputNumber
@@ -25,12 +29,22 @@
           </UForm>
         </div>
         <div class="w-full">
-          <h2 class="text-xl font-bold">Loan Calculation</h2>
+          <h2 class="text-xl font-bold text-gray-900 dark:text-white">
+            Loan Calculation
+          </h2>
           <div class="mt-2">
-            <p>Loan Amount: {{ currencyFormatter.format(form.amount) }}</p>
-            <p>Tenor: {{ form.tenor }} months</p>
-            <p>Amount Received: {{ receivedAmount }}</p>
-            <p>Monthly Payment: {{ monthlyPayment }}</p>
+            <p class="text-gray-900 dark:text-white">
+              Loan Amount: {{ currencyFormatter.format(form.amount) }}
+            </p>
+            <p class="text-gray-900 dark:text-white">
+              Tenor: {{ form.tenor }} months
+            </p>
+            <p class="text-gray-900 dark:text-white">
+              Amount Received: {{ receivedAmount }}
+            </p>
+            <p class="text-gray-900 dark:text-white">
+              Monthly Payment: {{ monthlyPayment }}
+            </p>
           </div>
         </div>
       </div>
