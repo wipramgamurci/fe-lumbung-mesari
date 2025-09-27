@@ -4,79 +4,27 @@
       Member Management
     </h1>
     <UCard>
-      <div class="flex items-center justify-between mb-6">
-        <h2 class="text-xl font-semibold text-gray-900 dark:text-white">
-          Pending Approvals
-        </h2>
-        <span class="text-sm text-gray-600 dark:text-gray-300"
-          >{{ members.length }} members</span
-        >
-      </div>
-
-      <div class="space-y-4">
-        <UCard v-for="member in members" :key="member.id">
-          <div class="flex flex-col sm:flex-row sm: justify-between gap-4">
-            <div>
-              <p class="font-medium text-gray-900 dark:text-white">
-                {{ member.fullname }}
-              </p>
-              <p class="text-sm text-gray-600 dark:text-gray-300">
-                {{ member.email }}
-              </p>
-              <p class="text-sm text-gray-500 dark:text-gray-400">
-                {{ new Date(member.createdAt).toLocaleDateString() }}
-              </p>
-            </div>
-
-            <div class="flex items-center gap-2">
-              <UBadge
-                :color="
-                  member.status === 'pending'
-                    ? 'warning'
-                    : member.status === 'approved'
-                    ? 'success'
-                    : 'error'
-                "
-                variant="solid"
-              >
-                {{ member.status }}
-              </UBadge>
-
-              <template v-if="member.status === 'pending'">
-                <UButton
-                  color="success"
-                  size="sm"
-                  icon="i-heroicons-check-circle"
-                  @click="handleApprove(member.id)"
-                >
-                  Approve
-                </UButton>
-
-                <UButton
-                  color="error"
-                  size="sm"
-                  icon="i-heroicons-x-circle"
-                  @click="handleReject(member.id)"
-                >
-                  Reject
-                </UButton>
-              </template>
-            </div>
-          </div>
-        </UCard>
-      </div>
+      <UTable :data="members" :columns="columns" class="flex-1" />
     </UCard>
   </div>
-  <pre>
-  {{ data }}
-  </pre>
 </template>
 
-<script setup>
-import { UCard, UTable, UBadge, UDropdownMenu, UButton } from "#components";
+<script setup lang="ts">
+import type { TableColumn } from "@nuxt/ui";
+
+type Member = {
+  id: string;
+  email: string;
+  fullname: string;
+  username: string;
+  phone_number: string;
+  address: string;
+  status: string;
+};
 
 definePageMeta({
   layout: "default",
+  // layout: false,
 });
 
 const { data } = await useAsyncData("members", () =>
@@ -87,15 +35,33 @@ const { data } = await useAsyncData("members", () =>
 
 const members = computed(() => data.value?.data || []);
 
-const handleApprove = (id) => {
+const handleApprove = (id: string) => {
   // TODO: Connect to /admin/members/:id/approve API
   console.log("Approve member:", id);
   alert("Member approved!");
 };
 
-const handleReject = (id) => {
+const handleReject = (id: string) => {
   // TODO: Connect to /admin/members/:id/reject API
   console.log("Reject member:", id);
   alert("Member rejected!");
 };
+
+const columns: TableColumn<Member>[] = [
+  {
+    accessorKey: "fullname",
+    header: "Full Name",
+    cell: ({ row }) => `${row.getValue("fullname")}`,
+  },
+  {
+    accessorKey: "email",
+    header: "Email",
+    cell: ({ row }) => `${row.getValue("email")}`,
+  },
+  {
+    accessorKey: "status",
+    header: "Status",
+    cell: ({ row }) => `${row.getValue("status")}`,
+  },
+];
 </script>
