@@ -4,6 +4,9 @@
       Member Management
     </h1>
     <UCard>
+      <!-- <template #header> -->
+      <!-- showing x - y of z members -->
+      <!-- </template> -->
       <UTable
         :data="members"
         :columns="columns"
@@ -27,6 +30,13 @@
           </div>
         </template>
       </UTable>
+      <template #footer>
+        <UPagination
+          v-model:page="page"
+          :items-per-page="limit"
+          :total="total"
+        />
+      </template>
     </UCard>
   </div>
 </template>
@@ -37,7 +47,6 @@ import type { TableColumn } from "@nuxt/ui";
 
 definePageMeta({
   layout: "default",
-  // layout: false,
 });
 
 const UBadge = resolveComponent("UBadge");
@@ -53,13 +62,22 @@ type Member = {
   status: string;
 };
 
-const { data } = await useAsyncData("members", () =>
-  $fetch("/api/users", {
-    query: { role: "member", page: 1, limit: 10 },
-  })
+const page = ref(1);
+const limit = ref(10);
+
+const { data, pending, refresh } = await useAsyncData(
+  "members",
+  () =>
+    $fetch("/api/users", {
+      query: { role: "member", page: page.value, limit: limit.value },
+    }),
+  {
+    watch: [page],
+  }
 );
 
 const members = computed(() => data.value?.data || []);
+const total = computed(() => data.value?.total || 0);
 
 const handleApprove = (id: string) => {
   // TODO: Connect to /admin/members/:id/approve API
@@ -76,7 +94,6 @@ const handleReject = (id: string) => {
 const columns: TableColumn<Member>[] = [
   {
     id: "expand",
-    // size: 30,
     meta: {
       class: {
         th: "w-8",
@@ -112,7 +129,6 @@ const columns: TableColumn<Member>[] = [
   {
     accessorKey: "status",
     header: "Status",
-    // cell: ({ row }) => `${row.getValue("status")}`,
     cell: ({ row }) => {
       const color = {
         pending: "warning" as const,

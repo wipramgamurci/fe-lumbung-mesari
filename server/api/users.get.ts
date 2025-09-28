@@ -282,6 +282,7 @@ export default defineEventHandler((event) => {
     data: responseData,
     page,
     limit,
+    total,
     next: hasNext,
     prev: hasPrev,
   };
