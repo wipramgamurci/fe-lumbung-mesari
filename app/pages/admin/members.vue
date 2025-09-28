@@ -4,13 +4,44 @@
       Member Management
     </h1>
     <UCard>
-      <UTable :data="members" :columns="columns" class="flex-1" />
+      <UTable
+        :data="members"
+        :columns="columns"
+        :ui="{ tr: 'data-[expanded=true]:bg-elevated/50' }"
+        class="flex-1"
+      >
+        <template #expanded="{ row }">
+          <!-- <pre>{{ row.original }}</pre> -->
+          <div class="flex flex-col gap-4">
+            <div class="flex flex-col gap-2">
+              <p class="text-sm text-gray-500 dark:text-gray-400">
+                Username: {{ row.original.username }}
+              </p>
+              <p class="text-sm text-gray-500 dark:text-gray-400">
+                Phone Number: {{ row.original.phone_number }}
+              </p>
+              <p class="text-sm text-gray-500 dark:text-gray-400">
+                Address: {{ row.original.address }}
+              </p>
+            </div>
+          </div>
+        </template>
+      </UTable>
     </UCard>
   </div>
 </template>
 
 <script setup lang="ts">
+import { h, resolveComponent } from "vue";
 import type { TableColumn } from "@nuxt/ui";
+
+definePageMeta({
+  layout: "default",
+  // layout: false,
+});
+
+const UBadge = resolveComponent("UBadge");
+const UButton = resolveComponent("UButton");
 
 type Member = {
   id: string;
@@ -21,11 +52,6 @@ type Member = {
   address: string;
   status: string;
 };
-
-definePageMeta({
-  layout: "default",
-  // layout: false,
-});
 
 const { data } = await useAsyncData("members", () =>
   $fetch("/api/users", {
@@ -49,6 +75,31 @@ const handleReject = (id: string) => {
 
 const columns: TableColumn<Member>[] = [
   {
+    id: "expand",
+    // size: 30,
+    meta: {
+      class: {
+        th: "w-8",
+        td: "w-8",
+      },
+    },
+    cell: ({ row }) =>
+      h(UButton, {
+        color: "neutral",
+        variant: "ghost",
+        icon: "i-heroicons-chevron-down",
+        square: true,
+        "aria-label": "Expand",
+        ui: {
+          leadingIcon: [
+            "transition-transform",
+            row.getIsExpanded() ? "duration-200 rotate-180" : "",
+          ],
+        },
+        onClick: () => row.toggleExpanded(),
+      }),
+  },
+  {
     accessorKey: "fullname",
     header: "Full Name",
     cell: ({ row }) => `${row.getValue("fullname")}`,
@@ -61,7 +112,18 @@ const columns: TableColumn<Member>[] = [
   {
     accessorKey: "status",
     header: "Status",
-    cell: ({ row }) => `${row.getValue("status")}`,
+    // cell: ({ row }) => `${row.getValue("status")}`,
+    cell: ({ row }) => {
+      const color = {
+        pending: "warning" as const,
+        approved: "success" as const,
+        rejected: "error" as const,
+      }[row.getValue("status") as string];
+
+      return h(UBadge, { class: "capitalize", variant: "solid", color }, () =>
+        row.getValue("status")
+      );
+    },
   },
 ];
 </script>
