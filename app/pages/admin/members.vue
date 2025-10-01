@@ -38,6 +38,78 @@
         />
       </template>
     </UCard>
+
+    <!-- Approve Modal -->
+    <UModal v-model:open="approveModalOpen" title="Approve Member">
+      <template #body>
+        <div class="space-y-4">
+          <p class="text-gray-600 dark:text-gray-300">
+            Are you sure you want to approve this member?
+          </p>
+          <div
+            v-if="selectedMember"
+            class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg"
+          >
+            <p class="font-medium">{{ selectedMember.fullname }}</p>
+            <p class="text-sm text-gray-500 dark:text-gray-400">
+              {{ selectedMember.email }}
+            </p>
+          </div>
+        </div>
+      </template>
+      <template #footer>
+        <div class="flex justify-end gap-2">
+          <UButton
+            color="neutral"
+            variant="outline"
+            @click="approveModalOpen = false"
+          >
+            Cancel
+          </UButton>
+          <UButton
+            color="success"
+            @click="confirmApprove"
+            :loading="isProcessing"
+          >
+            Approve Member
+          </UButton>
+        </div>
+      </template>
+    </UModal>
+
+    <!-- Reject Modal -->
+    <UModal v-model:open="rejectModalOpen" title="Reject Member">
+      <template #body>
+        <div class="space-y-4">
+          <p class="text-gray-600 dark:text-gray-300">
+            Are you sure you want to reject this member?
+          </p>
+          <div
+            v-if="selectedMember"
+            class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg"
+          >
+            <p class="font-medium">{{ selectedMember.fullname }}</p>
+            <p class="text-sm text-gray-500 dark:text-gray-400">
+              {{ selectedMember.email }}
+            </p>
+          </div>
+        </div>
+      </template>
+      <template #footer>
+        <div class="flex justify-end gap-2">
+          <UButton
+            color="neutral"
+            variant="outline"
+            @click="rejectModalOpen = false"
+          >
+            Cancel
+          </UButton>
+          <UButton color="error" @click="confirmReject" :loading="isProcessing">
+            Reject Member
+          </UButton>
+        </div>
+      </template>
+    </UModal>
   </div>
 </template>
 
@@ -51,6 +123,7 @@ definePageMeta({
 
 const UBadge = resolveComponent("UBadge");
 const UButton = resolveComponent("UButton");
+const UModal = resolveComponent("UModal");
 
 type Member = {
   id: string;
@@ -64,6 +137,12 @@ type Member = {
 
 const page = ref(1);
 const limit = ref(10);
+
+// Modal state
+const approveModalOpen = ref(false);
+const rejectModalOpen = ref(false);
+const selectedMember = ref<Member | null>(null);
+const isProcessing = ref(false);
 
 const { data, pending, refresh } = await useAsyncData(
   "members",
@@ -80,15 +159,91 @@ const members = computed(() => data.value?.data || []);
 const total = computed(() => data.value?.total || 0);
 
 const handleApprove = (id: string) => {
-  // TODO: Connect to /admin/members/:id/approve API
-  console.log("Approve member:", id);
-  alert("Member approved!");
+  const member = members.value.find((m) => m.id === id);
+  if (member) {
+    selectedMember.value = member;
+    approveModalOpen.value = true;
+  }
 };
 
 const handleReject = (id: string) => {
-  // TODO: Connect to /admin/members/:id/reject API
-  console.log("Reject member:", id);
-  alert("Member rejected!");
+  const member = members.value.find((m) => m.id === id);
+  if (member) {
+    selectedMember.value = member;
+    rejectModalOpen.value = true;
+  }
+};
+
+const confirmApprove = async () => {
+  if (!selectedMember.value) return;
+
+  isProcessing.value = true;
+  try {
+    // TODO: Connect to /admin/members/:id/approve API
+    console.log("Approve member:", selectedMember.value.id);
+
+    // Simulate API call
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    // Show success message
+    const toast = useToast();
+    toast.add({
+      title: "Member Approved",
+      description: `${selectedMember.value.fullname} has been approved successfully.`,
+      color: "success",
+    });
+
+    // Close modal and refresh data
+    approveModalOpen.value = false;
+    selectedMember.value = null;
+    await refresh();
+  } catch (error) {
+    console.error("Error approving member:", error);
+    const toast = useToast();
+    toast.add({
+      title: "Error",
+      description: "Failed to approve member. Please try again.",
+      color: "error",
+    });
+  } finally {
+    isProcessing.value = false;
+  }
+};
+
+const confirmReject = async () => {
+  if (!selectedMember.value) return;
+
+  isProcessing.value = true;
+  try {
+    // TODO: Connect to /admin/members/:id/reject API
+    console.log("Reject member:", selectedMember.value.id);
+
+    // Simulate API call
+    await new Promise((resolve) => setTimeout(resolve, 1000));
+
+    // Show success message
+    const toast = useToast();
+    toast.add({
+      title: "Member Rejected",
+      description: `${selectedMember.value.fullname} has been rejected.`,
+      color: "error",
+    });
+
+    // Close modal and refresh data
+    rejectModalOpen.value = false;
+    selectedMember.value = null;
+    await refresh();
+  } catch (error) {
+    console.error("Error rejecting member:", error);
+    const toast = useToast();
+    toast.add({
+      title: "Error",
+      description: "Failed to reject member. Please try again.",
+      color: "error",
+    });
+  } finally {
+    isProcessing.value = false;
+  }
 };
 
 const columns: TableColumn<Member>[] = [
@@ -140,6 +295,39 @@ const columns: TableColumn<Member>[] = [
         row.getValue("status")
       );
     },
+  },
+  {
+    id: "actions",
+    header: "Actions",
+    // meta: {
+    //   class: {
+    //     th: "text-center",
+    //     td: "text-center",
+    //   },
+    // },
+    cell: ({ row }) =>
+      row.getValue("status") === "pending"
+        ? h("div", { class: "flex gap-2" }, [
+            h(
+              UButton,
+              {
+                size: "sm",
+                color: "success",
+                onClick: () => handleApprove(row.original.id),
+              },
+              () => "Approve"
+            ),
+            h(
+              UButton,
+              {
+                size: "sm",
+                color: "error",
+                onClick: () => handleReject(row.original.id),
+              },
+              () => "Reject"
+            ),
+          ])
+        : null,
   },
 ];
 </script>
