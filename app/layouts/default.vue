@@ -55,7 +55,7 @@
     </div>
 
     <!-- Main Content Area -->
-    <div class="flex flex-1 pt-14 md:pt-12 md:flex-row">
+    <div class="grid grid-cols-1 lg:grid-cols-[auto_1fr] flex-1 pt-14 md:pt-12">
       <!-- Sidebar (visible only on desktop) -->
       <UNavigationMenu
         :items="navItems"
@@ -64,7 +64,7 @@
       />
 
       <!-- Main Content -->
-      <div class="flex-1 p-8">
+      <div class="p-8 min-w-0">
         <slot />
       </div>
     </div>
