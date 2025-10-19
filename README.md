@@ -1,6 +1,22 @@
-# Nuxt Minimal Starter
+# Lumbung Mesari Frontend
+
+A Nuxt.js frontend application for Lumbung Mesari cooperative management system.
 
 Look at the [Nuxt documentation](https://nuxt.com/docs/getting-started/introduction) to learn more.
+
+## Environment Configuration
+
+The application uses environment-based API configuration. Create a `.env` file in the root directory:
+
+```bash
+# Development (default)
+API_BASE_URL=http://localhost:8000
+
+# Production
+API_BASE_URL=https://api.yourdomain.com
+```
+
+If no `.env` file is provided, it defaults to `http://localhost:8000` for development.
 
 ## Setup
 

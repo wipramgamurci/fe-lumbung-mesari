@@ -9,4 +9,12 @@ export default defineNuxtConfig({
   vite: {
     plugins: [tailwindcss()],
   },
+  runtimeConfig: {
+    // Private keys (only available on server-side)
+    apiSecret: "123",
+    // Public keys (exposed to client-side)
+    public: {
+      apiBaseUrl: process.env.API_BASE_URL || "http://localhost:8000",
+    },
+  },
 });

@@ -13,25 +13,23 @@
       <UForm :state="formState" @submit="handleRegister">
         <div class="space-y-6">
           <!-- Personal Information -->
-          <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-            <UFormField label="First Name" name="firstName">
-              <UInput
-                v-model="formState.firstName"
-                placeholder="Enter first name"
-                required
-                class="w-full"
-              />
-            </UFormField>
+          <UFormField label="Username" name="username">
+            <UInput
+              v-model="formState.username"
+              placeholder="Enter username"
+              required
+              class="w-full"
+            />
+          </UFormField>
 
-            <UFormField label="Last Name" name="lastName">
-              <UInput
-                v-model="formState.lastName"
-                placeholder="Enter last name"
-                required
-                class="w-full"
-              />
-            </UFormField>
-          </div>
+          <UFormField label="Full Name" name="fullname">
+            <UInput
+              v-model="formState.fullname"
+              placeholder="Enter full name"
+              required
+              class="w-full"
+            />
+          </UFormField>
 
           <UFormField label="Email" name="email">
             <UInput
@@ -43,9 +41,9 @@
             />
           </UFormField>
 
-          <UFormField label="Phone Number" name="phone">
+          <UFormField label="Phone Number" name="phone_number">
             <UInput
-              v-model="formState.phone"
+              v-model="formState.phone_number"
               type="tel"
               placeholder="Enter phone number"
               required
@@ -53,10 +51,10 @@
             />
           </UFormField>
 
-          <UFormField label="ID Card Number" name="idNumber">
+          <UFormField label="Address" name="address">
             <UInput
-              v-model="formState.idNumber"
-              placeholder="Enter ID card number"
+              v-model="formState.address"
+              placeholder="Enter address"
               required
               class="w-full"
             />
@@ -72,9 +70,9 @@
             />
           </UFormField>
 
-          <UFormField label="Confirm Password" name="confirmPassword">
+          <UFormField label="Confirm Password" name="passwordConfirmation">
             <UInput
-              v-model="formState.confirmPassword"
+              v-model="formState.passwordConfirmation"
               type="password"
               placeholder="Confirm your password"
               required
@@ -105,52 +103,75 @@
 </template>
 
 <script setup>
-import { UCard, UForm, UFormField, UInput, UButton, UIcon } from "#components";
-
 definePageMeta({
   layout: "auth",
 });
 
 const formState = ref({
-  firstName: "",
-  lastName: "",
+  username: "",
+  fullname: "",
   email: "",
-  phone: "",
-  idNumber: "",
+  phone_number: "",
+  address: "",
   password: "",
-  confirmPassword: "",
+  passwordConfirmation: "",
 });
 
 const isLoading = ref(false);
 
 const handleRegister = async () => {
-  if (formState.value.password !== formState.value.confirmPassword) {
+  // Validate password confirmation
+  if (formState.value.password !== formState.value.passwordConfirmation) {
     alert("Passwords do not match");
+    return;
+  }
+
+  // Basic validation
+  if (
+    !formState.value.email ||
+    !formState.value.password ||
+    !formState.value.fullname ||
+    !formState.value.username
+  ) {
+    alert("Please fill in all required fields");
     return;
   }
 
   isLoading.value = true;
 
   try {
+    // Call the external API through our server proxy
     const response = await $fetch("/api/auth/register", {
       method: "POST",
       body: {
-        firstName: formState.value.firstName,
-        lastName: formState.value.lastName,
         email: formState.value.email,
-        phone: formState.value.phone,
-        idNumber: formState.value.idNumber,
         password: formState.value.password,
+        passwordConfirmation: formState.value.passwordConfirmation,
+        fullname: formState.value.fullname,
+        username: formState.value.username,
+        phone_number: formState.value.phone_number,
+        address: formState.value.address,
       },
     });
 
-    // Navigate on success
-    navigateTo("/login");
+    // Handle successful registration
+    console.log("Registration successful:", response);
+
+    // Store tokens if available
+    if (response.token) {
+      // Store access token in localStorage
+      localStorage.setItem("accessToken", response.token.access_token);
+      localStorage.setItem("refreshToken", response.token.refresh_token);
+    }
+
+    // Show success message
+    alert(response.message || "Registration successful!");
+
+    // Navigate to OTP verification page
+    navigateTo("/verify-otp");
   } catch (error) {
-    console.error("Registration error:", error);
-    alert(
-      "Registration failed: " + (error.data?.message || "Please try again")
-    );
+    console.error("Registration error:", error.data);
+    alert(error.data.message);
   } finally {
     isLoading.value = false;
   }

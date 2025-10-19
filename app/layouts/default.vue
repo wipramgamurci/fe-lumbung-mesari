@@ -75,7 +75,8 @@
 import { UNavigationMenu, UButton, UPopover } from "#components";
 
 const handleLogout = () => {
-  useState("authToken", () => null);
+  localStorage.removeItem("accessToken");
+  localStorage.removeItem("refreshToken");
   navigateTo("/login");
 };
 

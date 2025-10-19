@@ -81,13 +81,14 @@ const handleLogin = async () => {
     });
 
     // Store token
-    useState("authToken", () => response.token);
+    localStorage.setItem("accessToken", response.token.access_token);
+    localStorage.setItem("refreshToken", response.token.refresh_token);
 
     // Navigate on success
     navigateTo("/dashboard");
   } catch (error) {
-    console.error("Login error:", error);
-    alert("Login failed: " + (error.data?.message || "Please try again"));
+    console.error("Login error:", error.data);
+    alert("Login failed: " + error.data.message);
   } finally {
     isLoading.value = false;
   }
