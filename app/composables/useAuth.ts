@@ -1,4 +1,19 @@
 export const useAuth = () => {
+  const storeTokens = (tokenData: {
+    accessToken: string;
+    refreshToken: string;
+  }) => {
+    if (tokenData) {
+      useCookie("accessToken").value = tokenData.accessToken;
+      useCookie("refreshToken").value = tokenData.refreshToken;
+    }
+  };
+
+  const clearTokens = () => {
+    useCookie("accessToken").value = null;
+    useCookie("refreshToken").value = null;
+  };
+
   const login = async (identifier: string, password: string) => {
     try {
       const response = await $fetch("/api/auth/login", {
@@ -11,6 +26,8 @@ export const useAuth = () => {
           "Content-Type": "application/json",
         },
       });
+
+      storeTokens(response.token);
       return response;
     } catch (error) {
       throw error;
@@ -39,6 +56,8 @@ export const useAuth = () => {
           "Content-Type": "application/json",
         },
       });
+
+      storeTokens(response.token);
       return response;
     } catch (error) {
       throw error;
@@ -54,6 +73,8 @@ export const useAuth = () => {
           Authorization: `Bearer ${useCookie("accessToken").value}`,
         },
       });
+
+      storeTokens(response.token);
       return response;
     } catch (error) {
       throw error;
@@ -74,8 +95,7 @@ export const useAuth = () => {
   };
 
   const logout = () => {
-    useCookie("accessToken").value = null;
-    useCookie("refreshToken").value = null;
+    clearTokens();
     navigateTo("/login");
   };
 

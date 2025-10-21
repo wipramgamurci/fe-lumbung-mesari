@@ -107,7 +107,6 @@ definePageMeta({
   layout: "auth",
 });
 
-// Use the auth composable
 const { register } = useAuth();
 
 const formState = ref({
@@ -123,13 +122,11 @@ const formState = ref({
 const isLoading = ref(false);
 
 const handleRegister = async () => {
-  // Validate password confirmation
   if (formState.value.password !== formState.value.passwordConfirmation) {
     alert("Passwords do not match");
     return;
   }
 
-  // Basic validation
   if (
     !formState.value.email ||
     !formState.value.password ||
@@ -146,7 +143,6 @@ const handleRegister = async () => {
   isLoading.value = true;
 
   try {
-    // Call via composable
     const response = await register({
       email: formState.value.email,
       password: formState.value.password,
@@ -157,23 +153,12 @@ const handleRegister = async () => {
       address: formState.value.address,
     });
 
-    // Handle successful registration
-    console.log("Registration successful:", response);
+    alert(response.message);
 
-    // Store tokens if available
-    if (response.token) {
-      useCookie("accessToken").value = response.token.access_token;
-      useCookie("refreshToken").value = response.token.refresh_token;
-    }
-
-    // Show success message
-    alert(response.message || "Registration successful!");
-
-    // Navigate to OTP verification page
     navigateTo("/verify-otp");
   } catch (error) {
     console.error("Registration error:", error.data);
-    alert(error.data.message);
+    alert("Registration failed: " + error.data.message);
   } finally {
     isLoading.value = false;
   }

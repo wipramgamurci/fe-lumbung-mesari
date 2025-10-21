@@ -156,12 +156,6 @@ const handleVerifyOtp = async () => {
 
     console.log("OTP verification successful:", response);
 
-    // Store new tokens if available
-    if (response.token) {
-      useCookie("accessToken").value = response.token.accessToken;
-      useCookie("refreshToken").value = response.token.refreshToken;
-    }
-
     // Show success message
     alert(response.message);
 

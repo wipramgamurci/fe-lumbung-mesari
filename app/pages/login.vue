@@ -73,14 +73,7 @@ const handleLogin = async () => {
   isLoading.value = true;
 
   try {
-    const response = await login(
-      formState.value.identifier,
-      formState.value.password
-    );
-
-    // Store token
-    useCookie("accessToken").value = response.token.accessToken;
-    useCookie("refreshToken").value = response.token.refreshToken;
+    await login(formState.value.identifier, formState.value.password);
 
     // Navigate on success
     navigateTo("/dashboard");
