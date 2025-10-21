@@ -3,11 +3,11 @@ export default defineEventHandler(async (event) => {
   const body = await readBody(event); // Get POST data (email, password)
 
   // Basic validation
-  if (!body.email || !body.password) {
+  if (!body.identifier || !body.password) {
     throw createError({
       statusCode: 400,
       statusMessage: "Missing required fields",
-      data: { message: "Email and password are required" },
+      data: { message: "Identifier and password are required" },
     });
   }
 
@@ -16,7 +16,7 @@ export default defineEventHandler(async (event) => {
     const response: any = await $fetch(`${apiBaseUrl}/api/auth/login`, {
       method: "POST",
       body: {
-        identifier: body.email,
+        identifier: body.identifier,
         password: body.password,
       },
       headers: {

@@ -41,9 +41,9 @@
             />
           </UFormField>
 
-          <UFormField label="Phone Number" name="phone_number">
+          <UFormField label="Phone Number" name="phoneNumber">
             <UInput
-              v-model="formState.phone_number"
+              v-model="formState.phoneNumber"
               type="tel"
               placeholder="Enter phone number"
               required
@@ -107,11 +107,14 @@ definePageMeta({
   layout: "auth",
 });
 
+// Use the auth composable
+const { register } = useAuth();
+
 const formState = ref({
   username: "",
   fullname: "",
   email: "",
-  phone_number: "",
+  phoneNumber: "",
   address: "",
   password: "",
   passwordConfirmation: "",
@@ -131,7 +134,10 @@ const handleRegister = async () => {
     !formState.value.email ||
     !formState.value.password ||
     !formState.value.fullname ||
-    !formState.value.username
+    !formState.value.username ||
+    !formState.value.phoneNumber ||
+    !formState.value.address ||
+    !formState.value.passwordConfirmation
   ) {
     alert("Please fill in all required fields");
     return;
@@ -140,18 +146,15 @@ const handleRegister = async () => {
   isLoading.value = true;
 
   try {
-    // Call the external API through our server proxy
-    const response = await $fetch("/api/auth/register", {
-      method: "POST",
-      body: {
-        email: formState.value.email,
-        password: formState.value.password,
-        passwordConfirmation: formState.value.passwordConfirmation,
-        fullname: formState.value.fullname,
-        username: formState.value.username,
-        phone_number: formState.value.phone_number,
-        address: formState.value.address,
-      },
+    // Call via composable
+    const response = await register({
+      email: formState.value.email,
+      password: formState.value.password,
+      passwordConfirmation: formState.value.passwordConfirmation,
+      fullname: formState.value.fullname,
+      username: formState.value.username,
+      phoneNumber: formState.value.phoneNumber,
+      address: formState.value.address,
     });
 
     // Handle successful registration
@@ -159,9 +162,8 @@ const handleRegister = async () => {
 
     // Store tokens if available
     if (response.token) {
-      // Store access token in localStorage
-      localStorage.setItem("accessToken", response.token.access_token);
-      localStorage.setItem("refreshToken", response.token.refresh_token);
+      useCookie("accessToken").value = response.token.access_token;
+      useCookie("refreshToken").value = response.token.refresh_token;
     }
 
     // Show success message

@@ -13,7 +13,7 @@ export default defineEventHandler(async (event): Promise<any> => {
   }
 
   // Basic validation
-  if (!body.otp) {
+  if (!body.otpCode) {
     throw createError({
       statusCode: 400,
       statusMessage: "Missing required fields",
@@ -27,7 +27,7 @@ export default defineEventHandler(async (event): Promise<any> => {
     const response: any = await $fetch(`${apiBaseUrl}/api/auth/verify-otp`, {
       method: "POST",
       body: {
-        otp: body.otp,
+        otpCode: body.otpCode,
       },
       headers: {
         "Content-Type": "application/json",
@@ -46,12 +46,8 @@ export default defineEventHandler(async (event): Promise<any> => {
       setResponseStatus(event, error.statusCode);
       throw createError({
         statusCode: error.statusCode,
-        statusMessage:
-          error.statusMessage || error.message || "OTP verification failed",
-        data: error.data || {
-          message: error.message || "OTP verification failed",
-          error: error.data?.error || "UNKNOWN_ERROR",
-        },
+        statusMessage: error.statusMessage,
+        message: error.data.message,
       });
     }
 

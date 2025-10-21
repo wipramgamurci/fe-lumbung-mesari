@@ -34,12 +34,8 @@ export default defineEventHandler(async (event): Promise<any> => {
       setResponseStatus(event, error.statusCode);
       throw createError({
         statusCode: error.statusCode,
-        statusMessage:
-          error.statusMessage || error.message || "Failed to resend OTP",
-        data: error.data || {
-          message: error.message || "Failed to resend OTP",
-          error: error.data?.error || "UNKNOWN_ERROR",
-        },
+        statusMessage: error.statusMessage,
+        message: error.data.message,
       });
     }
 

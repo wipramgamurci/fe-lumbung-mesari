@@ -12,11 +12,11 @@
     <UCard class="mt-8">
       <UForm :state="formState" @submit="handleLogin">
         <div class="space-y-6">
-          <UFormField label="Email" name="email">
+          <UFormField label="Identifier" name="identifier">
             <UInput
-              v-model="formState.email"
+              v-model="formState.identifier"
               type="email"
-              placeholder="Enter your email"
+              placeholder="Enter your username or email"
               required
               class="w-full"
             />
@@ -55,14 +55,15 @@
 </template>
 
 <script setup>
-import { UCard, UForm, UFormField, UInput, UButton } from "#components";
-
 definePageMeta({
   layout: "auth",
 });
 
+// Use the auth composable
+const { login } = useAuth();
+
 const formState = ref({
-  email: "",
+  identifier: "",
   password: "",
 });
 
@@ -72,17 +73,14 @@ const handleLogin = async () => {
   isLoading.value = true;
 
   try {
-    const response = await $fetch("/api/auth/login", {
-      method: "POST",
-      body: {
-        email: formState.value.email,
-        password: formState.value.password,
-      },
-    });
+    const response = await login(
+      formState.value.identifier,
+      formState.value.password
+    );
 
     // Store token
-    localStorage.setItem("accessToken", response.token.access_token);
-    localStorage.setItem("refreshToken", response.token.refresh_token);
+    useCookie("accessToken").value = response.token.accessToken;
+    useCookie("refreshToken").value = response.token.refreshToken;
 
     // Navigate on success
     navigateTo("/dashboard");

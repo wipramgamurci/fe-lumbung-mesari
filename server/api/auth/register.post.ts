@@ -3,7 +3,15 @@ export default defineEventHandler(async (event): Promise<any> => {
   const body = await readBody(event); // Get form data
 
   // Basic validation
-  if (!body.email || !body.password || !body.fullname || !body.username) {
+  if (
+    !body.email ||
+    !body.password ||
+    !body.fullname ||
+    !body.username ||
+    !body.passwordConfirmation ||
+    !body.phoneNumber ||
+    !body.address
+  ) {
     throw createError({
       statusCode: 400,
       statusMessage: "Missing required fields",
@@ -22,7 +30,7 @@ export default defineEventHandler(async (event): Promise<any> => {
         passwordConfirmation: body.passwordConfirmation,
         fullname: body.fullname,
         username: body.username,
-        phone_number: body.phone_number,
+        phoneNumber: body.phoneNumber,
         address: body.address,
       },
       headers: {
