@@ -15,7 +15,7 @@
           <UFormField label="Identifier" name="identifier">
             <UInput
               v-model="formState.identifier"
-              type="email"
+              type="text"
               placeholder="Enter your username or email"
               required
               class="w-full"
@@ -54,7 +54,10 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
+import type { LoginRequest } from "../../types/auth";
+import type { ApiError } from "../../types/api";
+
 definePageMeta({
   layout: "auth",
 });
@@ -62,14 +65,14 @@ definePageMeta({
 // Use the auth composable
 const { login } = useAuth();
 
-const formState = ref({
+const formState = ref<LoginRequest>({
   identifier: "",
   password: "",
 });
 
-const isLoading = ref(false);
+const isLoading = ref<boolean>(false);
 
-const handleLogin = async () => {
+const handleLogin = async (): Promise<void> => {
   isLoading.value = true;
 
   try {
@@ -77,9 +80,10 @@ const handleLogin = async () => {
 
     // Navigate on success
     navigateTo("/dashboard");
-  } catch (error) {
+  } catch (error: any) {
     console.error("Login error:", error.data);
-    alert("Login failed: " + error.data.message);
+    const errorData = error.data as ApiError;
+    alert("Login failed: " + errorData.message);
   } finally {
     isLoading.value = false;
   }

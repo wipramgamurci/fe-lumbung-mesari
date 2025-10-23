@@ -102,14 +102,17 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
+import type { RegisterRequest, AuthResponse } from "../../types/auth";
+import type { ApiError } from "../../types/api";
+
 definePageMeta({
   layout: "auth",
 });
 
 const { register } = useAuth();
 
-const formState = ref({
+const formState = ref<RegisterRequest>({
   username: "",
   fullname: "",
   email: "",
@@ -119,9 +122,9 @@ const formState = ref({
   passwordConfirmation: "",
 });
 
-const isLoading = ref(false);
+const isLoading = ref<boolean>(false);
 
-const handleRegister = async () => {
+const handleRegister = async (): Promise<void> => {
   if (formState.value.password !== formState.value.passwordConfirmation) {
     alert("Passwords do not match");
     return;
@@ -143,22 +146,15 @@ const handleRegister = async () => {
   isLoading.value = true;
 
   try {
-    const response = await register({
-      email: formState.value.email,
-      password: formState.value.password,
-      passwordConfirmation: formState.value.passwordConfirmation,
-      fullname: formState.value.fullname,
-      username: formState.value.username,
-      phoneNumber: formState.value.phoneNumber,
-      address: formState.value.address,
-    });
+    const response: AuthResponse = await register(formState.value);
 
     alert(response.message);
 
     navigateTo("/verify-otp");
-  } catch (error) {
+  } catch (error: any) {
     console.error("Registration error:", error.data);
-    alert("Registration failed: " + error.data.message);
+    const errorData = error.data as ApiError;
+    alert("Registration failed: " + errorData.message);
   } finally {
     isLoading.value = false;
   }

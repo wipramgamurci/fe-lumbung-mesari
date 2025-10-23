@@ -1,6 +1,9 @@
-export default defineEventHandler(async (event): Promise<any> => {
+import type { RegisterRequest, AuthResponse } from "../../../types/auth";
+import type { ApiError } from "../../../types/api";
+
+export default defineEventHandler(async (event): Promise<AuthResponse> => {
   const config = useRuntimeConfig();
-  const body = await readBody(event); // Get form data
+  const body = (await readBody(event)) as RegisterRequest; // Get form data
 
   // Basic validation
   if (
@@ -15,28 +18,31 @@ export default defineEventHandler(async (event): Promise<any> => {
     throw createError({
       statusCode: 400,
       statusMessage: "Missing required fields",
-      data: { message: "Please complete all required fields" },
+      data: { message: "Please complete all required fields" } as ApiError,
     });
   }
 
   try {
     // Call the external API using environment-based URL
     const apiBaseUrl = config.public.apiBaseUrl;
-    const response: any = await $fetch(`${apiBaseUrl}/api/auth/register`, {
-      method: "POST",
-      body: {
-        email: body.email,
-        password: body.password,
-        passwordConfirmation: body.passwordConfirmation,
-        fullname: body.fullname,
-        username: body.username,
-        phoneNumber: body.phoneNumber,
-        address: body.address,
-      },
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await $fetch<AuthResponse>(
+      `${apiBaseUrl}/api/auth/register`,
+      {
+        method: "POST",
+        body: {
+          email: body.email,
+          password: body.password,
+          passwordConfirmation: body.passwordConfirmation,
+          fullname: body.fullname,
+          username: body.username,
+          phoneNumber: body.phoneNumber,
+          address: body.address,
+        },
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
     // Return the response from the external API
     setResponseStatus(event, 201);
@@ -59,7 +65,7 @@ export default defineEventHandler(async (event): Promise<any> => {
       statusMessage: "Internal server error",
       data: {
         message: "Unable to connect to registration service. Please try again.",
-      },
+      } as ApiError,
     });
   }
 });

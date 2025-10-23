@@ -1,8 +1,14 @@
+import type {
+  LoginRequest,
+  RegisterRequest,
+  VerifyOtpRequest,
+  AuthResponse,
+  TokenData,
+} from "../../types/auth";
+import type { ApiResponse } from "../../types/api";
+
 export const useAuth = () => {
-  const storeTokens = (tokenData: {
-    accessToken: string;
-    refreshToken: string;
-  }) => {
+  const storeTokens = (tokenData: TokenData) => {
     if (tokenData) {
       useCookie("accessToken").value = tokenData.accessToken;
       useCookie("refreshToken").value = tokenData.refreshToken;
@@ -14,14 +20,17 @@ export const useAuth = () => {
     useCookie("refreshToken").value = null;
   };
 
-  const login = async (identifier: string, password: string) => {
+  const login = async (
+    identifier: string,
+    password: string
+  ): Promise<AuthResponse> => {
     try {
-      const response = await $fetch("/api/auth/login", {
+      const response = await $fetch<AuthResponse>("/api/auth/login", {
         method: "POST",
         body: {
           identifier,
           password,
-        },
+        } as LoginRequest,
         headers: {
           "Content-Type": "application/json",
         },
@@ -39,17 +48,9 @@ export const useAuth = () => {
     return token !== null && token !== undefined && token !== "";
   });
 
-  const register = async (payload: {
-    email: string;
-    password: string;
-    passwordConfirmation: string;
-    fullname: string;
-    username: string;
-    phoneNumber: string;
-    address: string;
-  }) => {
+  const register = async (payload: RegisterRequest): Promise<AuthResponse> => {
     try {
-      const response = await $fetch("/api/auth/register", {
+      const response = await $fetch<AuthResponse>("/api/auth/register", {
         method: "POST",
         body: payload,
         headers: {
@@ -64,11 +65,11 @@ export const useAuth = () => {
     }
   };
 
-  const verifyOtp = async (otpCode: string) => {
+  const verifyOtp = async (otpCode: string): Promise<AuthResponse> => {
     try {
-      const response = await $fetch("/api/auth/verify-otp", {
+      const response = await $fetch<AuthResponse>("/api/auth/verify-otp", {
         method: "POST",
-        body: { otpCode },
+        body: { otpCode } as VerifyOtpRequest,
         headers: {
           Authorization: `Bearer ${useCookie("accessToken").value}`,
         },
@@ -81,9 +82,9 @@ export const useAuth = () => {
     }
   };
 
-  const resendOtp = async () => {
+  const resendOtp = async (): Promise<ApiResponse> => {
     try {
-      const response = await $fetch("/api/auth/resend-otp", {
+      const response = await $fetch<ApiResponse>("/api/auth/resend-otp", {
         headers: {
           Authorization: `Bearer ${useCookie("accessToken").value}`,
         },

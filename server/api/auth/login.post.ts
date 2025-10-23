@@ -1,28 +1,34 @@
-export default defineEventHandler(async (event) => {
+import type { LoginRequest, AuthResponse } from "../../../types/auth";
+import type { ApiError } from "../../../types/api";
+
+export default defineEventHandler(async (event): Promise<AuthResponse> => {
   const config = useRuntimeConfig();
-  const body = await readBody(event); // Get POST data (email, password)
+  const body = (await readBody(event)) as LoginRequest; // Get POST data (email, password)
 
   // Basic validation
   if (!body.identifier || !body.password) {
     throw createError({
       statusCode: 400,
       statusMessage: "Missing required fields",
-      data: { message: "Identifier and password are required" },
+      data: { message: "Identifier and password are required" } as ApiError,
     });
   }
 
   try {
     const apiBaseUrl = config.public.apiBaseUrl;
-    const response: any = await $fetch(`${apiBaseUrl}/api/auth/login`, {
-      method: "POST",
-      body: {
-        identifier: body.identifier,
-        password: body.password,
-      },
-      headers: {
-        "Content-Type": "application/json",
-      },
-    });
+    const response = await $fetch<AuthResponse>(
+      `${apiBaseUrl}/api/auth/login`,
+      {
+        method: "POST",
+        body: {
+          identifier: body.identifier,
+          password: body.password,
+        },
+        headers: {
+          "Content-Type": "application/json",
+        },
+      }
+    );
 
     // Return the response from the external API with the same status code
     setResponseStatus(event, 200);
@@ -48,7 +54,7 @@ export default defineEventHandler(async (event) => {
       data: {
         message: "Unable to login. Please try again.",
         error: "INTERNAL_ERROR",
-      },
+      } as ApiError,
     });
   }
 });
