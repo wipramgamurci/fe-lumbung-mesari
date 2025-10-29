@@ -12,11 +12,11 @@
     <UCard class="mt-8">
       <UForm :state="formState" @submit="handleLogin">
         <div class="space-y-6">
-          <UFormField label="Email" name="email">
+          <UFormField label="Identifier" name="identifier">
             <UInput
-              v-model="formState.email"
-              type="email"
-              placeholder="Enter your email"
+              v-model="formState.identifier"
+              type="text"
+              placeholder="Enter your username or email"
               required
               class="w-full"
             />
@@ -54,41 +54,36 @@
   </div>
 </template>
 
-<script setup>
-import { UCard, UForm, UFormField, UInput, UButton } from "#components";
+<script setup lang="ts">
+import type { LoginRequest } from "../../types/auth";
+import type { ApiError } from "../../types/api";
 
 definePageMeta({
   layout: "auth",
 });
 
-const formState = ref({
-  email: "",
+// Use the auth composable
+const { login } = useAuth();
+
+const formState = ref<LoginRequest>({
+  identifier: "",
   password: "",
 });
 
-const isLoading = ref(false);
+const isLoading = ref<boolean>(false);
 
-const handleLogin = async () => {
+const handleLogin = async (): Promise<void> => {
   isLoading.value = true;
 
   try {
-    const response = await $fetch("/api/auth/login", {
-      method: "POST",
-      body: {
-        email: formState.value.email,
-        password: formState.value.password,
-      },
-    });
-
-    // Store token
-    localStorage.setItem("accessToken", response.token.access_token);
-    localStorage.setItem("refreshToken", response.token.refresh_token);
+    await login(formState.value.identifier, formState.value.password);
 
     // Navigate on success
     navigateTo("/dashboard");
-  } catch (error) {
+  } catch (error: any) {
     console.error("Login error:", error.data);
-    alert("Login failed: " + error.data.message);
+    const errorData = error.data as ApiError;
+    alert("Login failed: " + errorData.message);
   } finally {
     isLoading.value = false;
   }

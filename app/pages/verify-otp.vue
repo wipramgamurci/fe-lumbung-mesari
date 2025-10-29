@@ -20,7 +20,7 @@
           <!-- OTP Input -->
           <UFormField label="Verification Code" name="otp">
             <UInput
-              v-model="formState.otp"
+              v-model="formState.otpCode"
               placeholder="Enter 6-digit code"
               maxlength="6"
               required
@@ -35,7 +35,7 @@
               v-if="timeLeft > 0"
               class="text-sm text-gray-600 dark:text-gray-400"
             >
-              Resend code in {{ formatTime(timeLeft) }}
+              Resend code in {{ timeLeft }}s
             </p>
             <p v-else class="text-sm text-gray-600 dark:text-gray-400">
               Didn't receive the code?
@@ -59,7 +59,7 @@
             color="primary"
             block
             :loading="isVerifying"
-            :disabled="formState.otp.length !== 6"
+            :disabled="formState.otpCode.length !== 6"
           >
             Verify Account
           </UButton>
@@ -83,18 +83,18 @@
 </template>
 
 <script setup>
-import { UCard, UForm, UFormField, UInput, UButton } from "#components";
-
 definePageMeta({
   layout: "auth",
 });
 
-// Get access token from localStorage
+const { verifyOtp, resendOtp } = useAuth();
+
+// Get access token (cookie first, fallback to localStorage)
 const accessToken = ref("");
 
 // Form state
 const formState = ref({
-  otp: "",
+  otpCode: "",
 });
 
 // Loading states
@@ -107,7 +107,7 @@ const timer = ref(null);
 
 // Start timer on mount and get token
 onMounted(() => {
-  accessToken.value = localStorage.getItem("accessToken") || "";
+  accessToken.value = useCookie("accessToken").value || "";
   if (!accessToken.value) {
     alert("No access token found. Please register or login again.");
     navigateTo("/login");
@@ -134,21 +134,17 @@ const startTimer = () => {
   }, 1000);
 };
 
-const formatTime = (seconds) => {
-  const mins = Math.floor(seconds / 60);
-  const secs = seconds % 60;
-  return `${mins}:${secs.toString().padStart(2, "0")}`;
-};
+// Simple counter 60 -> 0; no formatter needed
 
 // Handle OTP input (only allow numbers)
 const handleOtpInput = (event) => {
   const value = event.target.value.replace(/\D/g, ""); // Remove non-digits
-  formState.value.otp = value;
+  formState.value.otpCode = value;
 };
 
 // Verify OTP
 const handleVerifyOtp = async () => {
-  if (formState.value.otp.length !== 6) {
+  if (formState.value.otpCode.length !== 6) {
     alert("Please enter a valid 6-digit code");
     return;
   }
@@ -156,63 +152,17 @@ const handleVerifyOtp = async () => {
   isVerifying.value = true;
 
   try {
-    const response = await $fetch("/api/auth/verify-otp", {
-      method: "POST",
-      body: {
-        otp: formState.value.otp,
-      },
-      headers: {
-        Authorization: `Bearer ${accessToken.value}`,
-      },
-    });
+    const response = await verifyOtp(formState.value.otpCode);
 
     console.log("OTP verification successful:", response);
 
-    // Store new tokens if available
-    if (response.token) {
-      localStorage.setItem("accessToken", response.token.access_token);
-      localStorage.setItem("refreshToken", response.token.refresh_token);
-    }
-
     // Show success message
-    alert(response.message || "Account verified successfully!");
+    alert(response.message);
 
-    // Check user status and navigate accordingly
-    if (response.user?.status === "waiting_deposit") {
-      // User needs to submit deposit proof
-      navigateTo("/deposit-proof");
-    } else {
-      // User is fully verified
-      navigateTo("/dashboard");
-    }
+    navigateTo("/dashboard");
   } catch (error) {
     console.error("OTP verification error:", error);
-
-    let errorMessage = "Verification failed. Please try again.";
-    let shouldRestartTimer = false;
-
-    // Handle specific error cases
-    if (error.data?.error) {
-      switch (error.data.error) {
-        case "OTP_EXPIRED":
-          errorMessage = "OTP has expired. Please request a new one.";
-          shouldRestartTimer = true;
-          break;
-        case "INVALID_OTP":
-          errorMessage = "Invalid OTP code. Please check and try again.";
-          break;
-        default:
-          errorMessage = error.data.message || errorMessage;
-      }
-    } else if (error.data?.message) {
-      errorMessage = error.data.message;
-    } else if (error.statusMessage) {
-      errorMessage = error.statusMessage;
-    } else if (error.message) {
-      errorMessage = error.message;
-    }
-
-    alert(errorMessage);
+    alert("OTP verification failed: " + error.data.message);
 
     // Restart timer if OTP expired
     if (shouldRestartTimer) {
@@ -234,44 +184,16 @@ const handleResendOtp = async () => {
   isResending.value = true;
 
   try {
-    const response = await $fetch("/api/auth/resend-otp", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${accessToken.value}`,
-      },
-    });
+    const response = await resendOtp();
 
     console.log("OTP resent successfully:", response);
-    alert(response.message || "Verification code sent!");
+    alert(response.message);
 
     // Restart timer
     startTimer();
   } catch (error) {
     console.error("Resend OTP error:", error);
-
-    let errorMessage = "Failed to resend code. Please try again.";
-
-    // Handle specific error cases
-    if (error.data?.error) {
-      switch (error.data.error) {
-        case "OTP_EXPIRED":
-          errorMessage = "OTP has expired. Please request a new one.";
-          break;
-        case "INVALID_OTP":
-          errorMessage = "Invalid OTP code. Please check and try again.";
-          break;
-        default:
-          errorMessage = error.data.message || errorMessage;
-      }
-    } else if (error.data?.message) {
-      errorMessage = error.data.message;
-    } else if (error.statusMessage) {
-      errorMessage = error.statusMessage;
-    } else if (error.message) {
-      errorMessage = error.message;
-    }
-
-    alert(errorMessage);
+    alert("OTP request failed: " + error.data.message);
   } finally {
     isResending.value = false;
   }

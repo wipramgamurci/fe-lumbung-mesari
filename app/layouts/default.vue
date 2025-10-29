@@ -47,7 +47,7 @@
               variant="ghost"
               color="neutral"
               block
-              @click="handleLogout"
+              @click="logout"
             />
           </div>
         </template>
@@ -72,13 +72,7 @@
 </template>
 
 <script setup>
-import { UNavigationMenu, UButton, UPopover } from "#components";
-
-const handleLogout = () => {
-  localStorage.removeItem("accessToken");
-  localStorage.removeItem("refreshToken");
-  navigateTo("/login");
-};
+const { logout } = useAuth();
 
 const navItems = ref([
   {
