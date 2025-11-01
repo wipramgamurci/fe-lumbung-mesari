@@ -1,7 +1,7 @@
-import type { LoginRequest, AuthResponse } from "../../../types/auth";
+import type { LoginRequest, LoginResponse } from "../../../types/auth";
 import type { ApiError } from "../../../types/api";
 
-export default defineEventHandler(async (event): Promise<AuthResponse> => {
+export default defineEventHandler(async (event): Promise<LoginResponse> => {
   const config = useRuntimeConfig();
   const body = (await readBody(event)) as LoginRequest; // Get POST data (email, password)
 
@@ -16,7 +16,7 @@ export default defineEventHandler(async (event): Promise<AuthResponse> => {
 
   try {
     const apiBaseUrl = config.public.apiBaseUrl;
-    const response = await $fetch<AuthResponse>(
+    const response = await $fetch<LoginResponse>(
       `${apiBaseUrl}/api/auth/login`,
       {
         method: "POST",
@@ -29,6 +29,23 @@ export default defineEventHandler(async (event): Promise<AuthResponse> => {
         },
       }
     );
+
+    // Set httpOnly cookies for tokens (secure)
+    if (response.token) {
+      setCookie(event, "accessToken", response.token.accessToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict", // CSRF protection
+        maxAge: 60 * 60, // 1 hour (adjust as needed)
+      });
+
+      setCookie(event, "refreshToken", response.token.refreshToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+        maxAge: 60 * 60 * 24 * 1, // 1 day for refresh token
+      });
+    }
 
     // Return the response from the external API with the same status code
     setResponseStatus(event, 200);

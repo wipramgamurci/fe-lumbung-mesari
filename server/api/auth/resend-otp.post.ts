@@ -1,25 +1,23 @@
 export default defineEventHandler(async (event): Promise<any> => {
-  const config = useRuntimeConfig();
-  const body = await readBody(event);
+  const accessToken = getCookie(event, "accessToken");
 
-  // Get authorization header
-  const authHeader = getHeader(event, "authorization");
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+  if (!accessToken) {
     throw createError({
       statusCode: 401,
       statusMessage: "Unauthorized",
-      data: { message: "Access token is required" },
+      message: "Access token is required.",
     });
   }
+  const config = useRuntimeConfig();
 
   try {
     // Call the external API for resending OTP
     const apiBaseUrl = config.public.apiBaseUrl;
-    const response: any = await $fetch(`${apiBaseUrl}/api/auth/resend-otp`, {
+    const response = await $fetch(`${apiBaseUrl}/api/auth/resend-otp`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
-        Authorization: authHeader,
+        Authorization: `Bearer ${accessToken}`,
       },
     });
 

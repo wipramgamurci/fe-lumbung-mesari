@@ -89,9 +89,6 @@ definePageMeta({
 
 const { verifyOtp, resendOtp } = useAuth();
 
-// Get access token (cookie first, fallback to localStorage)
-const accessToken = ref("");
-
 // Form state
 const formState = ref({
   otpCode: "",
@@ -107,12 +104,6 @@ const timer = ref(null);
 
 // Start timer on mount and get token
 onMounted(() => {
-  accessToken.value = useCookie("accessToken").value || "";
-  if (!accessToken.value) {
-    alert("No access token found. Please register or login again.");
-    navigateTo("/login");
-    return;
-  }
   startTimer();
 });
 
@@ -175,12 +166,6 @@ const handleVerifyOtp = async () => {
 
 // Resend OTP
 const handleResendOtp = async () => {
-  if (!accessToken.value) {
-    alert("No access token found. Please register again.");
-    navigateTo("/register");
-    return;
-  }
-
   isResending.value = true;
 
   try {

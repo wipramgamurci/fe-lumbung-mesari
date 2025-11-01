@@ -1,16 +1,17 @@
-export default defineEventHandler(async (event): Promise<any> => {
-  const config = useRuntimeConfig();
-  const body = await readBody(event);
+import type { VerifyOtpRequest, VerifyOtpResponse } from "../../../types/auth";
 
-  // Get authorization header
-  const authHeader = getHeader(event, "authorization");
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+export default defineEventHandler(async (event): Promise<VerifyOtpResponse> => {
+  const accessToken = getCookie(event, "accessToken");
+
+  if (!accessToken) {
     throw createError({
       statusCode: 401,
       statusMessage: "Unauthorized",
-      data: { message: "Access token is required" },
+      message: "Access token is required.",
     });
   }
+  const config = useRuntimeConfig();
+  const body = (await readBody(event)) as VerifyOtpRequest;
 
   // Basic validation
   if (!body.otpCode) {
@@ -24,16 +25,19 @@ export default defineEventHandler(async (event): Promise<any> => {
   try {
     // Call the external API for OTP verification
     const apiBaseUrl = config.public.apiBaseUrl;
-    const response: any = await $fetch(`${apiBaseUrl}/api/auth/verify-otp`, {
-      method: "POST",
-      body: {
-        otpCode: body.otpCode,
-      },
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: authHeader,
-      },
-    });
+    const response = await $fetch<VerifyOtpResponse>(
+      `${apiBaseUrl}/api/auth/verify-otp`,
+      {
+        method: "POST",
+        body: {
+          otpCode: body.otpCode,
+        },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
 
     // Return the response from the external API with the same status code
     setResponseStatus(event, 200);
