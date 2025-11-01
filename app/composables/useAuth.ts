@@ -4,6 +4,7 @@ import type {
   VerifyOtpRequest,
   AuthResponse,
   TokenData,
+  User,
 } from "../../types/auth";
 import type { ApiResponse } from "../../types/api";
 
@@ -20,6 +21,8 @@ export const useAuth = () => {
     useCookie("refreshToken").value = null;
   };
 
+  const currentUser = useState<User | null>("currentUser", () => null);
+
   const login = async (
     identifier: string,
     password: string
@@ -35,8 +38,11 @@ export const useAuth = () => {
           "Content-Type": "application/json",
         },
       });
-
-      storeTokens(response.token);
+      if (response.token) {
+        storeTokens(response.token);
+        // Use the token directly from response instead of reading from cookie
+        await getCurrentUser(response.token.accessToken);
+      }
       return response;
     } catch (error) {
       throw error;
@@ -75,7 +81,11 @@ export const useAuth = () => {
         },
       });
 
-      storeTokens(response.token);
+      if (response.token) {
+        storeTokens(response.token);
+        // Use the token directly from response
+        await getCurrentUser(response.token.accessToken);
+      }
       return response;
     } catch (error) {
       throw error;
@@ -97,7 +107,29 @@ export const useAuth = () => {
 
   const logout = () => {
     clearTokens();
+    currentUser.value = null;
     navigateTo("/login");
+  };
+
+  const getCurrentUser = async (token?: string): Promise<User> => {
+    if (currentUser.value) {
+      return currentUser.value;
+    }
+    try {
+      // Use provided token or fall back to cookie
+      const accessToken = token || useCookie("accessToken").value;
+      const response = await $fetch<User>("/api/me", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+      currentUser.value = response;
+      return response;
+    } catch (error) {
+      throw error;
+    }
   };
 
   return {
@@ -107,5 +139,7 @@ export const useAuth = () => {
     verifyOtp,
     resendOtp,
     logout,
+    getCurrentUser,
+    currentUser,
   };
 };

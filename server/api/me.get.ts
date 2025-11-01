@@ -1,5 +1,9 @@
-export default defineEventHandler((event) => {
-  const authHeader = event.headers.get("authorization");
+import type { User } from "../../types/auth";
+
+export default defineEventHandler(async (event): Promise<User> => {
+  const config = useRuntimeConfig();
+
+  const authHeader = getHeader(event, "authorization");
   if (!authHeader || !authHeader.startsWith("Bearer ")) {
     throw createError({
       statusCode: 401,
@@ -8,45 +12,34 @@ export default defineEventHandler((event) => {
     });
   }
 
-  const token = authHeader.split(" ")[1];
+  try {
+    const response = await $fetch<User>(
+      `${config.public.apiBaseUrl}/api/users/me`,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: authHeader,
+        },
+      }
+    );
 
-  // Mock token validation (in real app, use JWT verify)
-  type User = {
-    id: string;
-    name: string;
-    email: string;
-    role: string;
-    status: string;
-    createdAt: string;
-  };
+    setResponseStatus(event, 200);
+    return response;
+  } catch (error: any) {
+    if (error.statusCode) {
+      throw createError({
+        statusCode: error.statusCode,
+        statusMessage: error.statusMessage,
+        message: error.data.message,
+      });
+    }
 
-  const mockTokens: Record<string, User> = {
-    "fake-jwt-token-user-1": {
-      id: "user-1",
-      name: "Test User",
-      email: "test@example.com",
-      role: "member",
-      status: "approved",
-      createdAt: new Date().toISOString(),
-    },
-    "fake-jwt-token-admin-1": {
-      id: "admin-1",
-      name: "Admin User",
-      email: "admin@example.com",
-      role: "admin",
-      status: "approved",
-      createdAt: new Date().toISOString(),
-    },
-  };
-
-  const user = mockTokens[token as string];
-  if (!user) {
+    setResponseStatus(event, 500);
     throw createError({
-      statusCode: 401,
-      statusMessage: "Unauthorized",
-      data: { message: "Invalid token" },
+      statusCode: 500,
+      statusMessage: "Internal server error",
+      message: "Unable to get user data",
     });
   }
-
-  return { user };
 });

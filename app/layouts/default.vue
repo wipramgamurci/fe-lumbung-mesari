@@ -54,16 +54,15 @@
       </UPopover>
     </div>
 
-    <!-- Main Content Area -->
-    <div class="grid grid-cols-1 lg:grid-cols-[auto_1fr] flex-1 pt-14 md:pt-12">
-      <!-- Sidebar (visible only on desktop) -->
-      <UNavigationMenu
-        :items="navItems"
-        orientation="vertical"
-        class="hidden lg:block w-48 bg-white dark:bg-gray-800 shadow-lg p-4"
-      />
+    <!-- Sidebar (visible only on desktop, fixed) -->
+    <UNavigationMenu
+      :items="navItems"
+      orientation="vertical"
+      class="hidden lg:block fixed left-0 top-14 w-48 h-[calc(100vh-3.5rem)] bg-white dark:bg-gray-800 shadow-lg p-4 overflow-y-auto"
+    />
 
-      <!-- Main Content -->
+    <!-- Main Content Area -->
+    <div class="flex-1 pt-14 md:pt-12 lg:pl-48">
       <div class="p-8 min-w-0">
         <slot />
       </div>

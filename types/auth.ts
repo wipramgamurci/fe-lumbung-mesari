@@ -32,9 +32,15 @@ export interface AuthResponse {
 
 export interface User {
   id: string;
-  name: string;
   email: string;
-  role: "member" | "admin";
-  status: "pending" | "approved" | "rejected";
+  fullname: string;
+  username: string;
+  address: string;
+  status: "pending" | "active" | "rejected" | "waiting_deposit";
+  phoneNumber: string;
+  roleId: "member" | "administrator";
+  depositImageUrl?: string;
+  otpVerified: boolean;
   createdAt: string; // ISO 8601 string
+  updatedAt: string; // ISO 8601 string
 }
