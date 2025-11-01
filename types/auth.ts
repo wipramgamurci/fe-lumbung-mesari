@@ -31,30 +31,30 @@ export interface AuthResponse {
 }
 
 export interface LoginResponse {
-  data: loginResponseData;
+  data: LoginResponseData;
   token: TokenData;
 }
 
-export interface registerResponse {
+export interface RegisterResponse {
   token: TokenData;
-  data: registerResponseData;
+  data: RegisterResponseData;
   message: string;
   otpSent: boolean;
 }
 
-export interface verifyOtpResponse {
+export interface VerifyOtpResponse {
   message: string;
   token: TokenData;
-  data: verifyOtpResponseData;
+  data: VerifyOtpResponseData;
 }
 
-export interface loginResponseData {
+export interface LoginResponseData {
   emailSent: boolean;
   message: string;
   status: string;
 }
 
-export interface registerResponseData {
+export interface RegisterResponseData {
   id: string;
   email: string;
   fullname: string;
@@ -62,7 +62,7 @@ export interface registerResponseData {
   status: "pending" | "active" | "rejected" | "waiting_deposit";
 }
 
-export interface verifyOtpResponseData {
+export interface VerifyOtpResponseData {
   email: string;
   fullname: string;
   id: string;
