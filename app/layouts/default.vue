@@ -2,7 +2,7 @@
   <div class="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col">
     <!-- Topbar -->
     <div
-      class="fixed top-0 left-0 right-0 z-10 bg-white dark:bg-gray-800 shadow-md flex items-center justify-between px-4 py-3"
+      class="fixed top-0 left-0 right-0 z-20 bg-white dark:bg-gray-800 shadow-md flex items-center justify-between px-4 py-3 h-14"
     >
       <!-- App Title/Logo and Mobile Toggle -->
       <div class="flex items-center space-x-2">
@@ -26,12 +26,28 @@
 
       <!-- User Menu -->
       <UPopover>
-        <UButton
-          label="User"
-          icon="i-heroicons-user-circle"
-          color="gray"
-          variant="ghost"
-        />
+        <button
+          class="flex items-center gap-2 px-2 py-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+        >
+          <UAvatar v-if="currentUser" :alt="currentUser.fullname" size="sm" />
+          <UIcon
+            v-else
+            name="i-heroicons-user-circle"
+            class="w-5 h-5 text-gray-500 dark:text-gray-400"
+          />
+          <span
+            v-if="currentUser"
+            class="hidden sm:block font-medium text-gray-900 dark:text-white"
+          >
+            {{ currentUser.fullname }}
+          </span>
+          <span
+            v-else
+            class="hidden sm:block font-medium text-gray-900 dark:text-white"
+          >
+            User
+          </span>
+        </button>
 
         <template #content>
           <div class="p-4 space-y-2">
@@ -58,11 +74,11 @@
     <UNavigationMenu
       :items="navItems"
       orientation="vertical"
-      class="hidden lg:block fixed left-0 top-14 w-48 h-[calc(100vh-3.5rem)] bg-white dark:bg-gray-800 shadow-lg p-4 overflow-y-auto"
+      class="hidden lg:block fixed left-0 top-14 w-48 h-[calc(100vh-3.5rem)] bg-white dark:bg-gray-800 shadow-lg p-4 overflow-y-auto z-10"
     />
 
     <!-- Main Content Area -->
-    <div class="flex-1 pt-14 md:pt-12 lg:pl-48">
+    <div class="flex-1 pt-14 lg:pl-48 relative z-0">
       <div class="p-8 min-w-0">
         <slot />
       </div>
@@ -71,7 +87,7 @@
 </template>
 
 <script setup>
-const { logout } = useAuth();
+const { logout, currentUser } = useAuth();
 
 const navItems = ref([
   {

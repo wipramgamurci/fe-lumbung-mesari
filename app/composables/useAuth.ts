@@ -118,6 +118,9 @@ export const useAuth = () => {
     try {
       // Use provided token or fall back to cookie
       const accessToken = token || useCookie("accessToken").value;
+      if (!accessToken) {
+        throw new Error("No access token available");
+      }
       const response = await $fetch<User>("/api/me", {
         method: "GET",
         headers: {
@@ -132,6 +135,20 @@ export const useAuth = () => {
     }
   };
 
+  // Initialize auth: load user data if token exists
+  const initAuth = async () => {
+    const token = useCookie("accessToken").value;
+    if (token && !currentUser.value) {
+      try {
+        await getCurrentUser(token);
+      } catch (error) {
+        // Token might be invalid, clear it
+        console.error("Failed to load user on init:", error);
+        clearTokens();
+      }
+    }
+  };
+
   return {
     login,
     isLoggedIn,
@@ -141,5 +158,6 @@ export const useAuth = () => {
     logout,
     getCurrentUser,
     currentUser,
+    initAuth,
   };
 };
