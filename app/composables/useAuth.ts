@@ -5,6 +5,7 @@ import type {
   LoginResponse,
   RegisterResponse,
   VerifyOtpResponse,
+  ResendOtpResponse,
   User,
 } from "../../types/auth";
 import type { ApiResponse } from "../../types/api";
@@ -76,9 +77,9 @@ export const useAuth = () => {
     }
   };
 
-  const resendOtp = async (): Promise<ApiResponse> => {
+  const resendOtp = async (): Promise<ResendOtpResponse> => {
     try {
-      const response = await $fetch<ApiResponse>("/api/auth/resend-otp", {
+      const response = await $fetch<ResendOtpResponse>("/api/auth/resend-otp", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
