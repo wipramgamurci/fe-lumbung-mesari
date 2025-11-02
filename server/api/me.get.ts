@@ -3,8 +3,9 @@ import type { User } from "../../types/auth";
 export default defineEventHandler(async (event): Promise<User> => {
   const config = useRuntimeConfig();
 
-  const authHeader = getHeader(event, "authorization");
-  if (!authHeader || !authHeader.startsWith("Bearer ")) {
+  // Read access token from httpOnly cookie
+  const accessToken = getCookie(event, "accessToken");
+  if (!accessToken) {
     throw createError({
       statusCode: 401,
       statusMessage: "Unauthorized",
@@ -19,7 +20,7 @@ export default defineEventHandler(async (event): Promise<User> => {
         method: "GET",
         headers: {
           "Content-Type": "application/json",
-          Authorization: authHeader,
+          Authorization: `Bearer ${accessToken}`,
         },
       }
     );

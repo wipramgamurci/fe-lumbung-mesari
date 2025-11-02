@@ -63,7 +63,7 @@ definePageMeta({
 });
 
 // Use the auth composable
-const { login } = useAuth();
+const { login, getCurrentUser } = useAuth();
 
 const formState = ref<LoginRequest>({
   identifier: "",
@@ -78,8 +78,8 @@ const handleLogin = async (): Promise<void> => {
   try {
     await login(formState.value.identifier, formState.value.password);
 
-    // Navigate on success
-    navigateTo("/dashboard");
+    // Fetch user data after successful login (cookies are now set)
+    await getCurrentUser();
   } catch (error: any) {
     console.error("Login error:", error.data);
     const errorData = error.data as ApiError;

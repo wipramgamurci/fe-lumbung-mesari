@@ -1,7 +1,7 @@
-import type { RegisterRequest, AuthResponse } from "../../../types/auth";
+import type { RegisterRequest, RegisterResponse } from "../../../types/auth";
 import type { ApiError } from "../../../types/api";
 
-export default defineEventHandler(async (event): Promise<AuthResponse> => {
+export default defineEventHandler(async (event): Promise<RegisterResponse> => {
   const config = useRuntimeConfig();
   const body = (await readBody(event)) as RegisterRequest; // Get form data
 
@@ -25,7 +25,7 @@ export default defineEventHandler(async (event): Promise<AuthResponse> => {
   try {
     // Call the external API using environment-based URL
     const apiBaseUrl = config.public.apiBaseUrl;
-    const response = await $fetch<AuthResponse>(
+    const response = await $fetch<RegisterResponse>(
       `${apiBaseUrl}/api/auth/register`,
       {
         method: "POST",
@@ -43,6 +43,23 @@ export default defineEventHandler(async (event): Promise<AuthResponse> => {
         },
       }
     );
+
+    // Set httpOnly cookies for tokens (secure)
+    if (response.token) {
+      setCookie(event, "accessToken", response.token.accessToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict", // CSRF protection
+        maxAge: 60 * 60, // 1 hour (adjust as needed)
+      });
+
+      setCookie(event, "refreshToken", response.token.refreshToken, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === "production",
+        sameSite: "strict",
+        maxAge: 60 * 60 * 24 * 1, // 1 day for refresh token
+      });
+    }
 
     // Return the response from the external API
     setResponseStatus(event, 201);

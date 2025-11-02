@@ -87,10 +87,7 @@ definePageMeta({
   layout: "auth",
 });
 
-const { verifyOtp, resendOtp } = useAuth();
-
-// Get access token (cookie first, fallback to localStorage)
-const accessToken = ref("");
+const { verifyOtp, resendOtp, getCurrentUser } = useAuth();
 
 // Form state
 const formState = ref({
@@ -107,12 +104,6 @@ const timer = ref(null);
 
 // Start timer on mount and get token
 onMounted(() => {
-  accessToken.value = useCookie("accessToken").value || "";
-  if (!accessToken.value) {
-    alert("No access token found. Please register or login again.");
-    navigateTo("/login");
-    return;
-  }
   startTimer();
 });
 
@@ -156,6 +147,9 @@ const handleVerifyOtp = async () => {
 
     console.log("OTP verification successful:", response);
 
+    // Fetch user data after successful verification (cookies are now set)
+    await getCurrentUser();
+
     // Show success message
     alert(response.message);
 
@@ -163,11 +157,6 @@ const handleVerifyOtp = async () => {
   } catch (error) {
     console.error("OTP verification error:", error);
     alert("OTP verification failed: " + error.data.message);
-
-    // Restart timer if OTP expired
-    if (shouldRestartTimer) {
-      startTimer();
-    }
   } finally {
     isVerifying.value = false;
   }
@@ -175,12 +164,6 @@ const handleVerifyOtp = async () => {
 
 // Resend OTP
 const handleResendOtp = async () => {
-  if (!accessToken.value) {
-    alert("No access token found. Please register again.");
-    navigateTo("/register");
-    return;
-  }
-
   isResending.value = true;
 
   try {
