@@ -87,7 +87,7 @@ definePageMeta({
   layout: "auth",
 });
 
-const { verifyOtp, resendOtp } = useAuth();
+const { verifyOtp, resendOtp, getCurrentUser } = useAuth();
 
 // Form state
 const formState = ref({
@@ -147,6 +147,9 @@ const handleVerifyOtp = async () => {
 
     console.log("OTP verification successful:", response);
 
+    // Fetch user data after successful verification (cookies are now set)
+    await getCurrentUser();
+
     // Show success message
     alert(response.message);
 
@@ -154,11 +157,6 @@ const handleVerifyOtp = async () => {
   } catch (error) {
     console.error("OTP verification error:", error);
     alert("OTP verification failed: " + error.data.message);
-
-    // Restart timer if OTP expired
-    if (shouldRestartTimer) {
-      startTimer();
-    }
   } finally {
     isVerifying.value = false;
   }

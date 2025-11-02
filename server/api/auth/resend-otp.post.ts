@@ -1,4 +1,6 @@
-export default defineEventHandler(async (event): Promise<any> => {
+import type { ResendOtpResponse } from "../../../types/auth";
+
+export default defineEventHandler(async (event): Promise<ResendOtpResponse> => {
   const accessToken = getCookie(event, "accessToken");
 
   if (!accessToken) {
@@ -13,13 +15,16 @@ export default defineEventHandler(async (event): Promise<any> => {
   try {
     // Call the external API for resending OTP
     const apiBaseUrl = config.public.apiBaseUrl;
-    const response = await $fetch(`${apiBaseUrl}/api/auth/resend-otp`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
-      },
-    });
+    const response = await $fetch<ResendOtpResponse>(
+      `${apiBaseUrl}/api/auth/resend-otp`,
+      {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
+      }
+    );
 
     // Return the response from the external API with the same status code
     setResponseStatus(event, 200);

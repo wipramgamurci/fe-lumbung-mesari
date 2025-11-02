@@ -42,6 +42,11 @@ export interface RegisterResponse {
   otpSent: boolean;
 }
 
+export interface ResendOtpResponse {
+  message: string;
+  otpSent: boolean;
+}
+
 export interface VerifyOtpResponse {
   message: string;
   token: TokenData;

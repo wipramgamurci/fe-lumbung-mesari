@@ -1,6 +1,6 @@
 export default defineNuxtRouteMiddleware((to, from) => {
   // Public routes that don't require authentication
-  const publicRoutes = ["/login", "/register", "/verify-otp"];
+  const publicRoutes = ["/login", "/register"];
 
   // Server-side: Can read httpOnly cookies
   // This is the PRIMARY protection - runs during SSR
