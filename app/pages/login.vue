@@ -57,13 +57,16 @@
 <script setup lang="ts">
 import type { LoginRequest } from "../../types/auth";
 import type { ApiError } from "../../types/api";
+import { useUserStore } from "../stores/useUser";
 
 definePageMeta({
   layout: "auth",
 });
 
 // Use the auth composable
-const { login, getCurrentUser } = useAuth();
+const { login } = useAuth();
+
+const userStore = useUserStore();
 
 const formState = ref<LoginRequest>({
   identifier: "",
@@ -79,7 +82,7 @@ const handleLogin = async (): Promise<void> => {
     await login(formState.value.identifier, formState.value.password);
 
     // Fetch user data after successful login (cookies are now set)
-    await getCurrentUser();
+    await userStore.fetchUser();
   } catch (error: any) {
     console.error("Login error:", error.data);
     const errorData = error.data as ApiError;

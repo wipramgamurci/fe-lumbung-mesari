@@ -87,7 +87,8 @@ definePageMeta({
   layout: "auth",
 });
 
-const { verifyOtp, resendOtp, getCurrentUser } = useAuth();
+const { verifyOtp, resendOtp } = useAuth();
+const userStore = useUserStore();
 
 // Form state
 const formState = ref({
@@ -148,7 +149,7 @@ const handleVerifyOtp = async () => {
     console.log("OTP verification successful:", response);
 
     // Fetch user data after successful verification (cookies are now set)
-    await getCurrentUser();
+    await userStore.fetchUser();
 
     // Show success message
     alert(response.message);

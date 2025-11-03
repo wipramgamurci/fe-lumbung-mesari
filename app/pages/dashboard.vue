@@ -75,8 +75,6 @@
 </template>
 
 <script setup>
-import { UCard } from "#components";
-
 definePageMeta({
   layout: "default",
 });
