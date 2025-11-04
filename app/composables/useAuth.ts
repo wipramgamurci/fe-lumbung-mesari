@@ -88,9 +88,9 @@ export const useAuth = () => {
   };
 
   const logout = async (): Promise<void> => {
-    // Clear user store
+    // Clear user store using action (Pinia best practice)
     const userStore = useUserStore();
-    userStore.user = null;
+    userStore.clearUser();
 
     // Clear cookies by calling a logout endpoint if you have one
     // Or just navigate to login - cookies will be cleared server-side on logout

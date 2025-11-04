@@ -11,7 +11,7 @@ export default defineNuxtPlugin(async (nuxtApp) => {
     } catch (error) {
       // Silently fail if no token or invalid token
       // The middleware will handle redirecting unauthenticated users
-      userStore.user = null;
+      userStore.clearUser();
     }
   }
 });
