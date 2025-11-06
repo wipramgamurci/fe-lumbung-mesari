@@ -6,15 +6,11 @@ import type {
   RegisterResponse,
   VerifyOtpResponse,
   ResendOtpResponse,
-  User,
 } from "../../types/auth";
 import type { ApiResponse } from "../../types/api";
+import { useUserStore } from "../stores/useUser";
 
 export const useAuth = () => {
-  // Store user data in SSR-compatible state
-  // useState automatically persists across navigations and is SSR-safe
-  const currentUser = useState<User | null>("auth:user", () => null);
-
   const login = async (
     identifier: string,
     password: string
@@ -91,29 +87,10 @@ export const useAuth = () => {
     }
   };
 
-  const getCurrentUser = async (): Promise<User | null> => {
-    try {
-      // Fetch user data from server route (which reads from cookies)
-      const user = await $fetch<User>("/api/me", {
-        method: "GET",
-        headers: {
-          "Content-Type": "application/json",
-        },
-      });
-
-      // Store user data in state
-      currentUser.value = user;
-      return user;
-    } catch (error: any) {
-      // Clear user state on error (e.g., token expired)
-      currentUser.value = null;
-      throw error;
-    }
-  };
-
   const logout = async (): Promise<void> => {
-    // Clear user state
-    currentUser.value = null;
+    // Clear user store using action (Pinia best practice)
+    const userStore = useUserStore();
+    userStore.clearUser();
 
     // Clear cookies by calling a logout endpoint if you have one
     // Or just navigate to login - cookies will be cleared server-side on logout
@@ -125,8 +102,6 @@ export const useAuth = () => {
     register,
     verifyOtp,
     resendOtp,
-    getCurrentUser,
-    currentUser: readonly(currentUser),
     logout,
   };
 };

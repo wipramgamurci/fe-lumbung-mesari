@@ -29,23 +29,11 @@
         <button
           class="flex items-center gap-2 px-2 py-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
         >
-          <UAvatar v-if="currentUser" :alt="currentUser.fullname" size="sm" />
-          <UIcon
-            v-else
-            name="i-heroicons-user-circle"
-            class="w-5 h-5 text-gray-500 dark:text-gray-400"
-          />
+          <UAvatar :alt="currentUser?.fullname || 'User'" size="sm" />
           <span
-            v-if="currentUser"
             class="hidden sm:block font-medium text-gray-900 dark:text-white"
           >
-            {{ currentUser.fullname }}
-          </span>
-          <span
-            v-else
-            class="hidden sm:block font-medium text-gray-900 dark:text-white"
-          >
-            User
+            {{ currentUser?.fullname || "User" }}
           </span>
         </button>
 
@@ -87,7 +75,9 @@
 </template>
 
 <script setup>
-const { logout, currentUser } = useAuth();
+const { logout } = useAuth();
+const userStore = useUserStore();
+const currentUser = computed(() => userStore.user);
 
 const navItems = ref([
   {

@@ -191,10 +191,10 @@ definePageMeta({
   layout: "default",
 });
 
-const { getCurrentUser, currentUser } = useAuth();
+const userStore = useUserStore();
 const isLoading = ref(true);
 const error = ref<string | null>(null);
-const user = computed(() => currentUser.value);
+const user = computed(() => userStore.user);
 
 // Load user data on mount
 onMounted(async () => {
@@ -207,8 +207,8 @@ const loadUser = async () => {
 
   try {
     // If user is already loaded, no need to fetch
-    if (!currentUser.value) {
-      await getCurrentUser();
+    if (!userStore.user) {
+      await userStore.fetchUser();
     }
   } catch (err: any) {
     console.error("Failed to load user:", err);
