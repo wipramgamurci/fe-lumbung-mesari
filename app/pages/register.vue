@@ -103,7 +103,7 @@
 </template>
 
 <script setup lang="ts">
-import type { RegisterRequest, AuthResponse } from "../../types/auth";
+import type { RegisterRequest, RegisterResponse } from "../../types/auth";
 import type { ApiError } from "../../types/api";
 
 definePageMeta({
@@ -146,7 +146,7 @@ const handleRegister = async (): Promise<void> => {
   isLoading.value = true;
 
   try {
-    const response: AuthResponse = await register(formState.value);
+    const response: RegisterResponse = await register(formState.value);
 
     alert(response.message);
 
