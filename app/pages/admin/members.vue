@@ -1,12 +1,14 @@
 <template>
-  <div>
+  <div class="flex flex-col gap-4">
     <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-8">
       Member Management
     </h1>
     <UCard>
-      <!-- <template #header> -->
-      <!-- showing x - y of z members -->
-      <!-- </template> -->
+      <UDropdownMenu :items="dropdownItems">
+        <UButton icon="i-heroicons-funnel" label="Filter" />
+      </UDropdownMenu>
+    </UCard>
+    <UCard>
       <UTable
         :data="members"
         :columns="columns"
@@ -14,14 +16,13 @@
         class="flex-1"
       >
         <template #expanded="{ row }">
-          <!-- <pre>{{ row.original }}</pre> -->
           <div class="flex flex-col gap-4">
             <div class="flex flex-col gap-2">
               <p class="text-sm text-gray-500 dark:text-gray-400">
                 Username: {{ row.original.username }}
               </p>
               <p class="text-sm text-gray-500 dark:text-gray-400">
-                Phone Number: {{ row.original.phone_number }}
+                Phone Number: {{ row.original.phoneNumber }}
               </p>
               <p class="text-sm text-gray-500 dark:text-gray-400">
                 Address: {{ row.original.address }}
@@ -116,24 +117,49 @@
 <script setup lang="ts">
 import { h, resolveComponent } from "vue";
 import type { TableColumn } from "@nuxt/ui";
+import type { User } from "~~/types/user";
 
 definePageMeta({
   layout: "default",
 });
 
+const selectedFilter = ref("allMembers");
+
+const onDropdownSelect = (value: string) => {
+  selectedFilter.value = value;
+  page.value = 1; // Reset to first page when changing filter
+};
+
+const dropdownItems = ref([
+  {
+    label: "All Members",
+    icon: "i-heroicons-users",
+    value: "allMembers",
+    onSelect: () => onDropdownSelect("allMembers"),
+  },
+  {
+    label: "Active Members",
+    icon: "i-heroicons-user-group",
+    value: "activeMembers",
+    onSelect: () => onDropdownSelect("activeMembers"),
+  },
+  {
+    label: "Pending Members",
+    icon: "i-heroicons-clock",
+    value: "pendingMembers",
+    onSelect: () => onDropdownSelect("pendingMembers"),
+  },
+  {
+    label: "Waiting Approval Members",
+    icon: "i-heroicons-clipboard-document-list",
+    value: "waitingApprovalMembers",
+    onSelect: () => onDropdownSelect("waitingApprovalMembers"),
+  },
+]);
+
 const UBadge = resolveComponent("UBadge");
 const UButton = resolveComponent("UButton");
 const UModal = resolveComponent("UModal");
-
-type Member = {
-  id: string;
-  email: string;
-  fullname: string;
-  username: string;
-  phone_number: string;
-  address: string;
-  status: string;
-};
 
 const page = ref(1);
 const limit = ref(10);
@@ -141,22 +167,48 @@ const limit = ref(10);
 // Modal state
 const approveModalOpen = ref(false);
 const rejectModalOpen = ref(false);
-const selectedMember = ref<Member | null>(null);
+const selectedMember = ref<User | null>(null);
 const isProcessing = ref(false);
 
+// Build query parameters based on selected filter
+const queryParams = computed(() => {
+  const baseQuery: Record<string, string | number> = {
+    page: page.value,
+    limit: limit.value,
+    role: "member",
+  };
+
+  switch (selectedFilter.value) {
+    case "allMembers":
+      // Just role=member, no status filter
+      break;
+    case "activeMembers":
+      baseQuery.status = "active";
+      break;
+    case "pendingMembers":
+      baseQuery.status = "pending";
+      break;
+    case "waitingApprovalMembers":
+      baseQuery.status = "waiting_deposit";
+      break;
+  }
+
+  return baseQuery;
+});
+
 const { data, pending, refresh } = await useAsyncData(
-  "members",
+  () => `members-${selectedFilter.value}-${page.value}`,
   () =>
     $fetch("/api/users", {
-      query: { role: "member", page: page.value, limit: limit.value },
+      query: queryParams.value,
     }),
   {
-    watch: [page],
+    watch: [page, selectedFilter],
   }
 );
 
 const members = computed(() => data.value?.data || []);
-const total = computed(() => data.value?.total || 0);
+const total = computed(() => data.value?.totalData || 0);
 
 const handleApprove = (id: string) => {
   const member = members.value.find((m) => m.id === id);
@@ -246,7 +298,7 @@ const confirmReject = async () => {
   }
 };
 
-const columns: TableColumn<Member>[] = [
+const columns: TableColumn<User>[] = [
   {
     id: "expand",
     meta: {
@@ -287,6 +339,8 @@ const columns: TableColumn<Member>[] = [
     cell: ({ row }) => {
       const color = {
         pending: "warning" as const,
+        waiting_deposit: "warning" as const,
+        active: "success" as const,
         approved: "success" as const,
         rejected: "error" as const,
       }[row.getValue("status") as string];
@@ -299,14 +353,8 @@ const columns: TableColumn<Member>[] = [
   {
     id: "actions",
     header: "Actions",
-    // meta: {
-    //   class: {
-    //     th: "text-center",
-    //     td: "text-center",
-    //   },
-    // },
     cell: ({ row }) =>
-      row.getValue("status") === "pending"
+      row.getValue("status") === "waiting_deposit"
         ? h("div", { class: "flex gap-2" }, [
             h(
               UButton,
