@@ -4,6 +4,11 @@
       Administrator Management
     </h1>
     <UCard>
+      <UDropdownMenu :items="dropdownItems">
+        <UButton icon="i-heroicons-funnel" label="Filter" />
+      </UDropdownMenu>
+    </UCard>
+    <UCard>
       <UTable
         :data="administrators"
         :columns="columns"
@@ -46,24 +51,51 @@ definePageMeta({
   layout: "default",
 });
 
+const selectedFilter = ref("administrator");
+
+const onDropdownSelect = (value: string) => {
+  selectedFilter.value = value;
+  page.value = 1; // Reset to first page when changing filter
+};
+
+const dropdownItems = ref([
+  {
+    label: "Administrators",
+    icon: "i-heroicons-briefcase",
+    value: "administrator",
+    onSelect: () => onDropdownSelect("administrator"),
+  },
+  {
+    label: "Super Administrators",
+    icon: "i-heroicons-shield-check",
+    value: "superadministrator",
+    onSelect: () => onDropdownSelect("superadministrator"),
+  },
+]);
+
 const UBadge = resolveComponent("UBadge");
 const UButton = resolveComponent("UButton");
 
 const page = ref(1);
 const limit = ref(10);
 
+// Build query parameters based on selected filter
+const queryParams = computed(() => {
+  return {
+    role: selectedFilter.value,
+    page: page.value,
+    limit: limit.value,
+  };
+});
+
 const { data, pending, refresh } = await useAsyncData(
-  () => `administrators-${page.value}`,
+  () => `administrators-${selectedFilter.value}-${page.value}`,
   () =>
     $fetch("/api/users", {
-      query: {
-        role: "administrator",
-        page: page.value,
-        limit: limit.value,
-      },
+      query: queryParams.value,
     }),
   {
-    watch: [page],
+    watch: [page, selectedFilter],
   }
 );
 
