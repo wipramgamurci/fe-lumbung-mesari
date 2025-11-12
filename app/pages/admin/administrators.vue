@@ -79,28 +79,16 @@ const UButton = resolveComponent("UButton");
 const page = ref(1);
 const limit = ref(10);
 
-// Build query parameters based on selected filter
-const queryParams = computed(() => {
-  return {
-    role: selectedFilter.value,
-    page: page.value,
-    limit: limit.value,
-  };
+const {
+  users: administrators,
+  total,
+  pending,
+  refresh,
+} = await useUsers({
+  role: selectedFilter,
+  page,
+  limit,
 });
-
-const { data, pending, refresh } = await useAsyncData(
-  () => `administrators-${selectedFilter.value}-${page.value}`,
-  () =>
-    $fetch("/api/users", {
-      query: queryParams.value,
-    }),
-  {
-    watch: [page, selectedFilter],
-  }
-);
-
-const administrators = computed(() => data.value?.data || []);
-const total = computed(() => data.value?.totalData || 0);
 
 const columns: TableColumn<User>[] = [
   {

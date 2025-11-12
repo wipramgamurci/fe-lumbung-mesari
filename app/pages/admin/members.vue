@@ -170,45 +170,30 @@ const rejectModalOpen = ref(false);
 const selectedMember = ref<User | null>(null);
 const isProcessing = ref(false);
 
-// Build query parameters based on selected filter
-const queryParams = computed(() => {
-  const baseQuery: Record<string, string | number> = {
-    page: page.value,
-    limit: limit.value,
-    role: "member",
-  };
-
+const statusFilter = computed(() => {
   switch (selectedFilter.value) {
-    case "allMembers":
-      // Just role=member, no status filter
-      break;
     case "activeMembers":
-      baseQuery.status = "active";
-      break;
+      return "active";
     case "pendingMembers":
-      baseQuery.status = "pending";
-      break;
+      return "pending";
     case "waitingApprovalMembers":
-      baseQuery.status = "waiting_deposit";
-      break;
+      return "waiting_deposit";
+    default:
+      return undefined;
   }
-
-  return baseQuery;
 });
 
-const { data, pending, refresh } = await useAsyncData(
-  () => `members-${selectedFilter.value}-${page.value}`,
-  () =>
-    $fetch("/api/users", {
-      query: queryParams.value,
-    }),
-  {
-    watch: [page, selectedFilter],
-  }
-);
-
-const members = computed(() => data.value?.data || []);
-const total = computed(() => data.value?.totalData || 0);
+const {
+  users: members,
+  total,
+  pending,
+  refresh,
+} = await useUsers({
+  role: "member",
+  status: statusFilter,
+  page,
+  limit,
+});
 
 const handleApprove = (id: string) => {
   const member = members.value.find((m) => m.id === id);
