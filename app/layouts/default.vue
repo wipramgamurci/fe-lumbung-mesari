@@ -86,9 +86,14 @@ const navItems = ref([
     to: "/dashboard",
   },
   {
-    icon: "i-heroicons-users",
-    label: "Admin Members",
+    icon: "i-heroicons-user-group",
+    label: "Member Management",
     to: "/admin/members",
+  },
+  {
+    icon: "i-heroicons-briefcase",
+    label: "Administrator Management",
+    to: "/admin/administrators",
   },
   {
     icon: "i-heroicons-banknotes",

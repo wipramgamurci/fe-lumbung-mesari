@@ -24,12 +24,6 @@ export interface TokenData {
   refreshToken: string;
 }
 
-export interface AuthResponse {
-  message: string;
-  token: TokenData;
-  user?: User;
-}
-
 export interface LoginResponse {
   data: LoginResponseData;
   token: TokenData;
@@ -73,19 +67,4 @@ export interface VerifyOtpResponseData {
   id: string;
   status: "pending" | "active" | "rejected" | "waiting_deposit";
   username: string;
-}
-
-export interface User {
-  id: string;
-  email: string;
-  fullname: string;
-  username: string;
-  address: string;
-  status: "pending" | "active" | "rejected" | "waiting_deposit";
-  phoneNumber: string;
-  roleId: "member" | "administrator";
-  depositImageUrl?: string;
-  otpVerified: boolean;
-  createdAt: string; // ISO 8601 string
-  updatedAt: string; // ISO 8601 string
 }

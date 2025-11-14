@@ -1,4 +1,4 @@
-import type { User } from "../../types/auth";
+import type { User } from "../../types/user";
 
 export default defineEventHandler(async (event): Promise<User> => {
   const config = useRuntimeConfig();

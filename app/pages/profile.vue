@@ -232,6 +232,7 @@ const statusConfig: Record<string, { label: string; color: BadgeColor }> = {
   active: { label: "Active", color: "success" },
   rejected: { label: "Rejected", color: "error" },
   waiting_deposit: { label: "Waiting Deposit", color: "info" },
+  inactive: { label: "Inactive", color: "neutral" },
 };
 
 const getStatusInfo = (status: string) => {
