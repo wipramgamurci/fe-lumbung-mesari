@@ -326,8 +326,8 @@ const columns: TableColumn<User>[] = [
         pending: "warning" as const,
         waiting_deposit: "warning" as const,
         active: "success" as const,
-        approved: "success" as const,
         rejected: "error" as const,
+        inactive: "neutral" as const,
       }[row.getValue("status") as string];
 
       return h(UBadge, { class: "capitalize", variant: "solid", color }, () =>

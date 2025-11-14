@@ -48,13 +48,13 @@ export default defineEventHandler(async (event) => {
       throw createError({
         statusCode: error.statusCode,
         statusMessage: error.statusMessage,
-        data: { message: error.data.message },
+        message: error.data.message,
       });
     }
     throw createError({
       statusCode: 500,
       statusMessage: "Internal server error",
-      data: { message: "Unable to get users" },
+      message: "Unable to get users",
     });
   }
 });
