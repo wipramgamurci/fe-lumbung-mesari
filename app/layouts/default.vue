@@ -29,12 +29,18 @@
         <button
           class="flex items-center gap-2 px-2 py-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
         >
-          <UAvatar :alt="currentUser?.fullname || 'User'" size="sm" />
-          <span
-            class="hidden sm:block font-medium text-gray-900 dark:text-white"
-          >
-            {{ currentUser?.fullname || "User" }}
-          </span>
+          <template v-if="isUserReady">
+            <UAvatar :alt="userDisplayName" size="sm" />
+            <span
+              class="hidden sm:block font-medium text-gray-900 dark:text-white"
+            >
+              {{ userDisplayName }}
+            </span>
+          </template>
+          <template v-else>
+            <USkeleton class="h-8 w-8 rounded-full" />
+            <USkeleton class="hidden sm:block h-4 w-24 rounded" />
+          </template>
         </button>
 
         <template #content>
@@ -78,6 +84,12 @@
 const { logout } = useAuth();
 const userStore = useUserStore();
 const currentUser = computed(() => userStore.user);
+const hasMounted = ref(false);
+onMounted(() => {
+  hasMounted.value = true;
+});
+const isUserReady = computed(() => hasMounted.value && userStore.isInitialized);
+const userDisplayName = computed(() => currentUser.value?.fullname || "User");
 
 const navItems = ref([
   {

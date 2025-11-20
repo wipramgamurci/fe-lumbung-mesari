@@ -4,6 +4,7 @@ import type { User } from "~~/types/user";
 export const useUserStore = defineStore("user", {
   state: () => ({
     user: null as User | null,
+    isInitialized: false,
   }),
 
   getters: {
@@ -18,10 +19,13 @@ export const useUserStore = defineStore("user", {
       } catch (error) {
         this.clearUser();
         throw error;
+      } finally {
+        this.isInitialized = true;
       }
     },
     clearUser() {
       this.user = null;
+      this.isInitialized = true;
     },
   },
 });
