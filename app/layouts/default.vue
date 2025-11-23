@@ -83,6 +83,7 @@
 <script setup>
 const { logout } = useAuth();
 const userStore = useUserStore();
+const { isAdmin } = useRole();
 const currentUser = computed(() => userStore.user);
 const hasMounted = ref(false);
 onMounted(() => {
@@ -91,12 +92,22 @@ onMounted(() => {
 const isUserReady = computed(() => hasMounted.value && userStore.isInitialized);
 const userDisplayName = computed(() => currentUser.value?.fullname || "User");
 
-const navItems = ref([
+// Base navigation items available to all users
+const baseNavItems = [
   {
     icon: "i-heroicons-home",
     label: "Dashboard",
     to: "/dashboard",
   },
+  {
+    icon: "i-heroicons-banknotes",
+    label: "My Loans",
+    to: "/loans",
+  },
+];
+
+// Admin-only navigation items
+const adminNavItems = [
   {
     icon: "i-heroicons-user-group",
     label: "Member Management",
@@ -108,15 +119,17 @@ const navItems = ref([
     to: "/admin/administrators",
   },
   {
-    icon: "i-heroicons-banknotes",
-    label: "My Loans",
-    to: "/loans",
-  },
-  {
     icon: "i-heroicons-clipboard-document-list",
     label: "Loan Management",
     to: "/admin/loans",
   },
-  // Add more items like 'Loans' here as needed
-]);
+];
+
+// Combine navigation items based on user role
+const navItems = computed(() => {
+  if (isAdmin.value) {
+    return [...baseNavItems, ...adminNavItems];
+  }
+  return baseNavItems;
+});
 </script>
