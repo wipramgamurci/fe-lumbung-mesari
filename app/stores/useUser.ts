@@ -11,9 +11,8 @@ export const useUserStore = defineStore("user", {
     isLoggedIn: (state) => state.user !== null,
     isAdmin: (state) => state.user?.roleId === "administrator",
     isMember: (state) => state.user?.roleId === "member",
-    hasRole: (state) => (role: "member" | "administrator") => {
-      return state.user?.roleId === role;
-    },
+    isSuperadministrator: (state) =>
+      state.user?.roleId === "superadministrator",
     userRole: (state) => state.user?.roleId || null,
   },
 

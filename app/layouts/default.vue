@@ -83,7 +83,6 @@
 <script setup>
 const { logout } = useAuth();
 const userStore = useUserStore();
-const { isAdmin } = useRole();
 const currentUser = computed(() => userStore.user);
 const hasMounted = ref(false);
 onMounted(() => {
@@ -127,7 +126,7 @@ const adminNavItems = [
 
 // Combine navigation items based on user role
 const navItems = computed(() => {
-  if (isAdmin.value) {
+  if (userStore.isAdmin) {
     return [...baseNavItems, ...adminNavItems];
   }
   return baseNavItems;
