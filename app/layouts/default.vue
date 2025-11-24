@@ -94,7 +94,11 @@
 </template>
 
 <script setup>
-import { ADMIN_NAV_ITEMS, BASE_NAV_ITEMS } from "~/constants/navigation";
+import {
+  ADMIN_NAV_ITEMS,
+  BASE_NAV_ITEMS,
+  MEMBER_NAV_ITEMS,
+} from "~/constants/navigation";
 
 const { logout } = useAuth();
 const userStore = useUserStore();
@@ -107,8 +111,11 @@ const isUserReady = computed(() => hasMounted.value && userStore.isInitialized);
 const userDisplayName = computed(() => currentUser.value?.fullname || "User");
 
 const navItems = computed(() => {
-  if (userStore.isAdmin) {
+  if (userStore.isAdmin || userStore.isSuperadministrator) {
     return [...BASE_NAV_ITEMS, ...ADMIN_NAV_ITEMS];
+  }
+  if (userStore.isMember) {
+    return [...BASE_NAV_ITEMS, ...MEMBER_NAV_ITEMS];
   }
   return BASE_NAV_ITEMS;
 });

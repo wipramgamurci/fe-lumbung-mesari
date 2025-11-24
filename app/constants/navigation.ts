@@ -10,6 +10,9 @@ export const BASE_NAV_ITEMS: NavigationItem[] = [
     label: "Dashboard",
     to: "/dashboard",
   },
+];
+
+export const MEMBER_NAV_ITEMS: NavigationItem[] = [
   {
     icon: "i-heroicons-banknotes",
     label: "My Loans",
