@@ -17,10 +17,11 @@ This document explains how Role-Based Access Control (RBAC) is implemented in th
 
 ## Overview
 
-Role-Based Access Control (RBAC) is a security mechanism that restricts access to resources based on user roles. In this application, we have two primary roles:
+Role-Based Access Control (RBAC) is a security mechanism that restricts access to resources based on user roles. In this application, we currently support three roles:
 
 - **Member** (`member`) - Regular users who can access member-specific features
-- **Administrator** (`administrator`) - Admin users who have access to administrative features
+- **Administrator** (`administrator`) - Admin users who manage members, admins, and loans
+- **Superadministrator** (`superadministrator`) - Elevated admins with the same UI privileges as administrators (reserved for future server-side expansion)
 
 The RBAC system is implemented at multiple levels:
 
@@ -43,8 +44,8 @@ The RBAC system consists of three main components:
          │                 │                  │
          ▼                 ▼                  ▼
 ┌──────────────┐  ┌──────────────┐  ┌──────────────┐
-│   Middleware │  │  Composable  │  │   Pages      │
-│   (role.ts)  │  │  (useRole)   │  │   (meta)     │
+│   Middleware │  │  Layout/Nav  │  │   Pages      │
+│   (role.ts)  │  │  (default)   │  │   (meta)     │
 └──────────────┘  └──────────────┘  └──────────────┘
 ```
 
@@ -67,10 +68,10 @@ The RBAC system consists of three main components:
    - Shows user-friendly message with current role
    - Provides navigation options (Dashboard, Go Back)
 
-4. **Role Composable** (`app/composables/useRole.ts`)
-   - Provides reactive role checking functions
-   - Used in components for conditional rendering
-   - Returns computed values that update when user changes
+4. **Navigation Constants** (`app/constants/navigation.ts`)
+   - Defines role-scoped nav sections
+   - Imported by `default.vue` to render the final menu
+   - Prevents admins from seeing member-only links (and vice versa)
 
 ---
 
@@ -194,7 +195,7 @@ This section explains the complete flow of how RBAC works in the application, fr
      - If no match → redirects to `/error/403` page
 
 4. **Page renders** (if authorized)
-   - Component can use `useRole()` composable
+   - Components read roles directly from the user store
    - Conditional rendering based on role
 
 ### 3. Component Rendering Flow
@@ -207,23 +208,15 @@ This section explains the complete flow of how RBAC works in the application, fr
            │
            ▼
 ┌──────────────────────────────┐
-│ useRole() composable called  │
-│ Returns reactive getters     │
-└──────────┬───────────────────┘
-           │
-           ▼
-┌──────────────────────────────┐
-│ Reads from userStore         │
-│ - isAdmin computed           │
-│ - isMember computed          │
-│ - hasRole() function         │
+│ Component imports userStore  │
+│ Creates computed role flags  │
 └──────────┬───────────────────┘
            │
            ▼
 ┌──────────────────────────────┐
 │ Template renders             │
 │ v-if="isAdmin" → Show/Hide   │
-│ v-if="hasRole('admin')"      │
+│ v-if="userRole === 'admin'"  │
 └──────────────────────────────┘
 ```
 
@@ -236,15 +229,16 @@ This section explains the complete flow of how RBAC works in the application, fr
     <!-- This checks isAdmin.value reactively -->
     <UButton v-if="isAdmin">Admin Action</UButton>
 
-    <!-- This checks hasRole('administrator') -->
-    <div v-if="hasRole('administrator')">Admin Content</div>
+    <!-- This checks the specific role -->
+    <div v-if="userRole === 'administrator'">Admin Content</div>
   </div>
 </template>
 
 <script setup>
 // Composable reads from userStore
-const { isAdmin, hasRole } = useRole();
-// isAdmin is a computed ref that updates when user changes
+const userStore = useUserStore();
+const isAdmin = computed(() => userStore.isAdmin);
+// Computed refs update when the store changes
 </script>
 ```
 
@@ -258,18 +252,15 @@ const { isAdmin, hasRole } = useRole();
            │
            ▼
 ┌──────────────────────────────┐
-│ useRole() composable         │
-│ const { isAdmin } = useRole()│
+│ Layout reads userStore       │
+│ and imports nav constants    │
 └──────────┬───────────────────┘
-           │
-           ▼
+          │
+          ▼
 ┌──────────────────────────────┐
 │ Computed navItems            │
-│ if (isAdmin.value) {         │
-│   return [...base, ...admin] │
-│ } else {                     │
-│   return base                │
-│ }                            │
+│ - Base available to everyone │
+│ - Append member/admin sets   │
 └──────────┬───────────────────┘
            │
            ▼
@@ -390,15 +381,16 @@ const { isAdmin, hasRole } = useRole();
 ### Role Types
 
 ```typescript
-type UserRole = "member" | "administrator";
+type UserRole = "member" | "administrator" | "superadministrator";
 ```
 
 ### Role Definitions
 
-| Role            | Description  | Access Level                                                 |
-| --------------- | ------------ | ------------------------------------------------------------ |
-| `member`        | Regular user | Can access member-specific pages (dashboard, loans, profile) |
-| `administrator` | Admin user   | Can access all pages including admin management pages        |
+| Role                 | Description            | Access Level                                                                 |
+| -------------------- | ---------------------- | ---------------------------------------------------------------------------- |
+| `member`             | Regular user           | Dashboard, profile, member-only flows such as `/loans`                       |
+| `administrator`      | Admin user             | Dashboard plus `/admin/*` management pages                                   |
+| `superadministrator` | Elevated administrator | Same UI reach as administrator; reserved for future server-side-only actions |
 
 ### User Data Structure
 
@@ -410,7 +402,7 @@ interface User {
   email: string;
   fullname: string;
   // ... other fields
-  roleId: "member" | "administrator";
+  roleId: "member" | "administrator" | "superadministrator";
 }
 ```
 
@@ -420,7 +412,7 @@ interface User {
 
 ### 1. User Store (`app/stores/useUser.ts`)
 
-The user store provides role-related getters:
+The user store is the single source of truth for the authenticated user and exposes convenience getters for each role. It also ensures SSR requests forward cookies when fetching `/api/me`, which keeps middleware decisions consistent on full page loads.
 
 ```typescript
 export const useUserStore = defineStore("user", {
@@ -433,20 +425,32 @@ export const useUserStore = defineStore("user", {
     isLoggedIn: (state) => state.user !== null,
     isAdmin: (state) => state.user?.roleId === "administrator",
     isMember: (state) => state.user?.roleId === "member",
-    hasRole: (state) => (role: "member" | "administrator") => {
-      return state.user?.roleId === role;
-    },
+    isSuperadministrator: (state) =>
+      state.user?.roleId === "superadministrator",
     userRole: (state) => state.user?.roleId || null,
+  },
+
+  actions: {
+    async fetchUser() {
+      const headers = import.meta.server
+        ? useRequestHeaders(["cookie"])
+        : undefined;
+      const user = await $fetch<User>("/api/me", { headers });
+      this.user = user;
+      this.isInitialized = true;
+    },
+    clearUser() {
+      this.user = null;
+      this.isInitialized = true;
+    },
   },
 });
 ```
 
-**Available Getters:**
+**Key points:**
 
-- `isAdmin` - Boolean: true if user is administrator
-- `isMember` - Boolean: true if user is member
-- `hasRole(role)` - Function: checks if user has specific role
-- `userRole` - String | null: returns current user's role
+- `isInitialized` prevents duplicate fetches and guards from running before data is loaded.
+- `fetchUser()` now forwards the incoming request cookies on SSR so the `/api/me` call succeeds on the server.
 
 ### 2. Role Middleware (`app/middleware/role.ts`)
 
@@ -491,22 +495,11 @@ A custom error page displayed when users try to access routes they don't have pe
 - Uses no layout for a clean, focused error experience
 - Reads user role from the user store to provide context
 
-### 4. Role Composable (`app/composables/useRole.ts`)
+### 4. Navigation Constants & Layout (`app/constants/navigation.ts`, `app/layouts/default.vue`)
 
-Provides reactive role checking functions for components:
-
-```typescript
-export const useRole = () => {
-  return {
-    hasRole, // Check specific role
-    hasAnyRole, // Check if user has any of the roles
-    hasAllRoles, // Check if user has all roles (for future multi-role)
-    isAdmin, // Computed: is user admin
-    isMember, // Computed: is user member
-    userRole, // Computed: current user role
-  };
-};
-```
+- `app/constants/navigation.ts` now exports `BASE_NAV_ITEMS`, `MEMBER_NAV_ITEMS`, and `ADMIN_NAV_ITEMS`. Each list maps to the routes a role can see.
+- `app/layouts/default.vue` imports those constants, computes `navItems` based on `userStore` getters, and renders skeleton placeholders until the store reports `isUserReady`.
+- Admin users no longer see the member-only `/loans` link, eliminating accidental 403 routes from the sidebar dropdown.
 
 ---
 
@@ -546,26 +539,24 @@ definePageMeta({
 
 ### 2. Conditional Rendering in Components
 
-Use the `useRole` composable to conditionally show/hide UI elements:
+Use the user store getters directly (all getters are reactive):
 
 ```vue
 <template>
   <div>
-    <!-- Show only to admins -->
-    <UButton v-if="isAdmin" @click="adminAction"> Admin Only Button </UButton>
+    <UButton v-if="isAdmin" @click="adminAction">Admin Only Button</UButton>
 
-    <!-- Show to specific role -->
-    <div v-if="hasRole('administrator')">Administrator Content</div>
+    <div v-if="userRole === 'administrator'">Administrator Content</div>
 
-    <!-- Show to multiple roles -->
-    <div v-if="hasAnyRole(['member', 'administrator'])">
-      Visible to both roles
-    </div>
+    <div v-if="isMember || isAdmin">Visible to members and admins</div>
   </div>
 </template>
 
 <script setup>
-const { isAdmin, hasRole, hasAnyRole } = useRole();
+const userStore = useUserStore();
+const isAdmin = computed(() => userStore.isAdmin);
+const isMember = computed(() => userStore.isMember);
+const userRole = computed(() => userStore.userRole);
 </script>
 ```
 
@@ -575,7 +566,9 @@ Check roles in script logic:
 
 ```typescript
 <script setup>
-const { isAdmin, hasRole, userRole } = useRole();
+const userStore = useUserStore();
+const isAdmin = computed(() => userStore.isAdmin);
+const isMember = computed(() => userStore.isMember);
 
 const handleAction = () => {
   if (isAdmin.value) {
@@ -587,8 +580,8 @@ const handleAction = () => {
   }
 };
 
-// Or using hasRole
-if (hasRole('administrator')) {
+// Inline check without computed helper
+if (userStore.isAdmin || userStore.isSuperadministrator) {
   // Admin logic
 }
 </script>
@@ -596,27 +589,26 @@ if (hasRole('administrator')) {
 
 ### 4. Navigation Menu Filtering
 
-Filter navigation items based on roles:
+Filter navigation items by importing the shared constants:
 
 ```vue
 <script setup>
-const { isAdmin } = useRole();
+import {
+  BASE_NAV_ITEMS,
+  MEMBER_NAV_ITEMS,
+  ADMIN_NAV_ITEMS,
+} from "~/constants/navigation";
 
-const baseNavItems = [
-  { label: "Dashboard", to: "/dashboard" },
-  { label: "My Loans", to: "/loans" },
-];
-
-const adminNavItems = [
-  { label: "Member Management", to: "/admin/members" },
-  { label: "Loan Management", to: "/admin/loans" },
-];
+const userStore = useUserStore();
 
 const navItems = computed(() => {
-  if (isAdmin.value) {
-    return [...baseNavItems, ...adminNavItems];
+  if (userStore.isAdmin || userStore.isSuperadministrator) {
+    return [...BASE_NAV_ITEMS, ...ADMIN_NAV_ITEMS];
   }
-  return baseNavItems;
+  if (userStore.isMember) {
+    return [...BASE_NAV_ITEMS, ...MEMBER_NAV_ITEMS];
+  }
+  return BASE_NAV_ITEMS;
 });
 </script>
 ```
@@ -669,7 +661,10 @@ definePageMeta({
 </template>
 
 <script setup>
-const { isAdmin } = useRole();
+const userStore = useUserStore();
+const isAdmin = computed(
+  () => userStore.isAdmin || userStore.isSuperadministrator
+);
 
 definePageMeta({
   layout: "default",
@@ -713,7 +708,11 @@ definePageMeta({
 </template>
 
 <script setup>
-const { isAdmin, isMember } = useRole();
+const userStore = useUserStore();
+const isAdmin = computed(
+  () => userStore.isAdmin || userStore.isSuperadministrator
+);
+const isMember = computed(() => userStore.isMember);
 const loan = ref(null);
 
 const approveLoan = () => {
@@ -766,7 +765,7 @@ export default defineEventHandler(async (event) => {
    });
    ```
 
-2. **Use composable for reactive checks**
+2. **Use user store getters for reactive checks**
 
    ```vue
    <div v-if="isAdmin">Admin Content</div>
@@ -782,15 +781,15 @@ export default defineEventHandler(async (event) => {
    - Client-side RBAC is for UX
    - Always validate on the server for security
 
-5. **Use specific role checks when possible**
+5. **Prefer store getters over inline string comparisons**
 
    ```typescript
-   // Good: Specific
-   if (hasRole("administrator")) {
+   // Good: Uses getter
+   if (userStore.isAdmin || userStore.isSuperadministrator) {
    }
 
-   // Less ideal: Generic
-   if (userRole === "administrator") {
+   // Less ideal: Hard-coded comparison
+   if (userStore.userRole === "administrator") {
    }
    ```
 
@@ -801,15 +800,15 @@ export default defineEventHandler(async (event) => {
    - Always validate on the server
    - Client-side is for UX, not security
 
-2. **Don't hardcode role strings**
+2. **Don't hardcode role strings everywhere**
 
    ```typescript
    // Bad
    if (user.roleId === "administrator") {
    }
 
-   // Good
-   if (hasRole("administrator")) {
+   // Better
+   if (userStore.isAdmin) {
    }
    ```
 
@@ -884,7 +883,7 @@ export default defineEventHandler(async (event) => {
 
 - `app/stores/useUser.ts` - User store with role getters
 - `app/middleware/role.ts` - Route protection middleware
-- `app/composables/useRole.ts` - Role checking composable
+- `app/constants/navigation.ts` - Shared navigation metadata
 - `app/pages/error/403.vue` - Custom 403 forbidden error page
 - `app/middleware/auth.global.ts` - Authentication middleware
 - `types/user.ts` - User type definitions
