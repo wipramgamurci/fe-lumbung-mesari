@@ -94,6 +94,22 @@
               {{ selectedMember.email }}
             </p>
           </div>
+          <div class="space-y-2">
+            <label
+              for="reject-reason"
+              class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+            >
+              Reason for rejection <span class="text-red-500">*</span>
+            </label>
+            <UTextarea
+              id="reject-reason"
+              v-model="rejectReason"
+              placeholder="Please provide a reason for rejecting this member..."
+              :rows="4"
+              class="w-full"
+              required
+            />
+          </div>
         </div>
       </template>
       <template #footer>
@@ -101,11 +117,21 @@
           <UButton
             color="neutral"
             variant="outline"
-            @click="rejectModalOpen = false"
+            @click="
+              () => {
+                rejectModalOpen = false;
+                rejectReason = '';
+              }
+            "
           >
             Cancel
           </UButton>
-          <UButton color="error" @click="confirmReject" :loading="isProcessing">
+          <UButton
+            color="error"
+            @click="confirmReject"
+            :loading="isProcessing"
+            :disabled="!rejectReason || rejectReason.trim() === ''"
+          >
             Reject Member
           </UButton>
         </div>
@@ -171,6 +197,7 @@ const approveModalOpen = ref(false);
 const rejectModalOpen = ref(false);
 const selectedMember = ref<User | null>(null);
 const isProcessing = ref(false);
+const rejectReason = ref("");
 
 const statusFilter = computed(() => {
   switch (selectedFilter.value) {
@@ -209,6 +236,7 @@ const handleReject = (id: string) => {
   const member = members.value.find((m) => m.id === id);
   if (member) {
     selectedMember.value = member;
+    rejectReason.value = "";
     rejectModalOpen.value = true;
   }
 };
@@ -218,11 +246,9 @@ const confirmApprove = async () => {
 
   isProcessing.value = true;
   try {
-    // TODO: Connect to /admin/members/:id/approve API
-    console.log("Approve member:", selectedMember.value.id);
-
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    await $fetch(`/api/users/${selectedMember.value.id}/approve`, {
+      method: "POST",
+    });
 
     // Show success message
     const toast = useToast();
@@ -236,12 +262,13 @@ const confirmApprove = async () => {
     approveModalOpen.value = false;
     selectedMember.value = null;
     await refresh();
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error approving member:", error);
     const toast = useToast();
     toast.add({
       title: "Error",
-      description: "Failed to approve member. Please try again.",
+      description:
+        error.data?.message || "Failed to approve member. Please try again.",
       color: "error",
     });
   } finally {
@@ -250,15 +277,16 @@ const confirmApprove = async () => {
 };
 
 const confirmReject = async () => {
-  if (!selectedMember.value) return;
+  if (!selectedMember.value || !rejectReason.value?.trim()) return;
 
   isProcessing.value = true;
   try {
-    // TODO: Connect to /admin/members/:id/reject API
-    console.log("Reject member:", selectedMember.value.id);
-
-    // Simulate API call
-    await new Promise((resolve) => setTimeout(resolve, 1000));
+    await $fetch(`/api/users/${selectedMember.value.id}/reject`, {
+      method: "POST",
+      body: {
+        reason: rejectReason.value.trim(),
+      },
+    });
 
     // Show success message
     const toast = useToast();
@@ -271,13 +299,15 @@ const confirmReject = async () => {
     // Close modal and refresh data
     rejectModalOpen.value = false;
     selectedMember.value = null;
+    rejectReason.value = "";
     await refresh();
-  } catch (error) {
+  } catch (error: any) {
     console.error("Error rejecting member:", error);
     const toast = useToast();
     toast.add({
       title: "Error",
-      description: "Failed to reject member. Please try again.",
+      description:
+        error.data?.message || "Failed to reject member. Please try again.",
       color: "error",
     });
   } finally {
