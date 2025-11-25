@@ -6,19 +6,24 @@
     >
       <!-- App Title/Logo and Mobile Toggle -->
       <div class="flex items-center space-x-2">
-        <UDropdownMenu
-          :items="navItems"
-          :ui="{
-            content: 'w-48',
-          }"
-        >
-          <UButton
-            class="lg:hidden"
-            icon="i-heroicons-bars-3"
-            color="neutral"
-            variant="ghost"
-          />
-        </UDropdownMenu>
+        <template v-if="isUserReady">
+          <UDropdownMenu
+            :items="navItems"
+            :ui="{
+              content: 'w-48',
+            }"
+          >
+            <UButton
+              class="lg:hidden"
+              icon="i-heroicons-bars-3"
+              color="neutral"
+              variant="ghost"
+            />
+          </UDropdownMenu>
+        </template>
+        <template v-else>
+          <USkeleton class="h-10 w-10 rounded-md lg:hidden" />
+        </template>
         <span class="font-bold text-lg text-gray-900 dark:text-white"
           >Lumbung Mesari</span
         >
@@ -65,11 +70,19 @@
     </div>
 
     <!-- Sidebar (visible only on desktop, fixed) -->
-    <UNavigationMenu
-      :items="navItems"
-      orientation="vertical"
+    <div
       class="hidden lg:block fixed left-0 top-14 w-48 h-[calc(100vh-3.5rem)] bg-white dark:bg-gray-800 shadow-lg p-4 overflow-y-auto z-10"
-    />
+    >
+      <UNavigationMenu
+        v-if="isUserReady"
+        :items="navItems"
+        orientation="vertical"
+        class="h-full"
+      />
+      <div v-else class="space-y-3">
+        <USkeleton v-for="n in 5" :key="n" class="h-10 w-full rounded-md" />
+      </div>
+    </div>
 
     <!-- Main Content Area -->
     <div class="flex-1 pt-14 lg:pl-48 relative z-0">
@@ -81,6 +94,12 @@
 </template>
 
 <script setup>
+import {
+  ADMIN_NAV_ITEMS,
+  BASE_NAV_ITEMS,
+  MEMBER_NAV_ITEMS,
+} from "~/constants/navigation";
+
 const { logout } = useAuth();
 const userStore = useUserStore();
 const currentUser = computed(() => userStore.user);
@@ -91,32 +110,13 @@ onMounted(() => {
 const isUserReady = computed(() => hasMounted.value && userStore.isInitialized);
 const userDisplayName = computed(() => currentUser.value?.fullname || "User");
 
-const navItems = ref([
-  {
-    icon: "i-heroicons-home",
-    label: "Dashboard",
-    to: "/dashboard",
-  },
-  {
-    icon: "i-heroicons-user-group",
-    label: "Member Management",
-    to: "/admin/members",
-  },
-  {
-    icon: "i-heroicons-briefcase",
-    label: "Administrator Management",
-    to: "/admin/administrators",
-  },
-  {
-    icon: "i-heroicons-banknotes",
-    label: "My Loans",
-    to: "/loans",
-  },
-  {
-    icon: "i-heroicons-clipboard-document-list",
-    label: "Loan Management",
-    to: "/admin/loans",
-  },
-  // Add more items like 'Loans' here as needed
-]);
+const navItems = computed(() => {
+  if (userStore.isAdmin || userStore.isSuperadministrator) {
+    return [...BASE_NAV_ITEMS, ...ADMIN_NAV_ITEMS];
+  }
+  if (userStore.isMember) {
+    return [...BASE_NAV_ITEMS, ...MEMBER_NAV_ITEMS];
+  }
+  return BASE_NAV_ITEMS;
+});
 </script>

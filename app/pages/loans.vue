@@ -55,6 +55,12 @@
 <script setup>
 import { ref, computed } from "vue";
 
+definePageMeta({
+  layout: "default",
+  middleware: "role",
+  roles: ["member"], // Only members can access this page
+});
+
 const tenorOptions = ref([3, 6, 9, 12, 15, 18, 21, 24]);
 
 const form = ref({

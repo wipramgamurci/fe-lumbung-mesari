@@ -49,6 +49,8 @@ import type { User } from "~~/types/user";
 
 definePageMeta({
   layout: "default",
+  middleware: "role",
+  roles: ["administrator"], // Only administrators can access this page
 });
 
 const selectedFilter = ref("administrator");

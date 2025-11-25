@@ -80,6 +80,8 @@ import { UCard, UBadge, UButton } from "#components";
 
 definePageMeta({
   layout: "default",
+  middleware: "role",
+  roles: ["administrator"], // Only administrators can access this page
 });
 
 const loans = ref([]);

@@ -9,12 +9,20 @@ export const useUserStore = defineStore("user", {
 
   getters: {
     isLoggedIn: (state) => state.user !== null,
+    isAdmin: (state) => state.user?.roleId === "administrator",
+    isMember: (state) => state.user?.roleId === "member",
+    isSuperadministrator: (state) =>
+      state.user?.roleId === "superadministrator",
+    userRole: (state) => state.user?.roleId || null,
   },
 
   actions: {
     async fetchUser() {
       try {
-        const user = await $fetch<User>("/api/me");
+        const headers = import.meta.server
+          ? useRequestHeaders(["cookie"])
+          : undefined;
+        const user = await $fetch<User>("/api/me", { headers });
         this.user = user;
       } catch (error) {
         this.clearUser();
