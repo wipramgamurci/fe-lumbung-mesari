@@ -24,7 +24,10 @@ export default defineEventHandler(async (event) => {
   }
 
   const body = await readBody(event);
-  if (!body.reason || typeof body.reason !== "string") {
+  const trimmedReason =
+    typeof body.reason === "string" ? body.reason.trim() : undefined;
+
+  if (!trimmedReason) {
     throw createError({
       statusCode: 400,
       statusMessage: "Bad Request",
@@ -42,7 +45,7 @@ export default defineEventHandler(async (event) => {
           Authorization: `Bearer ${accessToken}`,
         },
         body: {
-          reason: body.reason,
+          reason: trimmedReason,
         },
       }
     );
@@ -51,6 +54,7 @@ export default defineEventHandler(async (event) => {
     return response;
   } catch (error: any) {
     if (error.statusCode) {
+      setResponseStatus(event, error.statusCode);
       throw createError({
         statusCode: error.statusCode,
         statusMessage: error.statusMessage,
@@ -59,6 +63,7 @@ export default defineEventHandler(async (event) => {
       });
     }
 
+    setResponseStatus(event, 500);
     throw createError({
       statusCode: 500,
       statusMessage: "Internal server error",
