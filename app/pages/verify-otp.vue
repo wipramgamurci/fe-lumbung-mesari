@@ -154,7 +154,16 @@ const handleVerifyOtp = async () => {
     // Show success message
     alert(response.message);
 
-    navigateTo("/dashboard");
+    // Redirect based on user status after verification
+    const userStatus = userStore.user?.status;
+    if (userStatus === "waiting_deposit") {
+      navigateTo("/waiting-deposit");
+    } else if (userStatus === "active") {
+      navigateTo("/dashboard");
+    } else {
+      // For other statuses, let the status middleware handle it
+      navigateTo("/dashboard");
+    }
   } catch (error) {
     console.error("OTP verification error:", error);
     alert("OTP verification failed: " + error.data.message);

@@ -9,11 +9,14 @@ export default defineNuxtRouteMiddleware((to, from) => {
     const hasToken = !!accessToken.value;
 
     // Redirect logged-in users away from auth pages
+    // But let status middleware handle redirects for status-specific pages
     if (hasToken && publicRoutes.includes(to.path)) {
+      // Status middleware will redirect to appropriate page based on status
       return navigateTo("/dashboard");
     }
 
     // Protect routes - redirect to login if no token
+    // All routes except public routes require authentication
     if (!hasToken && !publicRoutes.includes(to.path)) {
       return navigateTo("/login");
     }
