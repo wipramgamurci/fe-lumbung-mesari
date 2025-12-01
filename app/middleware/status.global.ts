@@ -1,3 +1,9 @@
+import {
+  PUBLIC_ROUTES,
+  STATUS_ROUTES,
+  DEFAULT_AUTHENTICATED_ROUTE,
+} from "../constants/routes";
+
 export default defineNuxtRouteMiddleware(async (to, from) => {
   // Only check status if user is authenticated (has token)
   let hasToken = false;
@@ -23,8 +29,25 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
   if (!userStore.isInitialized || !userStore.user) {
     try {
       await userStore.fetchUser();
-    } catch (error) {
-      // If fetch fails, user is not authenticated, let auth.global handle it
+    } catch (error: any) {
+      // Check if it's an authentication error (401, 403)
+      const statusCode = error?.statusCode || error?.response?.status;
+
+      if (statusCode === 401 || statusCode === 403) {
+        // Authentication failure - let auth.global handle it
+        return;
+      }
+
+      // For other errors (500, network, etc.), log for debugging
+      // These could indicate API issues, network problems, or other server errors
+      console.error("[status.global.ts] Failed to fetch user:", {
+        statusCode,
+        message: error?.message || error?.data?.message,
+        path: to.path,
+      });
+
+      // Still return to avoid blocking, but errors are now visible for debugging
+      // In production, you might want to show an error page or retry logic
       return;
     }
   }
@@ -61,13 +84,12 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
 
     case "active":
       // Active users have full access - no redirect needed
-      // But redirect them away from status-specific pages
+      // But redirect them away from status-specific pages and public auth pages
       if (
-        to.path === "/verify-otp" ||
-        to.path === "/waiting-deposit" ||
-        to.path === "/rejected"
+        (STATUS_ROUTES as readonly string[]).includes(to.path) ||
+        (PUBLIC_ROUTES as readonly string[]).includes(to.path)
       ) {
-        return navigateTo("/dashboard");
+        return navigateTo(DEFAULT_AUTHENTICATED_ROUTE);
       }
       break;
 
