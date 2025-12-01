@@ -93,13 +93,26 @@ export const useAuth = () => {
   };
 
   const logout = async (): Promise<void> => {
-    // Clear user store using action (Pinia best practice)
-    const userStore = useUserStore();
-    userStore.clearUser();
+    try {
+      // Clear httpOnly cookies by calling logout endpoint
+      await $fetch("/api/auth/logout", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+    } catch (error) {
+      // Log error but continue with logout process
+      // Cookies might still be cleared even if request fails
+      console.error("Logout API error:", error);
+    } finally {
+      // Clear user store using action (Pinia best practice)
+      const userStore = useUserStore();
+      userStore.clearUser();
 
-    // Clear cookies by calling a logout endpoint if you have one
-    // Or just navigate to login - cookies will be cleared server-side on logout
-    await navigateTo("/login");
+      // Navigate to login page
+      await navigateTo("/login");
+    }
   };
 
   return {
