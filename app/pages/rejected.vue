@@ -7,6 +7,7 @@
           name="i-heroicons-x-circle"
           class="mx-auto text-red-500 dark:text-red-400"
           style="width: 4rem; height: 4rem"
+          aria-label="Account Rejected"
         />
       </div>
       <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">

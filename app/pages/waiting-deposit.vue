@@ -7,6 +7,7 @@
           name="i-heroicons-clock"
           class="mx-auto text-yellow-500 dark:text-yellow-400"
           style="width: 4rem; height: 4rem"
+          aria-label="Waiting for Initial Deposit"
         />
       </div>
       <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">
