@@ -7,7 +7,6 @@ import type {
   VerifyOtpResponse,
   ResendOtpResponse,
 } from "../../types/auth";
-import type { ApiResponse } from "../../types/api";
 import { useUserStore } from "../stores/useUser";
 
 export const useAuth = () => {
@@ -26,13 +25,19 @@ export const useAuth = () => {
           "Content-Type": "application/json",
         },
       });
-
-      if (response.data.status === "pending") {
-        await navigateTo("/verify-otp");
-        return response;
-      } else {
-        await navigateTo("/dashboard");
-        return response;
+      switch (response.data.status) {
+        case "pending":
+          await navigateTo("/verify-otp");
+          return response;
+        case "waiting_deposit":
+          await navigateTo("/waiting-deposit");
+          return response;
+        case "rejected":
+          await navigateTo("/rejected");
+          return response;
+        default:
+          await navigateTo("/dashboard");
+          return response;
       }
     } catch (error) {
       throw error;
