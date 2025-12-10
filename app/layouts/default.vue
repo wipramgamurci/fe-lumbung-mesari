@@ -10,7 +10,7 @@
           <UDropdownMenu
             :items="navItems"
             :ui="{
-              content: 'w-48',
+              content: 'w-auto',
             }"
           >
             <UButton
@@ -27,6 +27,18 @@
         <span class="font-bold text-lg text-gray-900 dark:text-white"
           >Lumbung Mesari</span
         >
+      </div>
+
+      <div class="hidden lg:block">
+        <UNavigationMenu
+          v-if="isUserReady"
+          :items="navItems"
+          orientation="horizontal"
+          class="h-full"
+        />
+        <div v-else class="flex gap-2">
+          <USkeleton v-for="n in 5" :key="n" class="h-10 w-20 rounded-md" />
+        </div>
       </div>
 
       <!-- User Menu -->
@@ -69,23 +81,8 @@
       </UPopover>
     </div>
 
-    <!-- Sidebar (visible only on desktop, fixed) -->
-    <div
-      class="hidden lg:block fixed left-0 top-14 w-48 h-[calc(100vh-3.5rem)] bg-white dark:bg-gray-800 shadow-lg p-4 overflow-y-auto z-10"
-    >
-      <UNavigationMenu
-        v-if="isUserReady"
-        :items="navItems"
-        orientation="vertical"
-        class="h-full"
-      />
-      <div v-else class="space-y-3">
-        <USkeleton v-for="n in 5" :key="n" class="h-10 w-full rounded-md" />
-      </div>
-    </div>
-
     <!-- Main Content Area -->
-    <div class="flex-1 pt-14 lg:pl-48 relative z-0">
+    <div class="flex-1 pt-14 relative z-0">
       <div class="p-8 min-w-0">
         <slot />
       </div>
