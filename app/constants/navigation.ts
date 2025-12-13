@@ -47,4 +47,9 @@ export const ADMIN_NAV_ITEMS: NavigationItem[] = [
     label: "Loan Management",
     to: "/admin/loans",
   },
+  {
+    icon: "i-heroicons-wallet",
+    label: "Savings Management",
+    to: "/admin/savings",
+  },
 ];
