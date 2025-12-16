@@ -37,42 +37,6 @@
       </div>
     </UCard>
 
-    <!-- Summary Stats -->
-    <div v-if="savingsData" class="grid grid-cols-1 md:grid-cols-4 gap-4">
-      <UCard>
-        <div class="flex flex-col">
-          <p class="text-sm text-gray-600 dark:text-gray-300">Total Records</p>
-          <p class="text-2xl font-bold text-gray-900 dark:text-white">
-            {{ savingsData.totalData }}
-          </p>
-        </div>
-      </UCard>
-      <UCard>
-        <div class="flex flex-col">
-          <p class="text-sm text-gray-600 dark:text-gray-300">Due</p>
-          <p class="text-2xl font-bold text-yellow-600 dark:text-yellow-400">
-            {{ stats.due }}
-          </p>
-        </div>
-      </UCard>
-      <UCard>
-        <div class="flex flex-col">
-          <p class="text-sm text-gray-600 dark:text-gray-300">Paid</p>
-          <p class="text-2xl font-bold text-green-600 dark:text-green-400">
-            {{ stats.paid }}
-          </p>
-        </div>
-      </UCard>
-      <UCard>
-        <div class="flex flex-col">
-          <p class="text-sm text-gray-600 dark:text-gray-300">Overdue</p>
-          <p class="text-2xl font-bold text-red-600 dark:text-red-400">
-            {{ stats.overdue }}
-          </p>
-        </div>
-      </UCard>
-    </div>
-
     <!-- Table Card -->
     <UCard>
       <div
@@ -250,19 +214,6 @@ const yearOptions = Array.from({ length: 6 }, (_, i) => ({
   label: String(currentYear - i),
   value: currentYear - i,
 }));
-
-// Statistics
-const stats = computed(() => {
-  if (!savingsData.value) {
-    return { due: 0, paid: 0, overdue: 0 };
-  }
-  return {
-    due: savingsData.value.data.filter((r) => r.status === "due").length,
-    paid: savingsData.value.data.filter((r) => r.status === "paid").length,
-    overdue: savingsData.value.data.filter((r) => r.status === "overdue")
-      .length,
-  };
-});
 
 // Format functions
 const formatCurrency = (amount: string): string => {
@@ -446,7 +397,7 @@ const fetchSavings = async () => {
     ).toString();
 
     const response = await $fetch<SavingsResponse>(
-      `/api/admin/savings?${queryString}`
+      `/api/savings?${queryString}`
     );
 
     savingsData.value = response;
