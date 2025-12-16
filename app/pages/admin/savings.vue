@@ -181,8 +181,6 @@ const savingsData = ref<SavingsResponse | null>(null);
 const error = ref<string | null>(null);
 const page = ref(1);
 const limit = ref(10);
-const selectedPeriod = ref<string | undefined>(undefined);
-const selectedYear = ref<number | undefined>(undefined);
 const settlingIds = ref<Set<string>>(new Set());
 const settleModalOpen = ref(false);
 const selectedSavings = ref<SavingsRecord | null>(null);
@@ -214,6 +212,13 @@ const yearOptions = Array.from({ length: 6 }, (_, i) => ({
   label: String(currentYear - i),
   value: currentYear - i,
 }));
+
+// Set default to current month and year
+const now = new Date();
+const selectedPeriod = ref<string | undefined>(
+  monthOptions[now.getMonth()]?.value
+);
+const selectedYear = ref<number | undefined>(now.getFullYear());
 
 // Format functions
 const formatCurrency = (amount: string): string => {
