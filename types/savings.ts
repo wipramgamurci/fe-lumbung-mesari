@@ -35,3 +35,8 @@ export interface SavingsResponse {
   next: boolean;
   prev: boolean;
 }
+
+export interface SavingsSettleResponse {
+  message: string;
+  savingsId: string;
+}

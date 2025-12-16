@@ -146,6 +146,54 @@
         />
       </template>
     </UCard>
+
+    <!-- Mark as Paid Confirmation Modal -->
+    <UModal
+      v-model:open="settleModalOpen"
+      title="Mark as Paid"
+      description="Are you sure you want to mark this savings record as paid?"
+    >
+      <template #body>
+        <div class="space-y-4">
+          <div
+            v-if="selectedSavings"
+            class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg"
+          >
+            <div class="flex flex-col gap-2">
+              <p class="font-medium text-gray-900 dark:text-white">
+                {{ selectedSavings.user.fullname }}
+              </p>
+              <p class="text-sm text-gray-600 dark:text-gray-400">
+                Period: {{ formatPeriod(selectedSavings.periodDate) }}
+              </p>
+              <p class="text-sm text-gray-600 dark:text-gray-400">
+                Amount: {{ formatCurrency(selectedSavings.amount) }}
+              </p>
+            </div>
+          </div>
+        </div>
+      </template>
+      <template #footer>
+        <div class="flex justify-end gap-2">
+          <UButton
+            color="neutral"
+            variant="outline"
+            @click="settleModalOpen = false"
+            :disabled="isSettling"
+          >
+            Cancel
+          </UButton>
+          <UButton
+            color="success"
+            @click="confirmMarkAsPaid"
+            :loading="isSettling"
+            :disabled="isSettling"
+          >
+            Mark as Paid
+          </UButton>
+        </div>
+      </template>
+    </UModal>
   </div>
 </template>
 
@@ -171,6 +219,14 @@ const page = ref(1);
 const limit = ref(10);
 const selectedPeriod = ref<string | undefined>(undefined);
 const selectedYear = ref<number | undefined>(undefined);
+const settlingIds = ref<Set<string>>(new Set());
+const settleModalOpen = ref(false);
+const selectedSavings = ref<SavingsRecord | null>(null);
+const isSettling = computed(() => {
+  return selectedSavings.value
+    ? settlingIds.value.has(selectedSavings.value.id)
+    : false;
+});
 
 // Month options
 const monthOptions = [
@@ -317,6 +373,32 @@ const columns: TableColumn<SavingsRecord>[] = [
     header: "Processed By",
     cell: ({ row }) => row.original.processedByUser?.fullname || "—",
   },
+  {
+    id: "actions",
+    header: "Actions",
+    cell: ({ row }) => {
+      const status = row.getValue("status") as string;
+      const isSettling = settlingIds.value.has(row.original.id);
+
+      if (status === "paid") {
+        return null;
+      }
+
+      return h("div", { class: "flex gap-2" }, [
+        h(
+          UButton,
+          {
+            size: "sm",
+            color: "success",
+            loading: isSettling,
+            disabled: isSettling,
+            onClick: () => openSettleModal(row.original),
+          },
+          () => "Mark as Paid"
+        ),
+      ]);
+    },
+  },
 ];
 
 // Handlers
@@ -375,6 +457,52 @@ const fetchSavings = async () => {
     savingsData.value = null;
   } finally {
     loading.value = false;
+  }
+};
+
+// Open settle modal
+const openSettleModal = (savings: SavingsRecord) => {
+  selectedSavings.value = savings;
+  settleModalOpen.value = true;
+};
+
+// Confirm mark as paid
+const confirmMarkAsPaid = async () => {
+  if (!selectedSavings.value) return;
+
+  const savingsId = selectedSavings.value.id;
+  settlingIds.value.add(savingsId);
+
+  try {
+    await $fetch(`/api/savings/${savingsId}/settle`, {
+      method: "POST",
+    });
+
+    // Show success message
+    const toast = useToast();
+    toast.add({
+      title: "Success",
+      description: "Savings record marked as paid successfully.",
+      color: "success",
+    });
+
+    // Close modal and refresh data
+    settleModalOpen.value = false;
+    selectedSavings.value = null;
+    await fetchSavings();
+  } catch (err: any) {
+    console.error("Error settling savings:", err);
+    const toast = useToast();
+    toast.add({
+      title: "Error",
+      description:
+        err.data?.message ||
+        err.message ||
+        "Failed to mark as paid. Please try again.",
+      color: "error",
+    });
+  } finally {
+    settlingIds.value.delete(savingsId);
   }
 };
 
