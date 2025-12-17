@@ -67,12 +67,16 @@ export default defineEventHandler(async (event): Promise<SavingsResponse> => {
     return response;
   } catch (error: any) {
     if (error.statusCode) {
+      setResponseStatus(event, error.statusCode);
       throw createError({
         statusCode: error.statusCode,
         statusMessage: error.statusMessage,
-        message: error.data?.message || error.message,
+        message: error.data?.message ?? "Unable to get savings records",
+        data: error.data,
       });
     }
+
+    setResponseStatus(event, 500);
     throw createError({
       statusCode: 500,
       statusMessage: "Internal server error",

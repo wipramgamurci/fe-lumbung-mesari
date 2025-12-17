@@ -37,42 +37,6 @@
       </div>
     </UCard>
 
-    <!-- Summary Stats -->
-    <div v-if="savingsData" class="grid grid-cols-1 md:grid-cols-4 gap-4">
-      <UCard>
-        <div class="flex flex-col">
-          <p class="text-sm text-gray-600 dark:text-gray-300">Total Records</p>
-          <p class="text-2xl font-bold text-gray-900 dark:text-white">
-            {{ savingsData.totalData }}
-          </p>
-        </div>
-      </UCard>
-      <UCard>
-        <div class="flex flex-col">
-          <p class="text-sm text-gray-600 dark:text-gray-300">Due</p>
-          <p class="text-2xl font-bold text-yellow-600 dark:text-yellow-400">
-            {{ stats.due }}
-          </p>
-        </div>
-      </UCard>
-      <UCard>
-        <div class="flex flex-col">
-          <p class="text-sm text-gray-600 dark:text-gray-300">Paid</p>
-          <p class="text-2xl font-bold text-green-600 dark:text-green-400">
-            {{ stats.paid }}
-          </p>
-        </div>
-      </UCard>
-      <UCard>
-        <div class="flex flex-col">
-          <p class="text-sm text-gray-600 dark:text-gray-300">Overdue</p>
-          <p class="text-2xl font-bold text-red-600 dark:text-red-400">
-            {{ stats.overdue }}
-          </p>
-        </div>
-      </UCard>
-    </div>
-
     <!-- Table Card -->
     <UCard>
       <div
@@ -146,6 +110,54 @@
         />
       </template>
     </UCard>
+
+    <!-- Mark as Paid Confirmation Modal -->
+    <UModal
+      v-model:open="settleModalOpen"
+      title="Mark as Paid"
+      description="Are you sure you want to mark this savings record as paid?"
+    >
+      <template #body>
+        <div class="space-y-4">
+          <div
+            v-if="selectedSavings"
+            class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg"
+          >
+            <div class="flex flex-col gap-2">
+              <p class="font-medium text-gray-900 dark:text-white">
+                {{ selectedSavings.user.fullname }}
+              </p>
+              <p class="text-sm text-gray-600 dark:text-gray-400">
+                Period: {{ formatPeriod(selectedSavings.periodDate) }}
+              </p>
+              <p class="text-sm text-gray-600 dark:text-gray-400">
+                Amount: {{ formatCurrency(selectedSavings.amount) }}
+              </p>
+            </div>
+          </div>
+        </div>
+      </template>
+      <template #footer>
+        <div class="flex justify-end gap-2">
+          <UButton
+            color="neutral"
+            variant="outline"
+            @click="settleModalOpen = false"
+            :disabled="isSettling"
+          >
+            Cancel
+          </UButton>
+          <UButton
+            color="success"
+            @click="confirmMarkAsPaid"
+            :loading="isSettling"
+            :disabled="isSettling"
+          >
+            Mark as Paid
+          </UButton>
+        </div>
+      </template>
+    </UModal>
   </div>
 </template>
 
@@ -169,8 +181,14 @@ const savingsData = ref<SavingsResponse | null>(null);
 const error = ref<string | null>(null);
 const page = ref(1);
 const limit = ref(10);
-const selectedPeriod = ref<string | undefined>(undefined);
-const selectedYear = ref<number | undefined>(undefined);
+const settlingIds = ref<Set<string>>(new Set());
+const settleModalOpen = ref(false);
+const selectedSavings = ref<SavingsRecord | null>(null);
+const isSettling = computed(() => {
+  return selectedSavings.value
+    ? settlingIds.value.has(selectedSavings.value.id)
+    : false;
+});
 
 // Month options
 const monthOptions = [
@@ -195,18 +213,12 @@ const yearOptions = Array.from({ length: 6 }, (_, i) => ({
   value: currentYear - i,
 }));
 
-// Statistics
-const stats = computed(() => {
-  if (!savingsData.value) {
-    return { due: 0, paid: 0, overdue: 0 };
-  }
-  return {
-    due: savingsData.value.data.filter((r) => r.status === "due").length,
-    paid: savingsData.value.data.filter((r) => r.status === "paid").length,
-    overdue: savingsData.value.data.filter((r) => r.status === "overdue")
-      .length,
-  };
-});
+// Set default to current month and year
+const now = new Date();
+const selectedPeriod = ref<string | undefined>(
+  monthOptions[now.getMonth()]?.value
+);
+const selectedYear = ref<number | undefined>(now.getFullYear());
 
 // Format functions
 const formatCurrency = (amount: string): string => {
@@ -317,6 +329,32 @@ const columns: TableColumn<SavingsRecord>[] = [
     header: "Processed By",
     cell: ({ row }) => row.original.processedByUser?.fullname || "—",
   },
+  {
+    id: "actions",
+    header: "Actions",
+    cell: ({ row }) => {
+      const status = row.getValue("status") as string;
+      const isSettling = settlingIds.value.has(row.original.id);
+
+      if (status === "paid") {
+        return null;
+      }
+
+      return h("div", { class: "flex gap-2" }, [
+        h(
+          UButton,
+          {
+            size: "sm",
+            color: "success",
+            loading: isSettling,
+            disabled: isSettling,
+            onClick: () => openSettleModal(row.original),
+          },
+          () => "Mark as Paid"
+        ),
+      ]);
+    },
+  },
 ];
 
 // Handlers
@@ -364,7 +402,7 @@ const fetchSavings = async () => {
     ).toString();
 
     const response = await $fetch<SavingsResponse>(
-      `/api/admin/savings?${queryString}`
+      `/api/savings?${queryString}`
     );
 
     savingsData.value = response;
@@ -375,6 +413,52 @@ const fetchSavings = async () => {
     savingsData.value = null;
   } finally {
     loading.value = false;
+  }
+};
+
+// Open settle modal
+const openSettleModal = (savings: SavingsRecord) => {
+  selectedSavings.value = savings;
+  settleModalOpen.value = true;
+};
+
+// Confirm mark as paid
+const confirmMarkAsPaid = async () => {
+  if (!selectedSavings.value) return;
+
+  const savingsId = selectedSavings.value.id;
+  settlingIds.value.add(savingsId);
+
+  try {
+    await $fetch(`/api/savings/${savingsId}/settle`, {
+      method: "POST",
+    });
+
+    // Show success message
+    const toast = useToast();
+    toast.add({
+      title: "Success",
+      description: "Savings record marked as paid successfully.",
+      color: "success",
+    });
+
+    // Close modal and refresh data
+    settleModalOpen.value = false;
+    selectedSavings.value = null;
+    await fetchSavings();
+  } catch (err: any) {
+    console.error("Error settling savings:", err);
+    const toast = useToast();
+    toast.add({
+      title: "Error",
+      description:
+        err.data?.message ||
+        err.message ||
+        "Failed to mark as paid. Please try again.",
+      color: "error",
+    });
+  } finally {
+    settlingIds.value.delete(savingsId);
   }
 };
 

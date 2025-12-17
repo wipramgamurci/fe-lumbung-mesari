@@ -1,9 +1,18 @@
-import type { User } from "../../types/user";
+import type { SavingsSettleResponse } from "../../../../types/savings";
 
-export default defineEventHandler(async (event): Promise<User> => {
+export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig();
+  const params = event.context.params;
+  const savingsId = params?.savingsId;
 
-  // Read access token from httpOnly cookie
+  if (!savingsId) {
+    throw createError({
+      statusCode: 400,
+      statusMessage: "Bad Request",
+      message: "Savings ID is required",
+    });
+  }
+
   const accessToken = getCookie(event, "accessToken");
   if (!accessToken) {
     throw createError({
@@ -14,10 +23,10 @@ export default defineEventHandler(async (event): Promise<User> => {
   }
 
   try {
-    const response = await $fetch<User>(
-      `${config.public.apiBaseUrl}/api/users/me`,
+    const response = await $fetch<SavingsSettleResponse>(
+      `${config.public.apiBaseUrl}/api/savings/${savingsId}/settle`,
       {
-        method: "GET",
+        method: "POST",
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${accessToken}`,
@@ -33,7 +42,7 @@ export default defineEventHandler(async (event): Promise<User> => {
       throw createError({
         statusCode: error.statusCode,
         statusMessage: error.statusMessage,
-        message: error.data?.message ?? "Unable to get user data",
+        message: error.data?.message ?? "Failed to settle savings",
         data: error.data,
       });
     }
@@ -42,7 +51,7 @@ export default defineEventHandler(async (event): Promise<User> => {
     throw createError({
       statusCode: 500,
       statusMessage: "Internal server error",
-      message: "Unable to get user data",
+      message: "Unable to settle savings",
     });
   }
 });
