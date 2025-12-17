@@ -29,10 +29,12 @@ export default defineEventHandler(async (event): Promise<User> => {
     return response;
   } catch (error: any) {
     if (error.statusCode) {
+      setResponseStatus(event, error.statusCode);
       throw createError({
         statusCode: error.statusCode,
         statusMessage: error.statusMessage,
-        message: error.data.message,
+        message: error.data?.message ?? "Unable to get user data",
+        data: error.data,
       });
     }
 

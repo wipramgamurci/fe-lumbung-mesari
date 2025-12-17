@@ -59,7 +59,8 @@ export default defineEventHandler(async (event): Promise<LoginResponse> => {
       throw createError({
         statusCode: error.statusCode,
         statusMessage: error.statusMessage,
-        message: error.data.message,
+        message: error.data?.message ?? "Unable to login. Please try again.",
+        data: error.data,
       });
     }
 

@@ -41,9 +41,9 @@ export default defineEventHandler(async (event) => {
       setResponseStatus(event, error.statusCode);
       throw createError({
         statusCode: error.statusCode,
-        statusMessage: error.statusMessage || error.error || "Bad Request",
-        message: error.message || "Failed to settle savings",
-        data: error,
+        statusMessage: error.statusMessage,
+        message: error.data?.message ?? "Failed to settle savings",
+        data: error.data,
       });
     }
 
