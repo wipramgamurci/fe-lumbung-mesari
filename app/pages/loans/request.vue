@@ -384,6 +384,9 @@ const handleSubmit = async () => {
       notes: "",
     };
     calculationResult.value = null;
+    // Clear tracking values to ensure clean state
+    lastCalculatedAmount.value = null;
+    lastCalculatedPeriodId.value = null;
 
     // Optionally redirect to loans list or dashboard
     // navigateTo("/loans");
