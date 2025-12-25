@@ -182,7 +182,6 @@ import type {
   LoanCreateRequest,
   Loan,
 } from "../../../types/loan";
-import type { ApiError } from "../../../types/api";
 
 definePageMeta({
   layout: "default",
@@ -298,9 +297,8 @@ const fetchLoanPeriods = async () => {
     loanPeriods.value = response;
   } catch (error: any) {
     console.error("Error fetching loan periods:", error);
-    const errorData = error.data as ApiError;
     alert(
-      "Failed to load loan periods: " + (errorData?.message || "Unknown error")
+      "Failed to load loan periods: " + (error.data?.message || "Unknown error")
     );
   } finally {
     isLoadingPeriods.value = false;
@@ -337,8 +335,7 @@ const handleCalculate = async () => {
     lastCalculatedPeriodId.value = form.value.loanPeriodId;
   } catch (error: any) {
     console.error("Error calculating loan:", error);
-    const errorData = error.data as ApiError;
-    alert("Calculation failed: " + (errorData?.message || "Unknown error"));
+    alert("Calculation failed: " + (error.data?.message || "Unknown error"));
     calculationResult.value = null;
     lastCalculatedAmount.value = null;
     lastCalculatedPeriodId.value = null;
@@ -392,8 +389,7 @@ const handleSubmit = async () => {
     // navigateTo("/loans");
   } catch (error: any) {
     console.error("Error submitting loan:", error);
-    const errorData = error.data as ApiError;
-    alert("Submission failed: " + (errorData?.message || "Unknown error"));
+    alert("Submission failed: " + (error.data?.message || "Unknown error"));
   } finally {
     isSubmitting.value = false;
   }

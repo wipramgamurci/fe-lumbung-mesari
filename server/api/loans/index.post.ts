@@ -1,5 +1,4 @@
 import type { LoanCreateRequest, Loan } from "../../../types/loan";
-import type { ApiError } from "../../../types/api";
 
 export default defineEventHandler(async (event): Promise<Loan> => {
   const config = useRuntimeConfig();
@@ -12,7 +11,7 @@ export default defineEventHandler(async (event): Promise<Loan> => {
       statusMessage: "Validation failed",
       data: {
         message: "loanPeriodId and amount are required",
-      } as ApiError,
+      },
     });
   }
 
@@ -64,7 +63,7 @@ export default defineEventHandler(async (event): Promise<Loan> => {
       data: {
         message: "Unable to create loan. Please try again.",
         error: "INTERNAL_ERROR",
-      } as ApiError,
+      },
     });
   }
 });

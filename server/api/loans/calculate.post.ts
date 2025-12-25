@@ -2,7 +2,6 @@ import type {
   LoanCalculateRequest,
   LoanCalculateResponse,
 } from "../../../types/loan";
-import type { ApiError } from "../../../types/api";
 
 export default defineEventHandler(
   async (event): Promise<LoanCalculateResponse> => {
@@ -16,7 +15,7 @@ export default defineEventHandler(
         statusMessage: "Validation failed",
         data: {
           message: "Amount and loanPeriodId are required",
-        } as ApiError,
+        },
       });
     }
 
@@ -68,7 +67,7 @@ export default defineEventHandler(
         data: {
           message: "Unable to calculate loan. Please try again.",
           error: "INTERNAL_ERROR",
-        } as ApiError,
+        },
       });
     }
   }
