@@ -256,6 +256,23 @@ watch(
   }
 );
 
+// Validate form fields
+const validateForm = (): boolean => {
+  errors.value = {};
+
+  if (!form.value.amount || form.value.amount <= 0) {
+    errors.value.amount = "Loan amount must be greater than 0";
+    return false;
+  }
+
+  if (!form.value.loanPeriodId) {
+    errors.value.loanPeriodId = "Please select a loan period";
+    return false;
+  }
+
+  return true;
+};
+
 // Handle button click - calculate or submit based on state
 const handleButtonClick = async (event: Event) => {
   if (calculationResult.value) {
@@ -296,15 +313,7 @@ const handleCalculate = async () => {
     return;
   }
 
-  errors.value = {};
-
-  if (!form.value.amount || form.value.amount <= 0) {
-    errors.value.amount = "Loan amount must be greater than 0";
-    return;
-  }
-
-  if (!form.value.loanPeriodId) {
-    errors.value.loanPeriodId = "Please select a loan period";
+  if (!validateForm()) {
     return;
   }
 
@@ -344,15 +353,7 @@ const handleSubmit = async () => {
     return;
   }
 
-  errors.value = {};
-
-  if (!form.value.amount || form.value.amount <= 0) {
-    errors.value.amount = "Loan amount must be greater than 0";
-    return;
-  }
-
-  if (!form.value.loanPeriodId) {
-    errors.value.loanPeriodId = "Please select a loan period";
+  if (!validateForm()) {
     return;
   }
 
