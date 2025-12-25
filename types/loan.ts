@@ -17,7 +17,7 @@ export interface LoanCalculateResponse {
   interestRate: number;
   monthlyInterest: number;
   monthlyPayment: number;
-  lastMonthPayment: number;
+  lastMonthPayment?: number;
 }
 
 export interface LoanCreateRequest {

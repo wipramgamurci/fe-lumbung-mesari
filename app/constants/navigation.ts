@@ -17,8 +17,14 @@ export const BASE_NAV_ITEMS: NavigationItem[] = [
 export const MEMBER_NAV_ITEMS: NavigationItem[] = [
   {
     icon: "i-heroicons-banknotes",
-    label: "My Loans",
-    to: "/loans",
+    label: "Loans",
+    children: [
+      {
+        icon: "i-heroicons-credit-card",
+        label: "Loan Request",
+        to: "loans/request",
+      },
+    ],
   },
 ];
 
