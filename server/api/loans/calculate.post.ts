@@ -26,7 +26,7 @@ export default defineEventHandler(
       throw createError({
         statusCode: 401,
         statusMessage: "Unauthorized",
-        data: { message: "Invalid credentials" },
+        data: { message: "Missing or invalid token" },
       });
     }
 

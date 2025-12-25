@@ -22,7 +22,7 @@ export default defineEventHandler(async (event): Promise<Loan> => {
     throw createError({
       statusCode: 401,
       statusMessage: "Unauthorized",
-      data: { message: "Invalid credentials" },
+      data: { message: "Missing or invalid token" },
     });
   }
 
