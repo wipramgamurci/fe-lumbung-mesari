@@ -22,7 +22,7 @@ export const MEMBER_NAV_ITEMS: NavigationItem[] = [
       {
         icon: "i-heroicons-credit-card",
         label: "Loan Request",
-        to: "loans/request",
+        to: "/loans/request",
       },
     ],
   },

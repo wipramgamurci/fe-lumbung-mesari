@@ -1,7 +1,7 @@
 export interface LoanPeriod {
   id: string;
   tenor: number;
-  interestRate: string;
+  interestRate: number;
 }
 
 export interface LoanCalculateRequest {
