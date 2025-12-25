@@ -21,3 +21,9 @@ export interface UsersResponse {
   next: boolean;
   prev: boolean;
 }
+
+export interface UserStatusUpdateResponse {
+  message: string;
+  status: "pending" | "active" | "rejected" | "waiting_deposit" | "inactive";
+  userId: string;
+}

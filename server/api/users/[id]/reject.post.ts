@@ -1,5 +1,4 @@
-import type { ApiResponse } from "../../../../types/api";
-import type { User } from "../../../../types/user";
+import type { UserStatusUpdateResponse } from "../../../../types/user";
 
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig();
@@ -36,7 +35,7 @@ export default defineEventHandler(async (event) => {
   }
 
   try {
-    const response = await $fetch<ApiResponse<User>>(
+    const response = await $fetch<UserStatusUpdateResponse>(
       `${config.public.apiBaseUrl}/api/users/${userId}/reject`,
       {
         method: "POST",
