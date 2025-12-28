@@ -18,7 +18,7 @@ export default defineEventHandler(async (event) => {
     throw createError({
       statusCode: 401,
       statusMessage: "Unauthorized",
-      data: { message: "Missing or invalid token" },
+      message: "Missing or invalid token",
     });
   }
 

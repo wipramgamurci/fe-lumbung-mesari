@@ -43,9 +43,7 @@ export default defineEventHandler(async (event) => {
     throw createError({
       statusCode: 500,
       statusMessage: "Internal server error",
-      data: {
-        message: "Unable to logout. Please try again.",
-      },
+      message: "Unable to logout. Please try again.",
     });
   }
 });

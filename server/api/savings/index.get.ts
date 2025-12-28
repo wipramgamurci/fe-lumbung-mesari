@@ -26,7 +26,7 @@ export default defineEventHandler(async (event): Promise<SavingsResponse> => {
     throw createError({
       statusCode: 401,
       statusMessage: "Unauthorized",
-      data: { message: "Missing or invalid token" },
+      message: "Missing or invalid token",
     });
   }
 

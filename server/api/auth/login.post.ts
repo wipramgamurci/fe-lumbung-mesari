@@ -9,7 +9,7 @@ export default defineEventHandler(async (event): Promise<LoginResponse> => {
     throw createError({
       statusCode: 400,
       statusMessage: "Missing required fields",
-      data: { message: "Identifier and password are required" },
+      message: "Identifier and password are required",
     });
   }
 
@@ -68,10 +68,7 @@ export default defineEventHandler(async (event): Promise<LoginResponse> => {
     throw createError({
       statusCode: 500,
       statusMessage: "Internal server error",
-      data: {
-        message: "Unable to login. Please try again.",
-        error: "INTERNAL_ERROR",
-      },
+      message: "Unable to login. Please try again.",
     });
   }
 });

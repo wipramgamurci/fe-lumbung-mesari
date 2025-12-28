@@ -18,7 +18,7 @@ export default defineEventHandler(async (event): Promise<VerifyOtpResponse> => {
     throw createError({
       statusCode: 400,
       statusMessage: "Missing required fields",
-      data: { message: "OTP is required" },
+      message: "OTP is required",
     });
   }
 
@@ -60,10 +60,7 @@ export default defineEventHandler(async (event): Promise<VerifyOtpResponse> => {
     throw createError({
       statusCode: 500,
       statusMessage: "Internal server error",
-      data: {
-        message: "Unable to verify OTP. Please try again.",
-        error: "INTERNAL_ERROR",
-      },
+      message: "Unable to verify OTP. Please try again.",
     });
   }
 });

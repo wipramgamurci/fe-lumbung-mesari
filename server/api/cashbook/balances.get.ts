@@ -9,7 +9,7 @@ export default defineEventHandler(
       throw createError({
         statusCode: 401,
         statusMessage: "Unauthorized",
-        data: { message: "Missing or invalid token" },
+        message: "Missing or invalid token",
       });
     }
 

@@ -47,10 +47,7 @@ export default defineEventHandler(async (event): Promise<ResendOtpResponse> => {
     throw createError({
       statusCode: 500,
       statusMessage: "Internal server error",
-      data: {
-        message: "Unable to resend OTP. Please try again.",
-        error: "INTERNAL_ERROR",
-      },
+      message: "Unable to resend OTP. Please try again.",
     });
   }
 });
