@@ -151,8 +151,11 @@ const handleRegister = async (): Promise<void> => {
 
     navigateTo("/verify-otp");
   } catch (error: any) {
-    console.error("Registration error:", error.data);
-    alert("Registration failed: " + (error.data?.message || "Unknown error"));
+    console.error("Registration error:", error);
+    alert(
+      "Registration failed: " +
+        (error.message || error.data?.message || "Unknown error")
+    );
   } finally {
     isLoading.value = false;
   }

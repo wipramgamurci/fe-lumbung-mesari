@@ -83,8 +83,11 @@ const handleLogin = async (): Promise<void> => {
     // Fetch user data after successful login (cookies are now set)
     await userStore.fetchUser();
   } catch (error: any) {
-    console.error("Login error:", error.data);
-    alert("Login failed: " + (error.data?.message || "Unknown error"));
+    console.error("Login error:", error);
+    alert(
+      "Login failed: " +
+        (error.message || error.data?.message || "Unknown error")
+    );
   } finally {
     isLoading.value = false;
   }

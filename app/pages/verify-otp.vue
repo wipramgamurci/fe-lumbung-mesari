@@ -164,9 +164,9 @@ const handleVerifyOtp = async () => {
       // For other statuses, let the status middleware handle it
       navigateTo("/dashboard");
     }
-  } catch (error) {
+  } catch (error: any) {
     console.error("OTP verification error:", error);
-    alert("OTP verification failed: " + error.data.message);
+    alert("OTP verification failed: " + (error.message || error.data?.message || "Unknown error"));
   } finally {
     isVerifying.value = false;
   }
@@ -184,9 +184,9 @@ const handleResendOtp = async () => {
 
     // Restart timer
     startTimer();
-  } catch (error) {
+  } catch (error: any) {
     console.error("Resend OTP error:", error);
-    alert("OTP request failed: " + error.data.message);
+    alert("OTP request failed: " + (error.message || error.data?.message || "Unknown error"));
   } finally {
     isResending.value = false;
   }

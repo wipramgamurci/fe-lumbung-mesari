@@ -268,7 +268,9 @@ const confirmApprove = async () => {
     toast.add({
       title: "Error",
       description:
-        error.data?.message || "Failed to approve member. Please try again.",
+        error.message ||
+        error.data?.message ||
+        "Failed to approve member. Please try again.",
       color: "error",
     });
   } finally {
@@ -307,7 +309,9 @@ const confirmReject = async () => {
     toast.add({
       title: "Error",
       description:
-        error.data?.message || "Failed to reject member. Please try again.",
+        error.message ||
+        error.data?.message ||
+        "Failed to reject member. Please try again.",
       color: "error",
     });
   } finally {

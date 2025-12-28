@@ -298,7 +298,8 @@ const fetchLoanPeriods = async () => {
   } catch (error: any) {
     console.error("Error fetching loan periods:", error);
     alert(
-      "Failed to load loan periods: " + (error.data?.message || "Unknown error")
+      "Failed to load loan periods: " +
+        (error.message || error.data?.message || "Unknown error")
     );
   } finally {
     isLoadingPeriods.value = false;
@@ -335,7 +336,10 @@ const handleCalculate = async () => {
     lastCalculatedPeriodId.value = form.value.loanPeriodId;
   } catch (error: any) {
     console.error("Error calculating loan:", error);
-    alert("Calculation failed: " + (error.data?.message || "Unknown error"));
+    alert(
+      "Calculation failed: " +
+        (error.message || error.data?.message || "Unknown error")
+    );
     calculationResult.value = null;
     lastCalculatedAmount.value = null;
     lastCalculatedPeriodId.value = null;
@@ -389,7 +393,10 @@ const handleSubmit = async () => {
     // navigateTo("/loans");
   } catch (error: any) {
     console.error("Error submitting loan:", error);
-    alert("Submission failed: " + (error.data?.message || "Unknown error"));
+    alert(
+      "Submission failed: " +
+        (error.message || error.data?.message || "Unknown error")
+    );
   } finally {
     isSubmitting.value = false;
   }
