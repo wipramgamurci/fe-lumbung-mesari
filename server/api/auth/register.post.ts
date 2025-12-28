@@ -1,5 +1,4 @@
 import type { RegisterRequest, RegisterResponse } from "../../../types/auth";
-import type { ApiError } from "../../../types/api";
 
 export default defineEventHandler(async (event): Promise<RegisterResponse> => {
   const config = useRuntimeConfig();
@@ -18,7 +17,7 @@ export default defineEventHandler(async (event): Promise<RegisterResponse> => {
     throw createError({
       statusCode: 400,
       statusMessage: "Missing required fields",
-      data: { message: "Please complete all required fields" } as ApiError,
+      message: "Please complete all required fields",
     });
   }
 
@@ -80,9 +79,7 @@ export default defineEventHandler(async (event): Promise<RegisterResponse> => {
     throw createError({
       statusCode: 500,
       statusMessage: "Internal server error",
-      data: {
-        message: "Unable to connect to registration service. Please try again.",
-      } as ApiError,
+      message: "Unable to connect to registration service. Please try again.",
     });
   }
 });

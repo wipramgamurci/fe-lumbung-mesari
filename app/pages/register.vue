@@ -104,7 +104,6 @@
 
 <script setup lang="ts">
 import type { RegisterRequest, RegisterResponse } from "../../types/auth";
-import type { ApiError } from "../../types/api";
 
 definePageMeta({
   layout: "auth",
@@ -152,9 +151,11 @@ const handleRegister = async (): Promise<void> => {
 
     navigateTo("/verify-otp");
   } catch (error: any) {
-    console.error("Registration error:", error.data);
-    const errorData = error.data as ApiError;
-    alert("Registration failed: " + errorData.message);
+    console.error("Registration error:", error);
+    alert(
+      "Registration failed: " +
+        (error.message || error.data?.message || "Unknown error")
+    );
   } finally {
     isLoading.value = false;
   }

@@ -82,7 +82,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 definePageMeta({
   layout: "auth",
 });
@@ -91,7 +91,9 @@ const { verifyOtp, resendOtp } = useAuth();
 const userStore = useUserStore();
 
 // Form state
-const formState = ref({
+const formState = ref<{
+  otpCode: string;
+}>({
   otpCode: "",
 });
 
@@ -101,7 +103,7 @@ const isResending = ref(false);
 
 // Timer for resend functionality
 const timeLeft = ref(60); // 60 seconds
-const timer = ref(null);
+const timer = ref<ReturnType<typeof setInterval> | null>(null);
 
 // Start timer on mount and get token
 onMounted(() => {
@@ -120,8 +122,9 @@ const startTimer = () => {
   timeLeft.value = 60;
   timer.value = setInterval(() => {
     timeLeft.value--;
-    if (timeLeft.value <= 0) {
+    if (timeLeft.value <= 0 && timer.value) {
       clearInterval(timer.value);
+      timer.value = null;
     }
   }, 1000);
 };
@@ -129,8 +132,9 @@ const startTimer = () => {
 // Simple counter 60 -> 0; no formatter needed
 
 // Handle OTP input (only allow numbers)
-const handleOtpInput = (event) => {
-  const value = event.target.value.replace(/\D/g, ""); // Remove non-digits
+const handleOtpInput = (event: Event) => {
+  const target = event.target as HTMLInputElement;
+  const value = target.value.replace(/\D/g, ""); // Remove non-digits
   formState.value.otpCode = value;
 };
 
@@ -164,9 +168,12 @@ const handleVerifyOtp = async () => {
       // For other statuses, let the status middleware handle it
       navigateTo("/dashboard");
     }
-  } catch (error) {
+  } catch (error: any) {
     console.error("OTP verification error:", error);
-    alert("OTP verification failed: " + error.data.message);
+    alert(
+      "OTP verification failed: " +
+        (error.message || error.data?.message || "Unknown error")
+    );
   } finally {
     isVerifying.value = false;
   }
@@ -184,9 +191,12 @@ const handleResendOtp = async () => {
 
     // Restart timer
     startTimer();
-  } catch (error) {
+  } catch (error: any) {
     console.error("Resend OTP error:", error);
-    alert("OTP request failed: " + error.data.message);
+    alert(
+      "OTP request failed: " +
+        (error.message || error.data?.message || "Unknown error")
+    );
   } finally {
     isResending.value = false;
   }

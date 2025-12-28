@@ -9,9 +9,7 @@ export default defineEventHandler(async (event): Promise<Loan> => {
     throw createError({
       statusCode: 400,
       statusMessage: "Validation failed",
-      data: {
-        message: "loanPeriodId and amount are required",
-      },
+      message: "loanPeriodId and amount are required",
     });
   }
 
@@ -21,7 +19,7 @@ export default defineEventHandler(async (event): Promise<Loan> => {
     throw createError({
       statusCode: 401,
       statusMessage: "Unauthorized",
-      data: { message: "Missing or invalid token" },
+      message: "Missing or invalid token",
     });
   }
 
@@ -60,10 +58,7 @@ export default defineEventHandler(async (event): Promise<Loan> => {
     throw createError({
       statusCode: 500,
       statusMessage: "Internal server error",
-      data: {
-        message: "Unable to create loan. Please try again.",
-        error: "INTERNAL_ERROR",
-      },
+      message: "Unable to create loan. Please try again.",
     });
   }
 });

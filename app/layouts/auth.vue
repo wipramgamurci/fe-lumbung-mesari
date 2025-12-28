@@ -8,6 +8,6 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 // Auth layout for login and register pages
 </script>

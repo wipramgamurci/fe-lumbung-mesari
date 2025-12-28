@@ -1,5 +1,4 @@
-import type { ApiResponse } from "../../../../types/api";
-import type { User } from "../../../../types/user";
+import type { UserStatusUpdateResponse } from "../../../../types/user";
 
 export default defineEventHandler(async (event) => {
   const config = useRuntimeConfig();
@@ -19,12 +18,12 @@ export default defineEventHandler(async (event) => {
     throw createError({
       statusCode: 401,
       statusMessage: "Unauthorized",
-      data: { message: "Missing or invalid token" },
+      message: "Missing or invalid token",
     });
   }
 
   try {
-    const response = await $fetch<ApiResponse<User>>(
+    const response = await $fetch<UserStatusUpdateResponse>(
       `${config.public.apiBaseUrl}/api/users/${userId}/approve`,
       {
         method: "POST",

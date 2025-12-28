@@ -14,7 +14,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 // Redirect to login page
 await navigateTo("/login");
 </script>

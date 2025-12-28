@@ -1,5 +1,3 @@
-import type { ApiError } from "../../../types/api";
-
 export default defineEventHandler(async (event) => {
   try {
     // Delete httpOnly cookies
@@ -45,9 +43,7 @@ export default defineEventHandler(async (event) => {
     throw createError({
       statusCode: 500,
       statusMessage: "Internal server error",
-      data: {
-        message: "Unable to logout. Please try again.",
-      } as ApiError,
+      message: "Unable to logout. Please try again.",
     });
   }
 });

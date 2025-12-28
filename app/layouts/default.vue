@@ -90,7 +90,7 @@
   </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import {
   ADMIN_NAV_ITEMS,
   BASE_NAV_ITEMS,

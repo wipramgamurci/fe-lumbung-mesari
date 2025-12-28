@@ -56,7 +56,6 @@
 
 <script setup lang="ts">
 import type { LoginRequest } from "../../types/auth";
-import type { ApiError } from "../../types/api";
 import { useUserStore } from "../stores/useUser";
 
 definePageMeta({
@@ -84,9 +83,11 @@ const handleLogin = async (): Promise<void> => {
     // Fetch user data after successful login (cookies are now set)
     await userStore.fetchUser();
   } catch (error: any) {
-    console.error("Login error:", error.data);
-    const errorData = error.data as ApiError;
-    alert("Login failed: " + errorData.message);
+    console.error("Login error:", error);
+    alert(
+      "Login failed: " +
+        (error.message || error.data?.message || "Unknown error")
+    );
   } finally {
     isLoading.value = false;
   }

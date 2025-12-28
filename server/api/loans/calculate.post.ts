@@ -13,9 +13,7 @@ export default defineEventHandler(
       throw createError({
         statusCode: 400,
         statusMessage: "Validation failed",
-        data: {
-          message: "Amount and loanPeriodId are required",
-        },
+        message: "Amount and loanPeriodId are required",
       });
     }
 
@@ -25,7 +23,7 @@ export default defineEventHandler(
       throw createError({
         statusCode: 401,
         statusMessage: "Unauthorized",
-        data: { message: "Missing or invalid token" },
+        message: "Missing or invalid token",
       });
     }
 
@@ -64,10 +62,7 @@ export default defineEventHandler(
       throw createError({
         statusCode: 500,
         statusMessage: "Internal server error",
-        data: {
-          message: "Unable to calculate loan. Please try again.",
-          error: "INTERNAL_ERROR",
-        },
+        message: "Unable to calculate loan. Please try again.",
       });
     }
   }
