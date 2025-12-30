@@ -8,6 +8,7 @@ export default defineEventHandler(async (event): Promise<LoansResponse> => {
   const pageStr = Array.isArray(query.page) ? query.page[0] : query.page;
   const limitStr = Array.isArray(query.limit) ? query.limit[0] : query.limit;
   const status = Array.isArray(query.status) ? query.status[0] : query.status;
+  const search = Array.isArray(query.search) ? query.search[0] : query.search;
   const sortBy = Array.isArray(query.sortBy) ? query.sortBy[0] : query.sortBy;
   const sortOrder = Array.isArray(query.sortOrder)
     ? query.sortOrder[0]
@@ -78,13 +79,16 @@ export default defineEventHandler(async (event): Promise<LoansResponse> => {
     const queryParams: string[] = [`page=${page}`, `limit=${limit}`];
 
     if (status) {
-      queryParams.push(`status=${status}`);
+      queryParams.push(`status=${encodeURIComponent(status)}`);
+    }
+    if (search) {
+      queryParams.push(`search=${encodeURIComponent(search)}`);
     }
     if (sortByParam) {
-      queryParams.push(`sortBy=${sortByParam}`);
+      queryParams.push(`sortBy=${encodeURIComponent(sortByParam)}`);
     }
     if (sortOrderParam) {
-      queryParams.push(`sortOrder=${sortOrderParam}`);
+      queryParams.push(`sortOrder=${encodeURIComponent(sortOrderParam)}`);
     }
 
     const queryString = `?${queryParams.join("&")}`;

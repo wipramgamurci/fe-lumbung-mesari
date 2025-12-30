@@ -49,31 +49,33 @@ export interface Loan {
   updatedAt: string;
 }
 
+export interface LoanUser {
+  id: string;
+  fullname: string;
+}
+
 export interface LoanListItem {
   id: string;
-  user_id: string;
-  loan_period_id: string;
-  principal_amount: string;
-  admin_fee_amount: string;
-  disbursed_amount: string;
-  interest_amount: string;
-  monthly_payment: string;
-  last_month_payment: string;
-  total_payable_amount: string;
-  installment_late_amount: string | null;
-  disbursed_at: string | null;
-  start_date: string;
-  end_date: string;
+  principalAmount: number;
+  adminFeeAmount: number;
+  disbursedAmount: number;
+  interestAmount: number;
+  monthlyPayment: number;
+  lastMonthPayment: number;
+  totalPayableAmount: number;
+  installmentLateAmount: number | null;
+  startDate: string;
+  endDate: string;
   status: string;
-  approved_by: string | null;
+  approvedBy: string | null;
+  approvedAt: string | null;
+  disbursedAt: string | null;
   notes: string | null;
-  approved_at: string | null;
-  created_at: string;
-  updated_at: string;
-  user_fullname: string;
-  user_email: string;
+  createdAt: string;
+  updatedAt: string;
   tenor: number;
-  interest_rate: string;
+  interestRate: number;
+  user: LoanUser;
 }
 
 export interface LoansResponse {
