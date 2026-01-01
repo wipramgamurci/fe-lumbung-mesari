@@ -163,6 +163,48 @@
                 </p>
               </div>
             </div>
+
+            <!-- Action Buttons -->
+            <div
+              v-if="
+                row.original.status === 'pending' ||
+                row.original.status === 'approved'
+              "
+              class="flex flex-wrap gap-2 mt-4 pt-4 border-t border-gray-200 dark:border-gray-700"
+            >
+              <UButton
+                v-if="row.original.status === 'pending'"
+                color="success"
+                size="sm"
+                icon="i-heroicons-check-circle"
+                :disabled="isProcessing"
+                @click="handleApprove(row.original.id)"
+              >
+                Approve
+              </UButton>
+
+              <UButton
+                v-if="row.original.status === 'pending'"
+                color="error"
+                size="sm"
+                icon="i-heroicons-x-circle"
+                :disabled="isProcessing"
+                @click="handleReject(row.original.id)"
+              >
+                Reject
+              </UButton>
+
+              <UButton
+                v-if="row.original.status === 'approved'"
+                color="primary"
+                size="sm"
+                icon="i-heroicons-banknotes"
+                :disabled="isProcessing"
+                @click="handleDisburse(row.original.id)"
+              >
+                Disburse
+              </UButton>
+            </div>
           </div>
         </template>
       </UTable>
@@ -182,22 +224,179 @@
         />
       </template>
     </UCard>
+
+    <!-- Approve Modal -->
+    <UModal
+      v-model:open="approveModalOpen"
+      title="Approve Loan"
+      description="Confirm approval of this loan application"
+    >
+      <template #body>
+        <div class="space-y-4">
+          <p class="text-gray-600 dark:text-gray-300">
+            Are you sure you want to approve this loan?
+          </p>
+          <div
+            v-if="selectedLoan"
+            class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg space-y-2"
+          >
+            <p class="font-medium text-gray-900 dark:text-white">
+              {{ selectedLoan.user.fullname }}
+            </p>
+            <p class="text-sm text-gray-600 dark:text-gray-400">
+              Principal Amount:
+              {{ formatCurrency(selectedLoan.principalAmount) }}
+            </p>
+            <p class="text-sm text-gray-600 dark:text-gray-400">
+              Tenor: {{ selectedLoan.tenor }} months
+            </p>
+            <p class="text-sm text-gray-600 dark:text-gray-400">
+              Monthly Payment: {{ formatCurrency(selectedLoan.monthlyPayment) }}
+            </p>
+          </div>
+        </div>
+      </template>
+      <template #footer>
+        <div class="flex justify-end gap-2">
+          <UButton
+            color="neutral"
+            variant="outline"
+            @click="approveModalOpen = false"
+          >
+            Cancel
+          </UButton>
+          <UButton
+            color="success"
+            @click="confirmApprove"
+            :loading="isProcessing"
+          >
+            Approve Loan
+          </UButton>
+        </div>
+      </template>
+    </UModal>
+
+    <!-- Reject Modal -->
+    <UModal
+      v-model:open="rejectModalOpen"
+      title="Reject Loan"
+      description="Confirm rejection of this loan application"
+    >
+      <template #body>
+        <div class="space-y-4">
+          <p class="text-gray-600 dark:text-gray-300">
+            Are you sure you want to reject this loan?
+          </p>
+          <div
+            v-if="selectedLoan"
+            class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg space-y-2"
+          >
+            <p class="font-medium text-gray-900 dark:text-white">
+              {{ selectedLoan.user.fullname }}
+            </p>
+            <p class="text-sm text-gray-600 dark:text-gray-400">
+              Principal Amount:
+              {{ formatCurrency(selectedLoan.principalAmount) }}
+            </p>
+            <p class="text-sm text-gray-600 dark:text-gray-400">
+              Tenor: {{ selectedLoan.tenor }} months
+            </p>
+          </div>
+        </div>
+      </template>
+      <template #footer>
+        <div class="flex justify-end gap-2">
+          <UButton
+            color="neutral"
+            variant="outline"
+            @click="rejectModalOpen = false"
+          >
+            Cancel
+          </UButton>
+          <UButton color="error" @click="confirmReject" :loading="isProcessing">
+            Reject Loan
+          </UButton>
+        </div>
+      </template>
+    </UModal>
+
+    <!-- Disburse Modal -->
+    <UModal
+      v-model:open="disburseModalOpen"
+      title="Disburse Loan"
+      description="Confirm disbursement of funds to the borrower"
+    >
+      <template #body>
+        <div class="space-y-4">
+          <p class="text-gray-600 dark:text-gray-300">
+            Are you sure you want to disburse this loan? This action will
+            transfer the funds to the borrower.
+          </p>
+          <div
+            v-if="selectedLoan"
+            class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg space-y-2"
+          >
+            <p class="font-medium text-gray-900 dark:text-white">
+              {{ selectedLoan.user.fullname }}
+            </p>
+            <p class="text-sm text-gray-600 dark:text-gray-400">
+              Principal Amount:
+              {{ formatCurrency(selectedLoan.principalAmount) }}
+            </p>
+            <p class="text-sm text-gray-600 dark:text-gray-400">
+              Disbursed Amount:
+              {{ formatCurrency(selectedLoan.disbursedAmount) }}
+            </p>
+            <p class="text-sm text-gray-600 dark:text-gray-400">
+              Tenor: {{ selectedLoan.tenor }} months
+            </p>
+            <p class="text-sm font-semibold text-gray-900 dark:text-white">
+              Total Payable:
+              {{ formatCurrency(selectedLoan.totalPayableAmount) }}
+            </p>
+          </div>
+        </div>
+      </template>
+      <template #footer>
+        <div class="flex justify-end gap-2">
+          <UButton
+            color="neutral"
+            variant="outline"
+            @click="disburseModalOpen = false"
+          >
+            Cancel
+          </UButton>
+          <UButton
+            color="primary"
+            @click="confirmDisburse"
+            :loading="isProcessing"
+          >
+            Disburse Loan
+          </UButton>
+        </div>
+      </template>
+    </UModal>
   </div>
 </template>
 
 <script setup lang="ts">
 import { h, resolveComponent } from "vue";
 import type { TableColumn } from "@nuxt/ui";
-import type { LoanListItem, LoansResponse } from "~~/types/loan";
+import type {
+  LoanListItem,
+  LoansResponse,
+  LoanStatusUpdateResponse,
+} from "~~/types/loan";
 
 definePageMeta({
   layout: "default",
   middleware: "role",
-  roles: ["administrator"], // Only administrators can access this page
+  roles: ["administrator", "superadministrator"], // Only administrators can access this page
 });
 
 const UBadge = resolveComponent("UBadge");
 const UButton = resolveComponent("UButton");
+const UModal = resolveComponent("UModal");
 
 // State
 const loading = ref(false);
@@ -207,6 +406,13 @@ const page = ref(1);
 const limit = ref(10);
 const searchQuery = ref("");
 const selectedStatus = ref<string | null>(null);
+
+// Modal state
+const approveModalOpen = ref(false);
+const rejectModalOpen = ref(false);
+const disburseModalOpen = ref(false);
+const selectedLoan = ref<LoanListItem | null>(null);
+const isProcessing = ref(false);
 
 // Status options
 const statusOptions = [
@@ -374,6 +580,153 @@ const columns: TableColumn<LoanListItem>[] = [
     cell: ({ row }) => formatDate(row.getValue("createdAt")),
   },
 ];
+
+// Handle approve - open modal
+const handleApprove = (loanId: string) => {
+  const loan = loansData.value?.data.find((l) => l.id === loanId);
+  if (loan) {
+    selectedLoan.value = loan;
+    approveModalOpen.value = true;
+  }
+};
+
+// Confirm approve
+const confirmApprove = async () => {
+  if (!selectedLoan.value) return;
+
+  isProcessing.value = true;
+  try {
+    const response = await $fetch<LoanStatusUpdateResponse>(
+      `/api/loans/${selectedLoan.value.id}/approve`,
+      {
+        method: "POST",
+      }
+    );
+
+    const toast = useToast();
+    toast.add({
+      title: "Loan Approved",
+      description: response.message || "Loan has been approved successfully.",
+      color: "success",
+    });
+
+    // Close modal and refresh data
+    approveModalOpen.value = false;
+    selectedLoan.value = null;
+    await fetchLoans();
+  } catch (err: any) {
+    console.error("Error approving loan:", err);
+    const toast = useToast();
+    toast.add({
+      title: "Error",
+      description:
+        err.data?.message ||
+        err.message ||
+        "Failed to approve loan. Please try again.",
+      color: "error",
+    });
+  } finally {
+    isProcessing.value = false;
+  }
+};
+
+// Handle reject - open modal
+const handleReject = (loanId: string) => {
+  const loan = loansData.value?.data.find((l) => l.id === loanId);
+  if (loan) {
+    selectedLoan.value = loan;
+    rejectModalOpen.value = true;
+  }
+};
+
+// Confirm reject
+const confirmReject = async () => {
+  if (!selectedLoan.value) return;
+
+  isProcessing.value = true;
+  try {
+    const response = await $fetch<LoanStatusUpdateResponse>(
+      `/api/loans/${selectedLoan.value.id}/reject`,
+      {
+        method: "POST",
+      }
+    );
+
+    const toast = useToast();
+    toast.add({
+      title: "Loan Rejected",
+      description: response.message || "Loan has been rejected.",
+      color: "error",
+    });
+
+    // Close modal and refresh data
+    rejectModalOpen.value = false;
+    selectedLoan.value = null;
+    await fetchLoans();
+  } catch (err: any) {
+    console.error("Error rejecting loan:", err);
+    const toast = useToast();
+    toast.add({
+      title: "Error",
+      description:
+        err.data?.message ||
+        err.message ||
+        "Failed to reject loan. Please try again.",
+      color: "error",
+    });
+  } finally {
+    isProcessing.value = false;
+  }
+};
+
+// Handle disburse - open modal
+const handleDisburse = (loanId: string) => {
+  const loan = loansData.value?.data.find((l) => l.id === loanId);
+  if (loan) {
+    selectedLoan.value = loan;
+    disburseModalOpen.value = true;
+  }
+};
+
+// Confirm disburse
+const confirmDisburse = async () => {
+  if (!selectedLoan.value) return;
+
+  isProcessing.value = true;
+  try {
+    const response = await $fetch<LoanStatusUpdateResponse>(
+      `/api/loans/${selectedLoan.value.id}/disburse`,
+      {
+        method: "POST",
+      }
+    );
+
+    const toast = useToast();
+    toast.add({
+      title: "Loan Disbursed",
+      description: response.message || "Loan has been disbursed successfully.",
+      color: "success",
+    });
+
+    // Close modal and refresh data
+    disburseModalOpen.value = false;
+    selectedLoan.value = null;
+    await fetchLoans();
+  } catch (err: any) {
+    console.error("Error disbursing loan:", err);
+    const toast = useToast();
+    toast.add({
+      title: "Error",
+      description:
+        err.data?.message ||
+        err.message ||
+        "Failed to disburse loan. Please try again.",
+      color: "error",
+    });
+  } finally {
+    isProcessing.value = false;
+  }
+};
 
 // Fetch loans on mount
 onMounted(() => {
