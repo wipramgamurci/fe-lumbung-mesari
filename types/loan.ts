@@ -1,3 +1,10 @@
+export type LoanStatus =
+  | "pending"
+  | "approved"
+  | "rejected"
+  | "active"
+  | "completed";
+
 export interface LoanPeriod {
   id: string;
   tenor: number;
@@ -40,7 +47,7 @@ export interface Loan {
   installmentLateAmount: number | null;
   startDate: string;
   endDate: string;
-  status: string;
+  status: LoanStatus;
   approvedBy: string | null;
   approvedAt: string | null;
   disbursedAt: string | null;
@@ -66,7 +73,7 @@ export interface LoanListItem {
   installmentLateAmount: number | null;
   startDate: string;
   endDate: string;
-  status: string;
+  status: LoanStatus;
   approvedBy: string | null;
   approvedAt: string | null;
   disbursedAt: string | null;
@@ -86,4 +93,10 @@ export interface LoansResponse {
   totalPage: number;
   next: boolean;
   prev: boolean;
+}
+
+export interface LoanStatusUpdateResponse {
+  message: string;
+  status: LoanStatus;
+  loanId: string;
 }
