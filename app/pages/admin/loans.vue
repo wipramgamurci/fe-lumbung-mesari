@@ -302,6 +302,22 @@
               Tenor: {{ selectedLoan.tenor }} months
             </p>
           </div>
+          <div class="space-y-2">
+            <label
+              for="reject-reason"
+              class="block text-sm font-medium text-gray-700 dark:text-gray-300"
+            >
+              Reason for rejection <span class="text-red-500">*</span>
+            </label>
+            <UTextarea
+              id="reject-reason"
+              v-model="rejectReason"
+              placeholder="Please provide a reason for rejecting this loan..."
+              :rows="4"
+              class="w-full"
+              required
+            />
+          </div>
         </div>
       </template>
       <template #footer>
@@ -309,11 +325,21 @@
           <UButton
             color="neutral"
             variant="outline"
-            @click="rejectModalOpen = false"
+            @click="
+              () => {
+                rejectModalOpen = false;
+                rejectReason = '';
+              }
+            "
           >
             Cancel
           </UButton>
-          <UButton color="error" @click="confirmReject" :loading="isProcessing">
+          <UButton
+            color="error"
+            @click="confirmReject"
+            :loading="isProcessing"
+            :disabled="!rejectReason || rejectReason.trim() === ''"
+          >
             Reject Loan
           </UButton>
         </div>
@@ -380,7 +406,7 @@
 </template>
 
 <script setup lang="ts">
-import { h, resolveComponent } from "vue";
+import { h, resolveComponent, type Ref } from "vue";
 import type { TableColumn } from "@nuxt/ui";
 import type {
   LoanListItem,
@@ -413,6 +439,7 @@ const rejectModalOpen = ref(false);
 const disburseModalOpen = ref(false);
 const selectedLoan = ref<LoanListItem | null>(null);
 const isProcessing = ref(false);
+const rejectReason = ref("");
 
 // Status options
 const statusOptions = [
@@ -581,6 +608,76 @@ const columns: TableColumn<LoanListItem>[] = [
   },
 ];
 
+// Helper function to handle loan actions
+const handleLoanAction = async (
+  action: "approve" | "reject" | "disburse",
+  modalRef: Ref<boolean>,
+  body?: Record<string, any>
+) => {
+  if (!selectedLoan.value) return;
+
+  isProcessing.value = true;
+  try {
+    const response = await $fetch<LoanStatusUpdateResponse>(
+      `/api/loans/${selectedLoan.value.id}/${action}`,
+      {
+        method: "POST",
+        body: body,
+      }
+    );
+
+    const toast = useToast();
+    const actionConfig = {
+      approve: {
+        title: "Loan Approved",
+        defaultMessage: "Loan has been approved successfully.",
+        color: "success" as const,
+      },
+      reject: {
+        title: "Loan Rejected",
+        defaultMessage: "Loan has been rejected.",
+        color: "error" as const,
+      },
+      disburse: {
+        title: "Loan Disbursed",
+        defaultMessage: "Loan has been disbursed successfully.",
+        color: "success" as const,
+      },
+    };
+
+    const config = actionConfig[action];
+    toast.add({
+      title: config.title,
+      description: response.message || config.defaultMessage,
+      color: config.color,
+    });
+
+    // Close modal and refresh data
+    modalRef.value = false;
+    selectedLoan.value = null;
+    if (action === "reject") {
+      rejectReason.value = "";
+    }
+    await fetchLoans();
+  } catch (err: any) {
+    console.error(`Error ${action}ing loan:`, err);
+    const toast = useToast();
+    const errorMessages = {
+      approve: "Failed to approve loan. Please try again.",
+      reject: "Failed to reject loan. Please try again.",
+      disburse: "Failed to disburse loan. Please try again.",
+    };
+
+    toast.add({
+      title: "Error",
+      description: err.data?.message || err.message || errorMessages[action],
+      color: "error",
+    });
+  } finally {
+    isProcessing.value = false;
+  }
+};
+
 // Handle approve - open modal
 const handleApprove = (loanId: string) => {
   const loan = loansData.value?.data.find((l) => l.id === loanId);
@@ -592,42 +689,7 @@ const handleApprove = (loanId: string) => {
 
 // Confirm approve
 const confirmApprove = async () => {
-  if (!selectedLoan.value) return;
-
-  isProcessing.value = true;
-  try {
-    const response = await $fetch<LoanStatusUpdateResponse>(
-      `/api/loans/${selectedLoan.value.id}/approve`,
-      {
-        method: "POST",
-      }
-    );
-
-    const toast = useToast();
-    toast.add({
-      title: "Loan Approved",
-      description: response.message || "Loan has been approved successfully.",
-      color: "success",
-    });
-
-    // Close modal and refresh data
-    approveModalOpen.value = false;
-    selectedLoan.value = null;
-    await fetchLoans();
-  } catch (err: any) {
-    console.error("Error approving loan:", err);
-    const toast = useToast();
-    toast.add({
-      title: "Error",
-      description:
-        err.data?.message ||
-        err.message ||
-        "Failed to approve loan. Please try again.",
-      color: "error",
-    });
-  } finally {
-    isProcessing.value = false;
-  }
+  await handleLoanAction("approve", approveModalOpen);
 };
 
 // Handle reject - open modal
@@ -635,48 +697,18 @@ const handleReject = (loanId: string) => {
   const loan = loansData.value?.data.find((l) => l.id === loanId);
   if (loan) {
     selectedLoan.value = loan;
+    rejectReason.value = "";
     rejectModalOpen.value = true;
   }
 };
 
 // Confirm reject
 const confirmReject = async () => {
-  if (!selectedLoan.value) return;
+  if (!rejectReason.value?.trim()) return;
 
-  isProcessing.value = true;
-  try {
-    const response = await $fetch<LoanStatusUpdateResponse>(
-      `/api/loans/${selectedLoan.value.id}/reject`,
-      {
-        method: "POST",
-      }
-    );
-
-    const toast = useToast();
-    toast.add({
-      title: "Loan Rejected",
-      description: response.message || "Loan has been rejected.",
-      color: "error",
-    });
-
-    // Close modal and refresh data
-    rejectModalOpen.value = false;
-    selectedLoan.value = null;
-    await fetchLoans();
-  } catch (err: any) {
-    console.error("Error rejecting loan:", err);
-    const toast = useToast();
-    toast.add({
-      title: "Error",
-      description:
-        err.data?.message ||
-        err.message ||
-        "Failed to reject loan. Please try again.",
-      color: "error",
-    });
-  } finally {
-    isProcessing.value = false;
-  }
+  await handleLoanAction("reject", rejectModalOpen, {
+    reason: rejectReason.value.trim(),
+  });
 };
 
 // Handle disburse - open modal
@@ -690,42 +722,7 @@ const handleDisburse = (loanId: string) => {
 
 // Confirm disburse
 const confirmDisburse = async () => {
-  if (!selectedLoan.value) return;
-
-  isProcessing.value = true;
-  try {
-    const response = await $fetch<LoanStatusUpdateResponse>(
-      `/api/loans/${selectedLoan.value.id}/disburse`,
-      {
-        method: "POST",
-      }
-    );
-
-    const toast = useToast();
-    toast.add({
-      title: "Loan Disbursed",
-      description: response.message || "Loan has been disbursed successfully.",
-      color: "success",
-    });
-
-    // Close modal and refresh data
-    disburseModalOpen.value = false;
-    selectedLoan.value = null;
-    await fetchLoans();
-  } catch (err: any) {
-    console.error("Error disbursing loan:", err);
-    const toast = useToast();
-    toast.add({
-      title: "Error",
-      description:
-        err.data?.message ||
-        err.message ||
-        "Failed to disburse loan. Please try again.",
-      color: "error",
-    });
-  } finally {
-    isProcessing.value = false;
-  }
+  await handleLoanAction("disburse", disburseModalOpen);
 };
 
 // Fetch loans on mount
