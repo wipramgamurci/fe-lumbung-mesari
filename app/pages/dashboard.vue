@@ -119,6 +119,7 @@
 
 <script setup lang="ts">
 import type { CashbookBalancesResponse } from "~~/types/cashbook";
+import { formatCurrency } from "~~/utils/formatters";
 
 definePageMeta({
   layout: "default",
@@ -127,14 +128,6 @@ definePageMeta({
 const loading = ref(false);
 const cashbookBalances = ref<CashbookBalancesResponse | null>(null);
 const error = ref<string | null>(null);
-
-const formatCurrency = (amount: number): string => {
-  return new Intl.NumberFormat("id-ID", {
-    style: "currency",
-    currency: "IDR",
-    minimumFractionDigits: 0,
-  }).format(amount);
-};
 
 const getCashbookBalances = async () => {
   loading.value = true;

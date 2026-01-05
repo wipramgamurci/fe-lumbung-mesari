@@ -70,7 +70,7 @@
                   Interest Rate
                 </p>
                 <p class="text-sm text-gray-600 dark:text-gray-400">
-                  {{ row.original.interestRate }}%
+                  {{ formatPercentage(row.original.interestRate) }}
                 </p>
               </div>
               <div class="flex flex-col gap-2">
@@ -413,6 +413,12 @@ import type {
   LoansResponse,
   LoanStatusUpdateResponse,
 } from "~~/types/loan";
+import {
+  formatCurrency,
+  formatPercentage,
+  formatDate,
+  formatDateTime,
+} from "~~/utils/formatters";
 
 definePageMeta({
   layout: "default",
@@ -506,37 +512,6 @@ const fetchLoans = async () => {
   } finally {
     loading.value = false;
   }
-};
-
-// Format currency
-const formatCurrency = (amount: number): string => {
-  return new Intl.NumberFormat("id-ID", {
-    style: "currency",
-    currency: "IDR",
-    minimumFractionDigits: 0,
-  }).format(amount);
-};
-
-// Format date
-const formatDate = (dateString: string): string => {
-  const date = new Date(dateString);
-  return date.toLocaleDateString("id-ID", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
-};
-
-// Format date and time
-const formatDateTime = (dateString: string): string => {
-  const date = new Date(dateString);
-  return date.toLocaleString("id-ID", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  });
 };
 
 // Table columns

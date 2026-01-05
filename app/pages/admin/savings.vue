@@ -165,6 +165,12 @@
 import { h, resolveComponent, computed } from "vue";
 import type { TableColumn } from "@nuxt/ui";
 import type { SavingsResponse, SavingsRecord } from "~~/types/savings";
+import {
+  formatCurrency,
+  formatDate,
+  formatDateTime,
+  formatPeriod,
+} from "~~/utils/formatters";
 
 definePageMeta({
   layout: "default",
@@ -219,45 +225,6 @@ const selectedPeriod = ref<string | undefined>(
   monthOptions[now.getMonth()]?.value
 );
 const selectedYear = ref<number | undefined>(now.getFullYear());
-
-// Format functions
-const formatCurrency = (amount: string): string => {
-  const num = parseFloat(amount);
-  return new Intl.NumberFormat("id-ID", {
-    style: "currency",
-    currency: "IDR",
-    minimumFractionDigits: 0,
-  }).format(num);
-};
-
-const formatPeriod = (dateString: string): string => {
-  const date = new Date(dateString);
-  return new Intl.DateTimeFormat("en-US", {
-    month: "long",
-    year: "numeric",
-  }).format(date);
-};
-
-const formatDate = (dateString: string | null): string => {
-  if (!dateString) return "—";
-  const date = new Date(dateString);
-  return new Intl.DateTimeFormat("en-US", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-  }).format(date);
-};
-
-const formatDateTime = (dateString: string): string => {
-  const date = new Date(dateString);
-  return new Intl.DateTimeFormat("en-US", {
-    year: "numeric",
-    month: "short",
-    day: "numeric",
-    hour: "2-digit",
-    minute: "2-digit",
-  }).format(date);
-};
 
 // Table columns
 const columns: TableColumn<SavingsRecord>[] = [

@@ -125,7 +125,7 @@
                 >Interest Rate:</span
               >
               <span class="font-semibold text-gray-900 dark:text-white">
-                {{ calculationResult.interestRate }}%
+                {{ formatPercentage(calculationResult.interestRate) }}
               </span>
             </div>
 
@@ -182,6 +182,7 @@ import type {
   LoanCreateRequest,
   Loan,
 } from "../../../types/loan";
+import { formatPercentage, formatCurrency } from "../../../utils/formatters";
 
 definePageMeta({
   layout: "default",

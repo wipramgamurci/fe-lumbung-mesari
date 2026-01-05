@@ -187,6 +187,8 @@
 </template>
 
 <script setup lang="ts">
+import { formatDate } from "~~/utils/formatters";
+
 definePageMeta({
   layout: "default",
 });
@@ -237,14 +239,5 @@ const statusConfig: Record<string, { label: string; color: BadgeColor }> = {
 
 const getStatusInfo = (status: string) => {
   return statusConfig[status] || { label: status, color: "neutral" };
-};
-
-const formatDate = (dateString: string): string => {
-  const date = new Date(dateString);
-  return date.toLocaleDateString("en-US", {
-    year: "numeric",
-    month: "long",
-    day: "numeric",
-  });
 };
 </script>
