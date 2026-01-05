@@ -180,7 +180,7 @@ import type {
   LoanPeriod,
   LoanCalculateResponse,
   LoanCreateRequest,
-  Loan,
+  LoanListItem,
 } from "../../../types/loan";
 import { formatPercentage, formatCurrency } from "../../../utils/formatters";
 
@@ -367,7 +367,7 @@ const handleSubmit = async () => {
   isSubmitting.value = true;
 
   try {
-    const response = await $fetch<Loan>("/api/loans", {
+    const response = await $fetch<LoanListItem>("/api/loans", {
       method: "POST",
       body: {
         loanPeriodId: form.value.loanPeriodId,

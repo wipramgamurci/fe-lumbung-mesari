@@ -1,6 +1,6 @@
-import type { LoanCreateRequest, Loan } from "../../../types/loan";
+import type { LoanCreateRequest, LoanListItem } from "../../../types/loan";
 
-export default defineEventHandler(async (event): Promise<Loan> => {
+export default defineEventHandler(async (event): Promise<LoanListItem> => {
   const config = useRuntimeConfig();
   const body = (await readBody(event)) as LoanCreateRequest;
 
@@ -24,7 +24,7 @@ export default defineEventHandler(async (event): Promise<Loan> => {
   }
 
   try {
-    const response = await $fetch<Loan>(
+    const response = await $fetch<LoanListItem>(
       `${config.public.apiBaseUrl}/api/loans`,
       {
         method: "POST",

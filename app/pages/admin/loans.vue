@@ -89,6 +89,17 @@
                   {{ formatCurrency(row.original.monthlyPayment) }}
                 </p>
               </div>
+              <div
+                v-if="row.original.lastMonthPayment"
+                class="flex flex-col gap-2"
+              >
+                <p class="text-sm font-medium text-gray-700 dark:text-gray-300">
+                  Last Month Payment
+                </p>
+                <p class="text-sm text-gray-600 dark:text-gray-400">
+                  {{ formatCurrency(row.original.lastMonthPayment) }}
+                </p>
+              </div>
 
               <!-- Financial Breakdown -->
               <div class="flex flex-col gap-2">

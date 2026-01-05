@@ -33,29 +33,6 @@ export interface LoanCreateRequest {
   notes?: string;
 }
 
-export interface Loan {
-  id: string;
-  userId: string;
-  loanPeriodId: string;
-  principalAmount: number;
-  adminFeeAmount: number;
-  disbursedAmount: number;
-  interestAmount: number;
-  monthlyPayment: number;
-  lastMonthPayment: number;
-  totalPayableAmount: number;
-  installmentLateAmount: number | null;
-  startDate: string;
-  endDate: string;
-  status: LoanStatus;
-  approvedBy: string | null;
-  approvedAt: string | null;
-  disbursedAt: string | null;
-  notes: string | null;
-  createdAt: string;
-  updatedAt: string;
-}
-
 export interface LoanUser {
   id: string;
   fullname: string;
@@ -68,7 +45,7 @@ export interface LoanListItem {
   disbursedAmount: number;
   interestAmount: number;
   monthlyPayment: number;
-  lastMonthPayment: number;
+  lastMonthPayment?: number;
   totalPayableAmount: number;
   installmentLateAmount: number | null;
   startDate: string;
