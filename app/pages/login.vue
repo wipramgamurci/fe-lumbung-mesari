@@ -3,37 +3,39 @@
     <!-- Logo/Header -->
     <div class="text-center">
       <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-        Lumbung Mesari
+        {{ $t("app.title") }}
       </h2>
-      <p class="text-gray-600 dark:text-gray-300">Sign in to your account</p>
+      <p class="text-gray-600 dark:text-gray-300">
+        {{ $t("auth.signInToAccount") }}
+      </p>
     </div>
 
     <!-- Login Form -->
     <UCard class="mt-8">
       <UForm :state="formState" @submit="handleLogin">
         <div class="space-y-6">
-          <UFormField label="Identifier" name="identifier">
+          <UFormField :label="$t('common.identifier')" name="identifier">
             <UInput
               v-model="formState.identifier"
               type="text"
-              placeholder="Enter your username or email"
+              :placeholder="$t('auth.enterUsernameOrEmail')"
               required
               class="w-full"
             />
           </UFormField>
 
-          <UFormField label="Password" name="password">
+          <UFormField :label="$t('common.password')" name="password">
             <UInput
               v-model="formState.password"
               type="password"
-              placeholder="Enter your password"
+              :placeholder="$t('auth.enterPassword')"
               required
               class="w-full"
             />
           </UFormField>
 
           <UButton type="submit" color="primary" block :loading="isLoading">
-            Sign In
+            {{ $t("common.signIn") }}
           </UButton>
         </div>
       </UForm>
@@ -41,12 +43,12 @@
       <!-- Register Link -->
       <div class="mt-6 text-center">
         <p class="text-sm text-gray-600 dark:text-gray-300">
-          Don't have an account?
+          {{ $t("auth.dontHaveAccount") }}
           <NuxtLink
             to="/register"
             class="font-medium text-primary-600 hover:text-primary-500 dark:text-primary-400 dark:hover:text-primary-300"
           >
-            Register here
+            {{ $t("auth.registerHere") }}
           </NuxtLink>
         </p>
       </div>

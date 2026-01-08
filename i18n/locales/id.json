@@ -1,0 +1,20 @@
+{
+  "common": {
+    "signIn": "Masuk",
+    "register": "Daftar",
+    "password": "Kata Sandi",
+    "identifier": "Nama Pengguna atau Email",
+    "submit": "Kirim",
+    "loading": "Memuat..."
+  },
+  "auth": {
+    "signInToAccount": "Masuk ke akun Anda",
+    "dontHaveAccount": "Belum punya akun?",
+    "registerHere": "Daftar di sini",
+    "enterUsernameOrEmail": "Masukkan nama pengguna atau email",
+    "enterPassword": "Masukkan kata sandi"
+  },
+  "app": {
+    "title": "Lumbung Mesari"
+  }
+}
