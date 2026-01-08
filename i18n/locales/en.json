@@ -14,6 +14,33 @@
     "enterUsernameOrEmail": "Enter your username or email",
     "enterPassword": "Enter your password"
   },
+  "register": {
+    "createAccount": "Create Account",
+    "alreadyHaveAccount": "Already have an account?",
+    "signInHere": "Sign in here",
+    "label": {
+      "username": "Username",
+      "fullname": "Full Name",
+      "email": "Email",
+      "phoneNumber": "Phone Number",
+      "address": "Address",
+      "password": "Password",
+      "passwordConfirmation": "Confirm Password"
+    },
+    "placeholder": {
+      "username": "Enter your username",
+      "fullname": "Enter your full name",
+      "email": "Enter your email",
+      "phoneNumber": "Enter your phone number",
+      "address": "Enter your address",
+      "password": "Enter your password",
+      "passwordConfirmation": "Confirm your password"
+    },
+    "error": {
+      "passwordsDoNotMatch": "Passwords do not match",
+      "registrationFailed": "Registration failed: {message}"
+    }
+  },
   "app": {
     "title": "Lumbung Mesari"
   }

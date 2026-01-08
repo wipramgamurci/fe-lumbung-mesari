@@ -14,6 +14,33 @@
     "enterUsernameOrEmail": "Masukkan nama pengguna atau email",
     "enterPassword": "Masukkan kata sandi"
   },
+  "register": {
+    "createAccount": "Buat Akun",
+    "alreadyHaveAccount": "Sudah punya akun?",
+    "signInHere": "Masuk di sini",
+    "label": {
+      "username": "Nama Pengguna",
+      "fullname": "Nama Lengkap",
+      "email": "Email",
+      "phoneNumber": "Nomor Telepon",
+      "address": "Alamat",
+      "password": "Kata Sandi",
+      "passwordConfirmation": "Konfirmasi Kata Sandi"
+    },
+    "placeholder": {
+      "username": "Masukkan nama pengguna",
+      "fullname": "Masukkan nama lengkap",
+      "email": "Masukkan email",
+      "phoneNumber": "Masukkan nomor telepon",
+      "address": "Masukkan alamat",
+      "password": "Masukkan kata sandi",
+      "passwordConfirmation": "Konfirmasi kata sandi"
+    },
+    "error": {
+      "passwordsDoNotMatch": "Kata sandi tidak cocok",
+      "registrationFailed": "Registrasi gagal: {message}"
+    }
+  },
   "app": {
     "title": "Lumbung Mesari"
   }
