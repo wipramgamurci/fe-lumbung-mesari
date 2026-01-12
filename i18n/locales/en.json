@@ -6,7 +6,8 @@
     "identifier": "Username or Email",
     "submit": "Submit",
     "loading": "Loading...",
-    "signOut": "Sign Out"
+    "signOut": "Sign Out",
+    "contactAdministrator": "Contact Administrator"
   },
   "auth": {
     "signInToAccount": "Sign in to your account",
@@ -63,6 +64,13 @@
     "toAccessYourDashboard": "To access your dashboard, you need to complete your",
     "principalSavings": "principal savings",
     "pleaseContactTheAdministrator": "Please contact the administrator or visit the office to complete your principal savings. Once your principal savings is approved, you will be able to access all features of the application."
+  },
+  "rejected": {
+    "accountRejected": "Account Rejected",
+    "yourAccountRegistrationHasBeenRejected": "Your account registration has been rejected",
+    "unfortunatelyYourAccountRegistrationHasBeen": "Unfortunately, your account registration has been",
+    "rejected": "rejected",
+    "getAssistanceFromAdministrator": "If you believe this is an error or have questions about your rejection, please contact the administrator for assistance."
   },
   "navigation": {
     "dashboard": "Dashboard",
