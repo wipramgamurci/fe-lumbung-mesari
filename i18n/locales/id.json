@@ -41,6 +41,21 @@
       "registrationFailed": "Registrasi gagal: {message}"
     }
   },
+  "verifyOtp": {
+    "verifyYourAccount": "Verifikasi Akun Anda",
+    "weveSentAVerificationCodeToYourEmail": "Kami telah mengirimkan kode verifikasi ke email Anda",
+    "pleaseCheckYourEmailForTheVerificationCode": "Silakan cek email Anda untuk kode verifikasi",
+    "verificationCode": "Kode Verifikasi",
+    "enter6DigitCode": "Masukkan 6 digit kode",
+    "resendCodeIn": "Kirim ulang kode dalam {timeLeft}s",
+    "didntReceiveTheCode": "Belum menerima kode?",
+    "resendCode": "Kirim Ulang Kode",
+    "verifyAccount": "Verifikasi Akun",
+    "needToStartOver": "Perlu memulai ulang?",
+    "registerAgain": "Daftar ulang",
+    "otpVerificationFailed": "Verifikasi OTP gagal: {message}",
+    "otpRequestFailed": "Request OTP gagal: {message}"
+  },
   "navigation": {
     "dashboard": "Dasbor",
     "loans": "Pinjaman",

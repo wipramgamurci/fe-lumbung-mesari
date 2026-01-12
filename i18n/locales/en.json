@@ -41,6 +41,21 @@
       "registrationFailed": "Registration failed: {message}"
     }
   },
+  "verifyOtp": {
+    "verifyYourAccount": "Verify Your Account",
+    "weveSentAVerificationCodeToYourEmail": "We've sent a verification code to your email",
+    "pleaseCheckYourEmailForTheVerificationCode": "Please check your email for the verification code",
+    "verificationCode": "Verification Code",
+    "enter6DigitCode": "Enter 6-digit code",
+    "resendCodeIn": "Resend code in {timeLeft}s",
+    "didntReceiveTheCode": "Didn't receive the code?",
+    "resendCode": "Resend Code",
+    "verifyAccount": "Verify Account",
+    "needToStartOver": "Need to start over?",
+    "registerAgain": "Register again",
+    "otpVerificationFailed": "OTP verification failed: {message}",
+    "otpRequestFailed": "OTP request failed: {message}"
+  },
   "navigation": {
     "dashboard": "Dashboard",
     "loans": "Loans",
