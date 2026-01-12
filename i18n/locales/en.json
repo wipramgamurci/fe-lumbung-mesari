@@ -53,6 +53,11 @@
     "loanManagement": "Loan Management",
     "savingsManagement": "Savings Management"
   },
+  "dashboard": {
+    "totalBalance": "Total Balance",
+    "capital": "Capital",
+    "shu": "SHU"
+  },
   "app": {
     "title": "Lumbung Mesari"
   }
