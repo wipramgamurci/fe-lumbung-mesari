@@ -92,12 +92,13 @@
 
 <script setup lang="ts">
 import {
-  ADMIN_NAV_ITEMS,
-  BASE_NAV_ITEMS,
-  MEMBER_NAV_ITEMS,
+  getAdminNavItems,
+  getBaseNavItems,
+  getMemberNavItems,
 } from "~/constants/navigation";
 
 const { logout } = useAuth();
+const { t } = useI18n(); // Call useI18n() at top level of setup
 const userStore = useUserStore();
 const currentUser = computed(() => userStore.user);
 const hasMounted = ref(false);
@@ -109,11 +110,11 @@ const userDisplayName = computed(() => currentUser.value?.fullname || "User");
 
 const navItems = computed(() => {
   if (userStore.isAdmin || userStore.isSuperadministrator) {
-    return [...BASE_NAV_ITEMS, ...ADMIN_NAV_ITEMS];
+    return [...getBaseNavItems(t), ...getAdminNavItems(t)];
   }
   if (userStore.isMember) {
-    return [...BASE_NAV_ITEMS, ...MEMBER_NAV_ITEMS];
+    return [...getBaseNavItems(t), ...getMemberNavItems(t)];
   }
-  return BASE_NAV_ITEMS;
+  return getBaseNavItems(t);
 });
 </script>

@@ -41,6 +41,18 @@
       "registrationFailed": "Registration failed: {message}"
     }
   },
+  "navigation": {
+    "dashboard": "Dashboard",
+    "loans": "Loans",
+    "loanRequest": "Loan Request",
+    "usersManagement": "Users Management",
+    "administratorManagement": "Administrator Management",
+    "administratorManagementDesc": "Manage administrators",
+    "memberManagement": "Member Management",
+    "memberManagementDesc": "List and Approve or Reject Member",
+    "loanManagement": "Loan Management",
+    "savingsManagement": "Savings Management"
+  },
   "app": {
     "title": "Lumbung Mesari"
   }

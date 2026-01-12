@@ -41,6 +41,18 @@
       "registrationFailed": "Registrasi gagal: {message}"
     }
   },
+  "navigation": {
+    "dashboard": "Dasbor",
+    "loans": "Pinjaman",
+    "loanRequest": "Ajukan Pinjaman",
+    "usersManagement": "Manajemen Pengguna",
+    "administratorManagement": "Manajemen Administrator",
+    "administratorManagementDesc": "Kelola administrator",
+    "memberManagement": "Manajemen Anggota",
+    "memberManagementDesc": "Daftar dan Setujui atau Tolak Anggota",
+    "loanManagement": "Manajemen Pinjaman",
+    "savingsManagement": "Manajemen Tabungan"
+  },
   "app": {
     "title": "Lumbung Mesari"
   }
