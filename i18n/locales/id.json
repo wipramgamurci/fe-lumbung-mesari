@@ -5,7 +5,8 @@
     "password": "Kata Sandi",
     "identifier": "Nama Pengguna atau Email",
     "submit": "Kirim",
-    "loading": "Memuat..."
+    "loading": "Memuat...",
+    "signOut": "Keluar"
   },
   "auth": {
     "signInToAccount": "Masuk ke akun Anda",
@@ -56,6 +57,13 @@
     "otpVerificationFailed": "Verifikasi OTP gagal: {message}",
     "otpRequestFailed": "Request OTP gagal: {message}"
   },
+  "waitingDeposit": {
+    "waitingForPrincipalSavings": "Menunggu Simpanan Pokok",
+    "yourAccountIsPendingPrincipalSavings": "Akun Anda sedang menunggu simpanan pokok",
+    "toAccessYourDashboard": "Untuk mengakses dasbor Anda, Anda perlu menyelesaikan",
+    "principalSavings": "simpanan pokok",
+    "pleaseContactTheAdministrator": "Silakan hubungi administrator atau kunjungi kantor untuk menyelesaikan simpanan pokok Anda. Setelah simpanan pokok Anda disetujui, Anda akan dapat mengakses semua fitur aplikasi."
+  },
   "navigation": {
     "dashboard": "Dasbor",
     "loans": "Pinjaman",
@@ -66,7 +74,7 @@
     "memberManagement": "Manajemen Anggota",
     "memberManagementDesc": "Daftar dan Setujui atau Tolak Anggota",
     "loanManagement": "Manajemen Pinjaman",
-    "savingsManagement": "Manajemen Tabungan"
+    "savingsManagement": "Manajemen Simpanan"
   },
   "dashboard": {
     "totalBalance": "Total Saldo",

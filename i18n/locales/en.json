@@ -5,7 +5,8 @@
     "password": "Password",
     "identifier": "Username or Email",
     "submit": "Submit",
-    "loading": "Loading..."
+    "loading": "Loading...",
+    "signOut": "Sign Out"
   },
   "auth": {
     "signInToAccount": "Sign in to your account",
@@ -55,6 +56,13 @@
     "registerAgain": "Register again",
     "otpVerificationFailed": "OTP verification failed: {message}",
     "otpRequestFailed": "OTP request failed: {message}"
+  },
+  "waitingDeposit": {
+    "waitingForPrincipalSavings": "Waiting for Initial Deposit",
+    "yourAccountIsPendingPrincipalSavings": "Your account is pending principal savings",
+    "toAccessYourDashboard": "To access your dashboard, you need to complete your",
+    "principalSavings": "principal savings",
+    "pleaseContactTheAdministrator": "Please contact the administrator or visit the office to complete your principal savings. Once your principal savings is approved, you will be able to access all features of the application."
   },
   "navigation": {
     "dashboard": "Dashboard",
