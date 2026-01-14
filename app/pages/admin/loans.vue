@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col gap-4">
     <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-8">
-      Loan Management
+      {{ $t("navigation.loanManagement") }}
     </h1>
 
     <!-- Filters Card -->
@@ -59,7 +59,7 @@
               <!-- Loan Terms -->
               <div class="flex flex-col gap-2">
                 <p class="text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Principal Amount
+                  {{ $t("loan.principalAmount") }}
                 </p>
                 <p class="text-sm text-gray-600 dark:text-gray-400">
                   {{ formatCurrency(row.original.principalAmount) }}
@@ -67,7 +67,7 @@
               </div>
               <div class="flex flex-col gap-2">
                 <p class="text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Interest Rate
+                  {{ $t("loan.interestRate") }}
                 </p>
                 <p class="text-sm text-gray-600 dark:text-gray-400">
                   {{ formatPercentage(row.original.interestRate) }}
@@ -75,7 +75,7 @@
               </div>
               <div class="flex flex-col gap-2">
                 <p class="text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Tenor
+                  {{ $t("loan.tenor") }}
                 </p>
                 <p class="text-sm text-gray-600 dark:text-gray-400">
                   {{ row.original.tenor }} months
@@ -83,7 +83,7 @@
               </div>
               <div class="flex flex-col gap-2">
                 <p class="text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Monthly Payment
+                  {{ $t("loan.monthlyPayment") }}
                 </p>
                 <p class="text-sm text-gray-600 dark:text-gray-400">
                   {{ formatCurrency(row.original.monthlyPayment) }}
@@ -94,7 +94,7 @@
                 class="flex flex-col gap-2"
               >
                 <p class="text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Last Month Payment
+                  {{ $t("loan.lastMonthPayment") }}
                 </p>
                 <p class="text-sm text-gray-600 dark:text-gray-400">
                   {{ formatCurrency(row.original.lastMonthPayment) }}
@@ -104,7 +104,7 @@
               <!-- Financial Breakdown -->
               <div class="flex flex-col gap-2">
                 <p class="text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Admin Fee
+                  {{ $t("loan.adminFeeAmount") }}
                 </p>
                 <p class="text-sm text-gray-600 dark:text-gray-400">
                   {{ formatCurrency(row.original.adminFeeAmount) }}
@@ -112,7 +112,7 @@
               </div>
               <div class="flex flex-col gap-2">
                 <p class="text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Interest Amount
+                  {{ $t("loan.interestAmount") }}
                 </p>
                 <p class="text-sm text-gray-600 dark:text-gray-400">
                   {{ formatCurrency(row.original.interestAmount) }}
@@ -120,7 +120,7 @@
               </div>
               <div class="flex flex-col gap-2">
                 <p class="text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Disbursed Amount
+                  {{ $t("loan.disbursedAmount") }}
                 </p>
                 <p class="text-sm text-gray-600 dark:text-gray-400">
                   {{ formatCurrency(row.original.disbursedAmount) }}
@@ -128,7 +128,7 @@
               </div>
               <div class="flex flex-col gap-2">
                 <p class="text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Total Payable
+                  {{ $t("loan.totalPayableAmount") }}
                 </p>
                 <p class="text-sm text-gray-600 dark:text-gray-400">
                   {{ formatCurrency(row.original.totalPayableAmount) }}
@@ -138,7 +138,7 @@
               <!-- Timeline -->
               <div class="flex flex-col gap-2">
                 <p class="text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Start Date
+                  {{ $t("loan.startDate") }}
                 </p>
                 <p class="text-sm text-gray-600 dark:text-gray-400">
                   {{ formatDate(row.original.startDate) }}
@@ -146,7 +146,7 @@
               </div>
               <div class="flex flex-col gap-2">
                 <p class="text-sm font-medium text-gray-700 dark:text-gray-300">
-                  End Date
+                  {{ $t("loan.endDate") }}
                 </p>
                 <p class="text-sm text-gray-600 dark:text-gray-400">
                   {{ formatDate(row.original.endDate) }}
@@ -154,7 +154,7 @@
               </div>
               <div class="flex flex-col gap-2">
                 <p class="text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Created At
+                  {{ $t("loan.createdAt") }}
                 </p>
                 <p class="text-sm text-gray-600 dark:text-gray-400">
                   {{ formatDateTime(row.original.createdAt) }}
@@ -167,7 +167,7 @@
                 class="flex flex-col gap-2 col-span-2"
               >
                 <p class="text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Notes
+                  {{ $t("loan.notes") }}
                 </p>
                 <p class="text-sm text-gray-600 dark:text-gray-400">
                   {{ row.original.notes }}
@@ -191,7 +191,7 @@
                 :disabled="isProcessing"
                 @click="handleApprove(row.original.id)"
               >
-                Approve
+                {{ $t("common.approve") }}
               </UButton>
 
               <UButton
@@ -202,7 +202,7 @@
                 :disabled="isProcessing"
                 @click="handleReject(row.original.id)"
               >
-                Reject
+                {{ $t("common.reject") }}
               </UButton>
 
               <UButton
@@ -213,7 +213,7 @@
                 :disabled="isProcessing"
                 @click="handleDisburse(row.original.id)"
               >
-                Disburse
+                {{ $t("loan.disburse") }}
               </UButton>
             </div>
           </div>
@@ -222,7 +222,7 @@
 
       <div v-if="!loansData && !loading" class="text-center py-8">
         <p class="text-gray-500 dark:text-gray-400">
-          No data available. Click refresh to load loans.
+          {{ $t("loan.noDataAvailable") }}
         </p>
       </div>
 
@@ -239,13 +239,13 @@
     <!-- Approve Modal -->
     <UModal
       v-model:open="approveModalOpen"
-      title="Approve Loan"
-      description="Confirm approval of this loan application"
+      :title="$t('loan.approveLoan')"
+      :description="$t('loan.confirmApprovalOfThisLoan')"
     >
       <template #body>
         <div class="space-y-4">
           <p class="text-gray-600 dark:text-gray-300">
-            Are you sure you want to approve this loan?
+            {{ $t("loan.confirmApprovalOfThisLoanDescription") }}
           </p>
           <div
             v-if="selectedLoan"
@@ -255,14 +255,16 @@
               {{ selectedLoan.user.fullname }}
             </p>
             <p class="text-sm text-gray-600 dark:text-gray-400">
-              Principal Amount:
+              {{ $t("loan.principalAmount") }}:
               {{ formatCurrency(selectedLoan.principalAmount) }}
             </p>
             <p class="text-sm text-gray-600 dark:text-gray-400">
-              Tenor: {{ selectedLoan.tenor }} months
+              {{ $t("loan.tenor") }}: {{ selectedLoan.tenor }}
+              {{ $t("common.months") }}
             </p>
             <p class="text-sm text-gray-600 dark:text-gray-400">
-              Monthly Payment: {{ formatCurrency(selectedLoan.monthlyPayment) }}
+              {{ $t("loan.monthlyPayment") }}:
+              {{ formatCurrency(selectedLoan.monthlyPayment) }}
             </p>
           </div>
         </div>
@@ -274,14 +276,14 @@
             variant="outline"
             @click="approveModalOpen = false"
           >
-            Cancel
+            {{ $t("common.cancel") }}
           </UButton>
           <UButton
             color="success"
             @click="confirmApprove"
             :loading="isProcessing"
           >
-            Approve Loan
+            {{ $t("loan.approveLoan") }}
           </UButton>
         </div>
       </template>
@@ -290,13 +292,13 @@
     <!-- Reject Modal -->
     <UModal
       v-model:open="rejectModalOpen"
-      title="Reject Loan"
-      description="Confirm rejection of this loan application"
+      :title="$t('loan.rejectLoan')"
+      :description="$t('loan.confirmRejectionOfThisLoan')"
     >
       <template #body>
         <div class="space-y-4">
           <p class="text-gray-600 dark:text-gray-300">
-            Are you sure you want to reject this loan?
+            {{ $t("loan.confirmRejectionOfThisLoanDescription") }}
           </p>
           <div
             v-if="selectedLoan"
@@ -306,11 +308,12 @@
               {{ selectedLoan.user.fullname }}
             </p>
             <p class="text-sm text-gray-600 dark:text-gray-400">
-              Principal Amount:
+              {{ $t("loan.principalAmount") }}:
               {{ formatCurrency(selectedLoan.principalAmount) }}
             </p>
             <p class="text-sm text-gray-600 dark:text-gray-400">
-              Tenor: {{ selectedLoan.tenor }} months
+              {{ $t("loan.tenor") }}: {{ selectedLoan.tenor }}
+              {{ $t("common.months") }}
             </p>
           </div>
           <div class="space-y-2">
@@ -318,12 +321,13 @@
               for="reject-reason"
               class="block text-sm font-medium text-gray-700 dark:text-gray-300"
             >
-              Reason for rejection <span class="text-red-500">*</span>
+              {{ $t("loan.reasonForRejection") }}
+              <span class="text-red-500">*</span>
             </label>
             <UTextarea
               id="reject-reason"
               v-model="rejectReason"
-              placeholder="Please provide a reason for rejecting this loan..."
+              :placeholder="$t('loan.reasonForRejectionPlaceholder')"
               :rows="4"
               class="w-full"
               required
@@ -343,7 +347,7 @@
               }
             "
           >
-            Cancel
+            {{ $t("common.cancel") }}
           </UButton>
           <UButton
             color="error"
@@ -351,7 +355,7 @@
             :loading="isProcessing"
             :disabled="!rejectReason || rejectReason.trim() === ''"
           >
-            Reject Loan
+            {{ $t("loan.rejectLoan") }}
           </UButton>
         </div>
       </template>
@@ -360,14 +364,13 @@
     <!-- Disburse Modal -->
     <UModal
       v-model:open="disburseModalOpen"
-      title="Disburse Loan"
-      description="Confirm disbursement of funds to the borrower"
+      :title="$t('loan.disburseLoan')"
+      :description="$t('loan.disburseLoanDescription')"
     >
       <template #body>
         <div class="space-y-4">
           <p class="text-gray-600 dark:text-gray-300">
-            Are you sure you want to disburse this loan? This action will
-            transfer the funds to the borrower.
+            {{ $t("loan.confirmDisbursementOfFundsToTheBorrower") }}
           </p>
           <div
             v-if="selectedLoan"
@@ -377,18 +380,19 @@
               {{ selectedLoan.user.fullname }}
             </p>
             <p class="text-sm text-gray-600 dark:text-gray-400">
-              Principal Amount:
+              {{ $t("loan.principalAmount") }}:
               {{ formatCurrency(selectedLoan.principalAmount) }}
             </p>
             <p class="text-sm text-gray-600 dark:text-gray-400">
-              Disbursed Amount:
+              {{ $t("loan.disbursedAmount") }}:
               {{ formatCurrency(selectedLoan.disbursedAmount) }}
             </p>
             <p class="text-sm text-gray-600 dark:text-gray-400">
-              Tenor: {{ selectedLoan.tenor }} months
+              {{ $t("loan.tenor") }}: {{ selectedLoan.tenor }}
+              {{ $t("common.months") }}
             </p>
             <p class="text-sm font-semibold text-gray-900 dark:text-white">
-              Total Payable:
+              {{ $t("loan.totalPayableAmount") }}:
               {{ formatCurrency(selectedLoan.totalPayableAmount) }}
             </p>
           </div>
@@ -401,14 +405,14 @@
             variant="outline"
             @click="disburseModalOpen = false"
           >
-            Cancel
+            {{ $t("common.cancel") }}
           </UButton>
           <UButton
             color="primary"
             @click="confirmDisburse"
             :loading="isProcessing"
           >
-            Disburse Loan
+            {{ $t("loan.disburseLoan") }}
           </UButton>
         </div>
       </template>
@@ -460,12 +464,12 @@ const rejectReason = ref("");
 
 // Status options
 const statusOptions = [
-  { label: "All Statuses", value: null },
-  { label: "Pending", value: "pending" },
-  { label: "Approved", value: "approved" },
-  { label: "Rejected", value: "rejected" },
-  { label: "Active", value: "active" },
-  { label: "Completed", value: "completed" },
+  { label: $t("loan.statusOptions.allStatuses"), value: null },
+  { label: $t("loan.statusOptions.pending"), value: "pending" },
+  { label: $t("loan.statusOptions.approved"), value: "approved" },
+  { label: $t("loan.statusOptions.rejected"), value: "rejected" },
+  { label: $t("loan.statusOptions.active"), value: "active" },
+  { label: $t("loan.statusOptions.completed"), value: "completed" },
 ];
 
 // Handlers
@@ -553,22 +557,22 @@ const columns: TableColumn<LoanListItem>[] = [
   },
   {
     accessorKey: "user.fullname",
-    header: "Borrower",
+    header: $t("loan.borrower"),
     cell: ({ row }) => row.original.user.fullname,
   },
   {
     accessorKey: "principalAmount",
-    header: "Principal Amount",
+    header: $t("loan.principalAmount"),
     cell: ({ row }) => formatCurrency(row.getValue("principalAmount")),
   },
   {
     accessorKey: "tenor",
-    header: "Tenor",
+    header: $t("loan.tenor"),
     cell: ({ row }) => `${row.getValue("tenor")} months`,
   },
   {
     accessorKey: "status",
-    header: "Status",
+    header: $t("loan.status"),
     cell: ({ row }) => {
       const status = row.getValue("status") as string;
       const color =
@@ -580,16 +584,14 @@ const columns: TableColumn<LoanListItem>[] = [
           completed: "success" as const,
         }[status] || ("neutral" as const);
 
-      return h(
-        UBadge,
-        { class: "capitalize", variant: "solid", color },
-        () => status
+      return h(UBadge, { class: "capitalize", variant: "solid", color }, () =>
+        $t(`loan.statusOptions.${status}`)
       );
     },
   },
   {
     accessorKey: "createdAt",
-    header: "Created At",
+    header: $t("loan.createdAt"),
     cell: ({ row }) => formatDate(row.getValue("createdAt")),
   },
 ];
@@ -615,18 +617,18 @@ const handleLoanAction = async (
     const toast = useToast();
     const actionConfig = {
       approve: {
-        title: "Loan Approved",
-        defaultMessage: "Loan has been approved successfully.",
+        title: $t("loan.loanApproved"),
+        defaultMessage: $t("loan.loanApprovedDescription"),
         color: "success" as const,
       },
       reject: {
-        title: "Loan Rejected",
-        defaultMessage: "Loan has been rejected.",
+        title: $t("loan.loanRejected"),
+        defaultMessage: $t("loan.loanRejectedDescription"),
         color: "error" as const,
       },
       disburse: {
-        title: "Loan Disbursed",
-        defaultMessage: "Loan has been disbursed successfully.",
+        title: $t("loan.loanDisbursed"),
+        defaultMessage: $t("loan.loanDisbursedDescription"),
         color: "success" as const,
       },
     };
@@ -649,14 +651,14 @@ const handleLoanAction = async (
     console.error(`Error ${action}ing loan:`, err);
     const toast = useToast();
     const errorMessages = {
-      approve: "Failed to approve loan. Please try again.",
-      reject: "Failed to reject loan. Please try again.",
-      disburse: "Failed to disburse loan. Please try again.",
+      approve: $t("loan.failedToApproveLoan"),
+      reject: $t("loan.failedToRejectLoan"),
+      disburse: $t("loan.failedToDisburseLoan"),
     };
 
     toast.add({
       title: "Error",
-      description: err.data?.message || err.message || errorMessages[action],
+      description: err.data?.message || errorMessages[action],
       color: "error",
     });
   } finally {
