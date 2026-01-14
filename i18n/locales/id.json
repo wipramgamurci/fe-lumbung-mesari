@@ -90,6 +90,11 @@
     "rejected": "ditolak",
     "getAssistanceFromAdministrator": "Jika Anda percaya ini adalah kesalahan atau memiliki pertanyaan tentang penolakan Anda, silakan hubungi administrator untuk bantuan."
   },
+  "error403": {
+    "403": "403",
+    "youDontHavePermissionToAccessThisPage": "Anda tidak memiliki izin untuk mengakses halaman ini.",
+    "goToDashboard": "Kembali ke Dasbor"
+  },
   "adminMembers": {
     "label": {
       "fullName": "Nama Lengkap",

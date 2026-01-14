@@ -90,6 +90,11 @@
     "rejected": "rejected",
     "getAssistanceFromAdministrator": "If you believe this is an error or have questions about your rejection, please contact the administrator for assistance."
   },
+  "error403": {
+    "403": "403",
+    "youDontHavePermissionToAccessThisPage": "You don't have permission to access this page.",
+    "goToDashboard": "Go to Dashboard"
+  },
   "adminMembers": {
     "label": {
       "fullName": "Full Name",
