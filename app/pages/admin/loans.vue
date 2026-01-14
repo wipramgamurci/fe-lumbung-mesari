@@ -31,7 +31,7 @@
           @click="refreshData"
           :loading="loading"
         >
-          Refresh
+          {{ $t("common.refresh") }}
         </UButton>
       </div>
     </UCard>

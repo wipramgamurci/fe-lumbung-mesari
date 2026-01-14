@@ -12,7 +12,20 @@
     "approve": "Approve",
     "reject": "Reject",
     "actions": "Actions",
-    "months": "Months"
+    "months": "Months",
+    "refresh": "Refresh",
+    "january": "January",
+    "february": "February",
+    "march": "March",
+    "april": "April",
+    "may": "May",
+    "june": "June",
+    "july": "July",
+    "august": "August",
+    "september": "September",
+    "october": "October",
+    "november": "November",
+    "december": "December"
   },
   "auth": {
     "signInToAccount": "Sign in to your account",
@@ -152,6 +165,30 @@
     "failedToApproveLoan": "Failed to approve loan. Please try again.",
     "failedToRejectLoan": "Failed to reject loan. Please try again.",
     "failedToDisburseLoan": "Failed to disburse loan. Please try again."
+  },
+  "savings": {
+    "statusOptions": {
+      "allStatuses": "All Statuses",
+      "due": "Due",
+      "paid": "Paid",
+      "overdue": "Overdue"
+    },
+    "selectPeriod": "Select Period",
+    "selectYear": "Select Year",
+    "username": "Username",
+    "createdAt": "Created At",
+    "updatedAt": "Updated At",
+    "noDataAvailable": "No data available. Click refresh to load savings data.",
+    "markAsPaid": "Mark as Paid",
+    "markAsPaidDescription": "Are you sure you want to mark this savings as paid?",
+    "period": "Period",
+    "amount": "Amount",
+    "status": "Status",
+    "memberName": "Member Name",
+    "paidDate": "Paid Date",
+    "processedBy": "Processed By",
+    "savingsRecordMarkedAsPaidSuccessfully": "Savings record marked as paid successfully.",
+    "errorMarkingAsPaid": "Failed to mark savings as paid. Please try again."
   },
   "navigation": {
     "dashboard": "Dashboard",

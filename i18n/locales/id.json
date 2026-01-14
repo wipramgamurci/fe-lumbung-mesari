@@ -12,7 +12,20 @@
     "approve": "Setujui",
     "reject": "Tolak",
     "actions": "Aksi",
-    "months": "Bulan"
+    "months": "Bulan",
+    "refresh": "Muat Ulang",
+    "january": "Januari",
+    "february": "Februari",
+    "march": "Maret",
+    "april": "April",
+    "may": "Mei",
+    "june": "Juni",
+    "july": "Juli",
+    "august": "Agustus",
+    "september": "September",
+    "october": "Oktober",
+    "november": "November",
+    "december": "Desember"
   },
   "auth": {
     "signInToAccount": "Masuk ke akun Anda",
@@ -152,6 +165,30 @@
     "failedToApproveLoan": "Gagal menyetujui pinjaman. Silakan coba lagi.",
     "failedToRejectLoan": "Gagal menolak pinjaman. Silakan coba lagi.",
     "failedToDisburseLoan": "Gagal mencairkan pinjaman. Silakan coba lagi."
+  },
+  "savings": {
+    "statusOptions": {
+      "allStatuses": "Semua Status",
+      "due": "Jatuh Tempo",
+      "paid": "Dibayar",
+      "overdue": "Terlambat"
+    },
+    "selectPeriod": "Pilih Periode",
+    "selectYear": "Pilih Tahun",
+    "username": "Nama Pengguna",
+    "createdAt": "Tanggal Dibuat",
+    "updatedAt": "Tanggal Diperbarui",
+    "noDataAvailable": "Tidak ada data tersedia. Klik refresh untuk memuat data simpanan.",
+    "markAsPaid": "Tandai Sebagai Dibayar",
+    "markAsPaidDescription": "Apakah Anda yakin untuk menandai simpanan ini sebagai dibayar?",
+    "period": "Periode",
+    "amount": "Jumlah",
+    "status": "Status",
+    "memberName": "Nama Anggota",
+    "paidDate": "Tanggal Dibayar",
+    "processedBy": "Diproses Oleh",
+    "savingsRecordMarkedAsPaidSuccessfully": "Simpanan telah ditandai sebagai dibayar.",
+    "errorMarkingAsPaid": "Gagal menandai simpanan sebagai dibayar. Silakan coba lagi."
   },
   "navigation": {
     "dashboard": "Dasbor",
