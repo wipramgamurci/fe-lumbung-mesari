@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col gap-4">
     <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-8">
-      Administrator Management
+      {{ $t("navigation.administratorManagement") }}
     </h1>
     <UCard>
       <UDropdownMenu :items="dropdownItems">
@@ -19,13 +19,14 @@
           <div class="flex flex-col gap-4">
             <div class="flex flex-col gap-2">
               <p class="text-sm text-gray-500 dark:text-gray-400">
-                Username: {{ row.original.username }}
+                {{ $t("register.label.username") }}: {{ row.original.username }}
               </p>
               <p class="text-sm text-gray-500 dark:text-gray-400">
-                Phone Number: {{ row.original.phoneNumber }}
+                {{ $t("register.label.phoneNumber") }}:
+                {{ row.original.phoneNumber }}
               </p>
               <p class="text-sm text-gray-500 dark:text-gray-400">
-                Address: {{ row.original.address }}
+                {{ $t("register.label.address") }}: {{ row.original.address }}
               </p>
             </div>
           </div>
@@ -119,17 +120,17 @@ const columns: TableColumn<User>[] = [
   },
   {
     accessorKey: "fullname",
-    header: "Full Name",
+    header: $t("adminMembers.label.fullName"),
     cell: ({ row }) => `${row.getValue("fullname")}`,
   },
   {
     accessorKey: "email",
-    header: "Email",
+    header: $t("adminMembers.label.email"),
     cell: ({ row }) => `${row.getValue("email")}`,
   },
   {
     accessorKey: "status",
-    header: "Status",
+    header: $t("adminMembers.label.status"),
     cell: ({ row }) => {
       const color = {
         pending: "warning" as const,
@@ -139,7 +140,7 @@ const columns: TableColumn<User>[] = [
       }[row.getValue("status") as string];
 
       return h(UBadge, { class: "capitalize", variant: "solid", color }, () =>
-        row.getValue("status")
+        $t(`adminMembers.status.${row.getValue("status")}`)
       );
     },
   },
