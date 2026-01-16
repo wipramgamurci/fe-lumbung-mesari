@@ -144,7 +144,7 @@
     "monthlyPayment": "Monthly Payment",
     "lastMonthPayment": "Last Month Payment",
     "adminFeeAmount": "Admin Fee",
-    "interestAmount": "Interest Amount",
+    "interestAmount": "Monthly Interest",
     "disbursedAmount": "Disbursed Amount",
     "totalPayableAmount": "Total Payable Amount",
     "installmentLateAmount": "Late Payment Fee",
@@ -214,6 +214,24 @@
     "emailVerified": "Email Verified",
     "memberSince": "Member Since",
     "lastUpdated": "Last Updated"
+  },
+  "loanRequest": {
+    "error": {
+      "failedToLoadLoanPeriods": "Failed to load loan periods.",
+      "failedToCalculateLoan": "Failed to calculate loan.",
+      "failedToSubmitLoanApplication": "Failed to submit loan application."
+    },
+    "loanApplication": "Loan Application",
+    "loanAmount": "Loan Amount",
+    "loanPeriod": "Loan Period",
+    "loanPeriodPlaceholder": "Select loan period",
+    "notes": "Notes (Optional)",
+    "notesPlaceholder": "Add any additional notes...",
+    "submit": "Submit Request",
+    "calculate": "Calculate",
+    "loanCalculation": "Loan Calculation",
+    "enterLoanAmountAndSelectPeriodThenClickCalculate": "Enter loan amount and select period, then click Calculate",
+    "loanApplicationSubmittedSuccessfully": "Loan application submitted successfully."
   },
   "navigation": {
     "dashboard": "Dashboard",
