@@ -1,18 +1,22 @@
 <template>
   <div>
     <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-8">
-      Profile
+      {{ $t("common.profile") }}
     </h1>
 
     <!-- Loading State -->
     <div v-if="isLoading" class="flex justify-center items-center py-12">
-      <div class="text-gray-600 dark:text-gray-400">Loading profile...</div>
+      <div class="text-gray-600 dark:text-gray-400">
+        {{ $t("profile.loadingProfile") }}
+      </div>
     </div>
 
     <!-- Error State -->
     <UCard v-else-if="error" class="mb-6">
       <div class="text-center text-red-600 dark:text-red-400">
-        <p class="font-semibold mb-2">Failed to load profile</p>
+        <p class="font-semibold mb-2">
+          {{ $t("profile.failedToLoadProfile") }}
+        </p>
         <p class="text-sm">{{ error }}</p>
         <UButton
           color="primary"
@@ -20,7 +24,7 @@
           class="mt-4"
           @click="loadUser"
         >
-          Retry
+          {{ $t("profile.retry") }}
         </UButton>
       </div>
     </UCard>
@@ -38,7 +42,7 @@
                 {{ user.fullname }}
               </h2>
               <p class="text-gray-600 dark:text-gray-300">
-                @{{ user.username }}
+                {{ user.username }}
               </p>
             </div>
           </div>
@@ -57,7 +61,11 @@
               variant="subtle"
               size="lg"
             >
-              {{ user.roleId === "administrator" ? "Administrator" : "Member" }}
+              {{
+                user.roleId === "administrator"
+                  ? $t("profile.role.administrator")
+                  : $t("profile.role.member")
+              }}
             </UBadge>
             <UBadge
               v-if="user.otpVerified"
@@ -65,10 +73,10 @@
               variant="subtle"
               size="lg"
             >
-              Verified
+              {{ $t("profile.verified") }}
             </UBadge>
             <UBadge v-else color="warning" variant="subtle" size="lg">
-              Not Verified
+              {{ $t("profile.notVerified") }}
             </UBadge>
           </div>
         </div>
@@ -79,12 +87,12 @@
         <!-- Personal Information -->
         <UCard>
           <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-            Personal Information
+            {{ $t("profile.personalInformation") }}
           </h3>
           <div class="space-y-4">
             <div>
               <p class="text-sm text-gray-600 dark:text-gray-400 mb-1">
-                Full Name
+                {{ $t("register.label.fullname") }}
               </p>
               <p class="text-base font-medium text-gray-900 dark:text-white">
                 {{ user.fullname }}
@@ -92,21 +100,23 @@
             </div>
             <div>
               <p class="text-sm text-gray-600 dark:text-gray-400 mb-1">
-                Username
+                {{ $t("register.label.username") }}
               </p>
               <p class="text-base font-medium text-gray-900 dark:text-white">
                 {{ user.username }}
               </p>
             </div>
             <div>
-              <p class="text-sm text-gray-600 dark:text-gray-400 mb-1">Email</p>
+              <p class="text-sm text-gray-600 dark:text-gray-400 mb-1">
+                {{ $t("register.label.email") }}
+              </p>
               <p class="text-base font-medium text-gray-900 dark:text-white">
                 {{ user.email }}
               </p>
             </div>
             <div>
               <p class="text-sm text-gray-600 dark:text-gray-400 mb-1">
-                Phone Number
+                {{ $t("register.label.phoneNumber") }}
               </p>
               <p class="text-base font-medium text-gray-900 dark:text-white">
                 {{ user.phoneNumber }}
@@ -114,7 +124,7 @@
             </div>
             <div>
               <p class="text-sm text-gray-600 dark:text-gray-400 mb-1">
-                Address
+                {{ $t("register.label.address") }}
               </p>
               <p class="text-base font-medium text-gray-900 dark:text-white">
                 {{ user.address }}
@@ -126,10 +136,10 @@
         <!-- Account Information -->
         <UCard>
           <h3 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-            Account Information
+            {{ $t("profile.accountInformation") }}
           </h3>
           <div class="space-y-4">
-            <div>
+            <!-- <div>
               <p class="text-sm text-gray-600 dark:text-gray-400 mb-1">
                 User ID
               </p>
@@ -138,10 +148,10 @@
               >
                 {{ user.id }}
               </p>
-            </div>
+            </div> -->
             <div>
               <p class="text-sm text-gray-600 dark:text-gray-400 mb-1">
-                Status
+                {{ $t("profile.status") }}
               </p>
               <p class="text-base font-medium text-gray-900 dark:text-white">
                 {{ getStatusInfo(user.status).label }}
@@ -151,21 +161,23 @@
               <p class="text-sm text-gray-600 dark:text-gray-400 mb-1">Role</p>
               <p class="text-base font-medium text-gray-900 dark:text-white">
                 {{
-                  user.roleId === "administrator" ? "Administrator" : "Member"
+                  user.roleId === "administrator"
+                    ? $t("profile.role.administrator")
+                    : $t("profile.role.member")
                 }}
               </p>
             </div>
             <div>
               <p class="text-sm text-gray-600 dark:text-gray-400 mb-1">
-                Email Verified
+                {{ $t("profile.emailVerified") }}
               </p>
               <p class="text-base font-medium text-gray-900 dark:text-white">
-                {{ user.otpVerified ? "Yes" : "No" }}
+                {{ user.otpVerified ? $t("common.yes") : $t("common.no") }}
               </p>
             </div>
             <div>
               <p class="text-sm text-gray-600 dark:text-gray-400 mb-1">
-                Member Since
+                {{ $t("profile.memberSince") }}
               </p>
               <p class="text-base font-medium text-gray-900 dark:text-white">
                 {{ formatDate(user.createdAt) }}
@@ -173,7 +185,7 @@
             </div>
             <div>
               <p class="text-sm text-gray-600 dark:text-gray-400 mb-1">
-                Last Updated
+                {{ $t("profile.lastUpdated") }}
               </p>
               <p class="text-base font-medium text-gray-900 dark:text-white">
                 {{ formatDate(user.updatedAt) }}
@@ -230,11 +242,14 @@ type BadgeColor =
   | "neutral";
 
 const statusConfig: Record<string, { label: string; color: BadgeColor }> = {
-  pending: { label: "Pending", color: "warning" },
-  active: { label: "Active", color: "success" },
-  rejected: { label: "Rejected", color: "error" },
-  waiting_deposit: { label: "Waiting Deposit", color: "info" },
-  inactive: { label: "Inactive", color: "neutral" },
+  pending: { label: $t("adminMembers.status.pending"), color: "warning" },
+  active: { label: $t("adminMembers.status.active"), color: "success" },
+  rejected: { label: $t("adminMembers.status.rejected"), color: "error" },
+  waiting_deposit: {
+    label: $t("adminMembers.status.waiting_deposit"),
+    color: "info",
+  },
+  inactive: { label: $t("adminMembers.status.inactive"), color: "neutral" },
 };
 
 const getStatusInfo = (status: string) => {

@@ -63,14 +63,14 @@
         <template #content>
           <div class="p-4 space-y-2">
             <UButton
-              label="Profile"
+              :label="$t('common.profile')"
               variant="ghost"
               color="neutral"
               block
               to="/profile"
             />
             <UButton
-              label="Logout"
+              :label="$t('common.signOut')"
               variant="ghost"
               color="neutral"
               block

@@ -25,7 +25,10 @@
     "september": "September",
     "october": "Oktober",
     "november": "November",
-    "december": "Desember"
+    "december": "Desember",
+    "profile": "Profil",
+    "yes": "Ya",
+    "no": "Tidak"
   },
   "auth": {
     "signInToAccount": "Masuk ke akun Anda",
@@ -194,6 +197,23 @@
     "processedBy": "Diproses Oleh",
     "savingsRecordMarkedAsPaidSuccessfully": "Simpanan telah ditandai sebagai dibayar.",
     "errorMarkingAsPaid": "Gagal menandai simpanan sebagai dibayar. Silakan coba lagi."
+  },
+  "profile": {
+    "loadingProfile": "Memuat profil...",
+    "failedToLoadProfile": "Gagal memuat profil. Silakan coba lagi.",
+    "retry": "Coba Lagi",
+    "role": {
+      "administrator": "Administrator",
+      "member": "Anggota"
+    },
+    "verified": "Terverifikasi",
+    "notVerified": "Belum Terverifikasi",
+    "personalInformation": "Informasi Pribadi",
+    "accountInformation": "Informasi Akun",
+    "status": "Status",
+    "emailVerified": "Email Terverifikasi",
+    "memberSince": "Anggota Sejak",
+    "lastUpdated": "Terakhir Diperbarui"
   },
   "navigation": {
     "dashboard": "Dasbor",

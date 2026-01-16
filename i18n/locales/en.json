@@ -25,7 +25,10 @@
     "september": "September",
     "october": "October",
     "november": "November",
-    "december": "December"
+    "december": "December",
+    "profile": "Profile",
+    "yes": "Yes",
+    "no": "No"
   },
   "auth": {
     "signInToAccount": "Sign in to your account",
@@ -194,6 +197,23 @@
     "processedBy": "Processed By",
     "savingsRecordMarkedAsPaidSuccessfully": "Savings record marked as paid successfully.",
     "errorMarkingAsPaid": "Failed to mark savings as paid. Please try again."
+  },
+  "profile": {
+    "loadingProfile": "Loading profile...",
+    "failedToLoadProfile": "Failed to load profile. Please try again.",
+    "retry": "Retry",
+    "role": {
+      "administrator": "Administrator",
+      "member": "Member"
+    },
+    "verified": "Verified",
+    "notVerified": "Not Verified",
+    "personalInformation": "Personal Information",
+    "accountInformation": "Account Information",
+    "status": "Status",
+    "emailVerified": "Email Verified",
+    "memberSince": "Member Since",
+    "lastUpdated": "Last Updated"
   },
   "navigation": {
     "dashboard": "Dashboard",
