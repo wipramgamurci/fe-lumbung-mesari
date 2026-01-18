@@ -11,10 +11,10 @@
         />
       </div>
       <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-        Account Rejected
+        {{ $t("rejected.accountRejected") }}
       </h2>
       <p class="text-gray-600 dark:text-gray-300">
-        Your account registration has been rejected
+        {{ $t("rejected.yourAccountRegistrationHasBeenRejected") }}
       </p>
     </div>
 
@@ -23,22 +23,24 @@
       <div class="space-y-6">
         <div class="text-center">
           <p class="text-gray-700 dark:text-gray-300 mb-4">
-            Unfortunately, your account registration has been
-            <strong class="text-red-600 dark:text-red-400">rejected</strong>.
+            {{ $t("rejected.unfortunatelyYourAccountRegistrationHasBeen") }}
+            <strong class="text-red-600 dark:text-red-400">{{
+              $t("rejected.rejected")
+            }}</strong
+            >.
           </p>
           <p class="text-sm text-gray-600 dark:text-gray-400 mb-2">
-            If you believe this is an error or have questions about your
-            rejection, please contact the administrator for assistance.
+            {{ $t("rejected.getAssistanceFromAdministrator") }}
           </p>
         </div>
 
         <!-- Action Buttons -->
         <div class="space-y-3">
           <UButton color="primary" block @click="handleLogout">
-            Sign Out
+            {{ $t("common.signOut") }}
           </UButton>
           <UButton variant="ghost" block @click="handleContactAdmin">
-            Contact Administrator
+            {{ $t("common.contactAdministrator") }}
           </UButton>
         </div>
       </div>

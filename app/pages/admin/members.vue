@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col gap-4">
     <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-8">
-      Member Management
+      {{ $t("navigation.memberManagement") }}
     </h1>
     <UCard>
       <UDropdownMenu :items="dropdownItems">
@@ -19,13 +19,14 @@
           <div class="flex flex-col gap-4">
             <div class="flex flex-col gap-2">
               <p class="text-sm text-gray-500 dark:text-gray-400">
-                Username: {{ row.original.username }}
+                {{ $t("register.label.username") }}: {{ row.original.username }}
               </p>
               <p class="text-sm text-gray-500 dark:text-gray-400">
-                Phone Number: {{ row.original.phoneNumber }}
+                {{ $t("register.label.phoneNumber") }}:
+                {{ row.original.phoneNumber }}
               </p>
               <p class="text-sm text-gray-500 dark:text-gray-400">
-                Address: {{ row.original.address }}
+                {{ $t("register.label.address") }}: {{ row.original.address }}
               </p>
             </div>
           </div>
@@ -41,12 +42,13 @@
     </UCard>
 
     <!-- Approve Modal -->
-    <UModal v-model:open="approveModalOpen" title="Approve Member">
+    <UModal
+      v-model:open="approveModalOpen"
+      :title="$t('adminMembers.approveMember')"
+      :description="$t('adminMembers.confirmApprovalOfThisMember')"
+    >
       <template #body>
         <div class="space-y-4">
-          <p class="text-gray-600 dark:text-gray-300">
-            Are you sure you want to approve this member?
-          </p>
           <div
             v-if="selectedMember"
             class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg"
@@ -65,26 +67,27 @@
             variant="outline"
             @click="approveModalOpen = false"
           >
-            Cancel
+            {{ $t("common.cancel") }}
           </UButton>
           <UButton
             color="success"
             @click="confirmApprove"
             :loading="isProcessing"
           >
-            Approve Member
+            {{ $t("adminMembers.approveMember") }}
           </UButton>
         </div>
       </template>
     </UModal>
 
     <!-- Reject Modal -->
-    <UModal v-model:open="rejectModalOpen" title="Reject Member">
+    <UModal
+      v-model:open="rejectModalOpen"
+      :title="$t('adminMembers.rejectMember')"
+      :description="$t('adminMembers.confirmRejectionOfThisMember')"
+    >
       <template #body>
         <div class="space-y-4">
-          <p class="text-gray-600 dark:text-gray-300">
-            Are you sure you want to reject this member?
-          </p>
           <div
             v-if="selectedMember"
             class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg"
@@ -99,12 +102,13 @@
               for="reject-reason"
               class="block text-sm font-medium text-gray-700 dark:text-gray-300"
             >
-              Reason for rejection <span class="text-red-500">*</span>
+              {{ $t("adminMembers.reasonForRejection") }}
+              <span class="text-red-500">*</span>
             </label>
             <UTextarea
               id="reject-reason"
               v-model="rejectReason"
-              placeholder="Please provide a reason for rejecting this member..."
+              :placeholder="$t('adminMembers.reasonForRejectionPlaceholder')"
               :rows="4"
               class="w-full"
               required
@@ -124,7 +128,7 @@
               }
             "
           >
-            Cancel
+            {{ $t("common.cancel") }}
           </UButton>
           <UButton
             color="error"
@@ -132,7 +136,7 @@
             :loading="isProcessing"
             :disabled="!rejectReason || rejectReason.trim() === ''"
           >
-            Reject Member
+            {{ $t("adminMembers.rejectMember") }}
           </UButton>
         </div>
       </template>
@@ -253,8 +257,10 @@ const confirmApprove = async () => {
     // Show success message
     const toast = useToast();
     toast.add({
-      title: "Member Approved",
-      description: `${selectedMember.value.fullname} has been approved successfully.`,
+      title: $t("adminMembers.memberApproved"),
+      description: $t("adminMembers.memberApprovedDescription", {
+        fullname: selectedMember.value.fullname,
+      }),
       color: "success",
     });
 
@@ -267,10 +273,10 @@ const confirmApprove = async () => {
     const toast = useToast();
     toast.add({
       title: "Error",
-      description:
-        error.message ||
-        error.data?.message ||
-        "Failed to approve member. Please try again.",
+      description: $t("adminMembers.errorApprovingMember", {
+        message:
+          error.data?.message || $t("adminMembers.failedToApproveMember"),
+      }),
       color: "error",
     });
   } finally {
@@ -293,8 +299,10 @@ const confirmReject = async () => {
     // Show success message
     const toast = useToast();
     toast.add({
-      title: "Member Rejected",
-      description: `${selectedMember.value.fullname} has been rejected.`,
+      title: $t("adminMembers.memberRejected"),
+      description: $t("adminMembers.memberRejectedDescription", {
+        fullname: selectedMember.value.fullname,
+      }),
       color: "error",
     });
 
@@ -308,10 +316,9 @@ const confirmReject = async () => {
     const toast = useToast();
     toast.add({
       title: "Error",
-      description:
-        error.message ||
-        error.data?.message ||
-        "Failed to reject member. Please try again.",
+      description: $t("adminMembers.errorRejectingMember", {
+        message: error.data?.message || $t("adminMembers.failedToRejectMember"),
+      }),
       color: "error",
     });
   } finally {
@@ -346,17 +353,17 @@ const columns: TableColumn<User>[] = [
   },
   {
     accessorKey: "fullname",
-    header: "Full Name",
+    header: $t("adminMembers.label.fullName"),
     cell: ({ row }) => `${row.getValue("fullname")}`,
   },
   {
     accessorKey: "email",
-    header: "Email",
+    header: $t("adminMembers.label.email"),
     cell: ({ row }) => `${row.getValue("email")}`,
   },
   {
     accessorKey: "status",
-    header: "Status",
+    header: $t("adminMembers.label.status"),
     cell: ({ row }) => {
       const color = {
         pending: "warning" as const,
@@ -367,13 +374,13 @@ const columns: TableColumn<User>[] = [
       }[row.getValue("status") as string];
 
       return h(UBadge, { class: "capitalize", variant: "solid", color }, () =>
-        row.getValue("status")
+        $t(`adminMembers.status.${row.getValue("status")}`)
       );
     },
   },
   {
     id: "actions",
-    header: "Actions",
+    header: $t("common.actions"),
     cell: ({ row }) =>
       row.getValue("status") === "waiting_deposit"
         ? h("div", { class: "flex gap-2" }, [
@@ -384,7 +391,7 @@ const columns: TableColumn<User>[] = [
                 color: "success",
                 onClick: () => handleApprove(row.original.id),
               },
-              () => "Approve"
+              () => $t("common.approve")
             ),
             h(
               UButton,
@@ -393,7 +400,7 @@ const columns: TableColumn<User>[] = [
                 color: "error",
                 onClick: () => handleReject(row.original.id),
               },
-              () => "Reject"
+              () => $t("common.reject")
             ),
           ])
         : null,

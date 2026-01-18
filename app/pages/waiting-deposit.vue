@@ -7,14 +7,14 @@
           name="i-heroicons-clock"
           class="mx-auto text-yellow-500 dark:text-yellow-400"
           style="width: 4rem; height: 4rem"
-          aria-label="Waiting for Initial Deposit"
+          aria-label="Waiting for Principal Savings"
         />
       </div>
       <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-        Waiting for Initial Deposit
+        {{ $t("waitingDeposit.waitingForPrincipalSavings") }}
       </h2>
       <p class="text-gray-600 dark:text-gray-300">
-        Your account is pending initial deposit
+        {{ $t("waitingDeposit.yourAccountIsPendingPrincipalSavings") }}
       </p>
     </div>
 
@@ -23,27 +23,20 @@
       <div class="space-y-6">
         <div class="text-center">
           <p class="text-gray-700 dark:text-gray-300 mb-4">
-            To access your dashboard, you need to complete your
-            <strong class="text-primary-600 dark:text-primary-400"
-              >principal savings</strong
-            >
-            or
-            <strong class="text-primary-600 dark:text-primary-400"
-              >initial deposit</strong
-            >
-            first.
+            {{ $t("waitingDeposit.toAccessYourDashboard") }}
+            <strong class="text-primary-600 dark:text-primary-400">{{
+              $t("waitingDeposit.principalSavings")
+            }}</strong>
           </p>
           <p class="text-sm text-gray-600 dark:text-gray-400">
-            Please contact the administrator or visit the office to complete
-            your initial deposit. Once your deposit is approved, you will be
-            able to access all features of the application.
+            {{ $t("waitingDeposit.pleaseContactTheAdministrator") }}
           </p>
         </div>
 
         <!-- Action Buttons -->
         <div class="space-y-3">
           <UButton color="primary" block @click="handleLogout">
-            Sign Out
+            {{ $t("common.signOut") }}
           </UButton>
         </div>
       </div>

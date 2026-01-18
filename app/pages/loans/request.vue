@@ -3,7 +3,7 @@
     <UCard>
       <template #header>
         <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
-          Loan Request
+          {{ $t("navigation.loanRequest") }}
         </h1>
       </template>
 
@@ -11,12 +11,12 @@
         <!-- Loan Application Form -->
         <div class="w-full lg:w-1/2">
           <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4">
-            Loan Application
+            {{ $t("loanRequest.loanApplication") }}
           </h2>
 
           <UForm :state="form" @submit="handleSubmit" class="space-y-4">
             <UFormField
-              label="Loan Amount"
+              :label="$t('loanRequest.loanAmount')"
               name="amount"
               :error="errors.amount"
               required
@@ -33,7 +33,7 @@
             </UFormField>
 
             <UFormField
-              label="Loan Period"
+              :label="$t('loanRequest.loanPeriod')"
               name="loanPeriodId"
               :error="errors.loanPeriodId"
               required
@@ -41,17 +41,17 @@
               <USelect
                 v-model="form.loanPeriodId"
                 :items="loanPeriodOptions"
-                placeholder="Select loan period"
+                :placeholder="$t('loanRequest.loanPeriodPlaceholder')"
                 :disabled="isLoadingPeriods || isSubmitting"
                 :loading="isLoadingPeriods"
                 class="w-full"
               />
             </UFormField>
 
-            <UFormField label="Notes (Optional)" name="notes">
+            <UFormField :label="$t('loanRequest.notes')" name="notes">
               <UTextarea
                 v-model="form.notes"
-                placeholder="Add any additional notes..."
+                :placeholder="$t('loanRequest.notesPlaceholder')"
                 :disabled="isSubmitting"
                 :rows="3"
                 class="w-full"
@@ -67,7 +67,11 @@
               @click="handleButtonClick"
               block
             >
-              {{ calculationResult ? "Submit Application" : "Calculate" }}
+              {{
+                calculationResult
+                  ? $t("loanRequest.submit")
+                  : $t("loanRequest.calculate")
+              }}
             </UButton>
           </UForm>
         </div>
@@ -75,7 +79,7 @@
         <!-- Loan Calculation Results -->
         <div class="w-full lg:w-1/2">
           <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4">
-            Loan Calculation
+            {{ $t("loanRequest.loanCalculation") }}
           </h2>
 
           <div
@@ -84,7 +88,7 @@
           >
             <div class="flex justify-between">
               <span class="text-gray-600 dark:text-gray-300"
-                >Principal Amount:</span
+                >{{ $t("loan.principalAmount") }}:</span
               >
               <span class="font-semibold text-gray-900 dark:text-white">
                 {{
@@ -94,7 +98,9 @@
             </div>
 
             <div class="flex justify-between">
-              <span class="text-gray-600 dark:text-gray-300">Admin Fee:</span>
+              <span class="text-gray-600 dark:text-gray-300">
+                {{ $t("loan.adminFeeAmount") }}:
+              </span>
               <span class="font-semibold text-gray-900 dark:text-white">
                 {{ currencyFormatter.format(calculationResult.adminFee) }}
               </span>
@@ -102,7 +108,7 @@
 
             <div class="flex justify-between border-t pt-2">
               <span class="text-gray-600 dark:text-gray-300"
-                >Disbursed Amount:</span
+                >{{ $t("loan.disbursedAmount") }}:</span
               >
               <span
                 class="font-semibold text-primary-600 dark:text-primary-400"
@@ -114,15 +120,18 @@
             </div>
 
             <div class="flex justify-between pt-2">
-              <span class="text-gray-600 dark:text-gray-300">Tenor:</span>
+              <span class="text-gray-600 dark:text-gray-300">
+                {{ $t("loan.tenor") }}:
+              </span>
               <span class="font-semibold text-gray-900 dark:text-white">
-                {{ calculationResult.tenor }} months
+                {{ calculationResult.tenor }}
+                {{ $t("common.months") }}
               </span>
             </div>
 
             <div class="flex justify-between">
               <span class="text-gray-600 dark:text-gray-300"
-                >Interest Rate:</span
+                >{{ $t("loan.interestRate") }}:</span
               >
               <span class="font-semibold text-gray-900 dark:text-white">
                 {{ formatPercentage(calculationResult.interestRate) }}
@@ -131,7 +140,7 @@
 
             <div class="flex justify-between">
               <span class="text-gray-600 dark:text-gray-300"
-                >Monthly Interest:</span
+                >{{ $t("loan.interestAmount") }}:</span
               >
               <span class="font-semibold text-gray-900 dark:text-white">
                 {{
@@ -142,7 +151,7 @@
 
             <div class="flex justify-between border-t pt-2">
               <span class="text-gray-600 dark:text-gray-300"
-                >Monthly Payment:</span
+                >{{ $t("loan.monthlyPayment") }}:</span
               >
               <span
                 class="font-semibold text-primary-600 dark:text-primary-400"
@@ -156,7 +165,7 @@
               class="flex justify-between"
             >
               <span class="text-gray-600 dark:text-gray-300"
-                >Last Month Payment:</span
+                >{{ $t("loan.lastMonthPayment") }}:</span
               >
               <span class="font-semibold text-gray-900 dark:text-white">
                 {{
@@ -167,7 +176,13 @@
           </div>
 
           <div v-else class="text-center py-8 text-gray-500 dark:text-gray-400">
-            <p>Enter loan amount and select period, then click Calculate</p>
+            <p>
+              {{
+                $t(
+                  "loanRequest.enterLoanAmountAndSelectPeriodThenClickCalculate"
+                )
+              }}
+            </p>
           </div>
         </div>
       </div>
@@ -189,6 +204,8 @@ definePageMeta({
   middleware: "role",
   roles: ["member"],
 });
+
+const toast = useToast();
 
 const currencyFormatter = new Intl.NumberFormat("id-ID", {
   style: "currency",
@@ -298,10 +315,12 @@ const fetchLoanPeriods = async () => {
     loanPeriods.value = response;
   } catch (error: any) {
     console.error("Error fetching loan periods:", error);
-    alert(
-      "Failed to load loan periods: " +
-        (error.message || error.data?.message || "Unknown error")
-    );
+    toast.add({
+      title: "Error",
+      description:
+        error.data?.message || $t("loanRequest.error.failedToLoadLoanPeriods"),
+      color: "error",
+    });
   } finally {
     isLoadingPeriods.value = false;
   }
@@ -337,10 +356,12 @@ const handleCalculate = async () => {
     lastCalculatedPeriodId.value = form.value.loanPeriodId;
   } catch (error: any) {
     console.error("Error calculating loan:", error);
-    alert(
-      "Calculation failed: " +
-        (error.message || error.data?.message || "Unknown error")
-    );
+    toast.add({
+      title: "Error",
+      description:
+        error.data?.message || $t("loanRequest.error.failedToCalculateLoan"),
+      color: "error",
+    });
     calculationResult.value = null;
     lastCalculatedAmount.value = null;
     lastCalculatedPeriodId.value = null;
@@ -376,7 +397,11 @@ const handleSubmit = async () => {
       },
     });
 
-    alert("Loan application submitted successfully!");
+    toast.add({
+      title: "Success",
+      description: $t("loanRequest.loanApplicationSubmittedSuccessfully"),
+      color: "success",
+    });
     console.log("Loan submitted:", response);
 
     // Reset form
@@ -394,10 +419,13 @@ const handleSubmit = async () => {
     // navigateTo("/loans");
   } catch (error: any) {
     console.error("Error submitting loan:", error);
-    alert(
-      "Submission failed: " +
-        (error.message || error.data?.message || "Unknown error")
-    );
+    toast.add({
+      title: "Error",
+      description:
+        error.data?.message ||
+        $t("loanRequest.error.failedToSubmitLoanApplication"),
+      color: "error",
+    });
   } finally {
     isSubmitting.value = false;
   }

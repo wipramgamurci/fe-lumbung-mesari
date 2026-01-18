@@ -3,13 +3,13 @@
     <!-- Logo/Header -->
     <div class="text-center">
       <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-        Verify Your Account
+        {{ $t("verifyOtp.verifyYourAccount") }}
       </h2>
       <p class="text-gray-600 dark:text-gray-300">
-        We've sent a verification code to your email
+        {{ $t("verifyOtp.weveSentAVerificationCodeToYourEmail") }}
       </p>
       <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
-        Please check your email for the verification code
+        {{ $t("verifyOtp.pleaseCheckYourEmailForTheVerificationCode") }}
       </p>
     </div>
 
@@ -18,10 +18,10 @@
       <UForm :state="formState" @submit="handleVerifyOtp">
         <div class="space-y-6">
           <!-- OTP Input -->
-          <UFormField label="Verification Code" name="otp">
+          <UFormField :label="$t('verifyOtp.verificationCode')" name="otp">
             <UInput
               v-model="formState.otpCode"
-              placeholder="Enter 6-digit code"
+              :placeholder="$t('verifyOtp.enter6DigitCode')"
               maxlength="6"
               required
               class="w-full text-center text-2xl tracking-widest"
@@ -35,10 +35,10 @@
               v-if="timeLeft > 0"
               class="text-sm text-gray-600 dark:text-gray-400"
             >
-              Resend code in {{ timeLeft }}s
+              {{ $t("verifyOtp.resendCodeIn", { timeLeft }) }}
             </p>
             <p v-else class="text-sm text-gray-600 dark:text-gray-400">
-              Didn't receive the code?
+              {{ $t("verifyOtp.didntReceiveTheCode") }}
             </p>
 
             <UButton
@@ -49,7 +49,7 @@
               :loading="isResending"
               @click="handleResendOtp"
             >
-              Resend Code
+              {{ $t("verifyOtp.resendCode") }}
             </UButton>
           </div>
 
@@ -61,7 +61,7 @@
             :loading="isVerifying"
             :disabled="formState.otpCode.length !== 6"
           >
-            Verify Account
+            {{ $t("verifyOtp.verifyAccount") }}
           </UButton>
         </div>
       </UForm>
@@ -69,12 +69,12 @@
       <!-- Back to Login Link -->
       <div class="mt-6 text-center">
         <p class="text-sm text-gray-600 dark:text-gray-300">
-          Need to start over?
+          {{ $t("verifyOtp.needToStartOver") }}
           <NuxtLink
             to="/register"
             class="font-medium text-primary-600 hover:text-primary-500 dark:text-primary-400 dark:hover:text-primary-300"
           >
-            Register again
+            {{ $t("verifyOtp.registerAgain") }}
           </NuxtLink>
         </p>
       </div>
@@ -89,7 +89,7 @@ definePageMeta({
 
 const { verifyOtp, resendOtp } = useAuth();
 const userStore = useUserStore();
-
+const toast = useToast();
 // Form state
 const formState = ref<{
   otpCode: string;
@@ -140,11 +140,6 @@ const handleOtpInput = (event: Event) => {
 
 // Verify OTP
 const handleVerifyOtp = async () => {
-  if (formState.value.otpCode.length !== 6) {
-    alert("Please enter a valid 6-digit code");
-    return;
-  }
-
   isVerifying.value = true;
 
   try {
@@ -156,7 +151,11 @@ const handleVerifyOtp = async () => {
     await userStore.fetchUser();
 
     // Show success message
-    alert(response.message);
+    toast.add({
+      title: "Success",
+      description: response.message,
+      color: "success",
+    });
 
     // Redirect based on user status after verification
     const userStatus = userStore.user?.status;
@@ -170,10 +169,13 @@ const handleVerifyOtp = async () => {
     }
   } catch (error: any) {
     console.error("OTP verification error:", error);
-    alert(
-      "OTP verification failed: " +
-        (error.message || error.data?.message || "Unknown error")
-    );
+    toast.add({
+      title: "Error",
+      description: $t("verifyOtp.otpVerificationFailed", {
+        message: error.data?.message || "Unknown error",
+      }),
+      color: "error",
+    });
   } finally {
     isVerifying.value = false;
   }
@@ -187,16 +189,23 @@ const handleResendOtp = async () => {
     const response = await resendOtp();
 
     console.log("OTP resent successfully:", response);
-    alert(response.message);
+    toast.add({
+      title: "Success",
+      description: response.message,
+      color: "success",
+    });
 
     // Restart timer
     startTimer();
   } catch (error: any) {
     console.error("Resend OTP error:", error);
-    alert(
-      "OTP request failed: " +
-        (error.message || error.data?.message || "Unknown error")
-    );
+    toast.add({
+      title: "Error",
+      description: $t("verifyOtp.otpRequestFailed", {
+        message: error.data?.message || "Unknown error",
+      }),
+      color: "error",
+    });
   } finally {
     isResending.value = false;
   }

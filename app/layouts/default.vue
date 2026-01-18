@@ -24,9 +24,9 @@
         <template v-else>
           <USkeleton class="h-10 w-10 rounded-md lg:hidden" />
         </template>
-        <span class="font-bold text-lg text-gray-900 dark:text-white"
-          >Lumbung Mesari</span
-        >
+        <span class="font-bold text-lg text-gray-900 dark:text-white">{{
+          $t("app.title")
+        }}</span>
       </div>
 
       <div class="hidden lg:block">
@@ -63,14 +63,14 @@
         <template #content>
           <div class="p-4 space-y-2">
             <UButton
-              label="Profile"
+              :label="$t('common.profile')"
               variant="ghost"
               color="neutral"
               block
               to="/profile"
             />
             <UButton
-              label="Logout"
+              :label="$t('common.signOut')"
               variant="ghost"
               color="neutral"
               block
@@ -92,12 +92,13 @@
 
 <script setup lang="ts">
 import {
-  ADMIN_NAV_ITEMS,
-  BASE_NAV_ITEMS,
-  MEMBER_NAV_ITEMS,
+  getAdminNavItems,
+  getBaseNavItems,
+  getMemberNavItems,
 } from "~/constants/navigation";
 
 const { logout } = useAuth();
+const { t } = useI18n(); // Call useI18n() at top level of setup
 const userStore = useUserStore();
 const currentUser = computed(() => userStore.user);
 const hasMounted = ref(false);
@@ -109,11 +110,11 @@ const userDisplayName = computed(() => currentUser.value?.fullname || "User");
 
 const navItems = computed(() => {
   if (userStore.isAdmin || userStore.isSuperadministrator) {
-    return [...BASE_NAV_ITEMS, ...ADMIN_NAV_ITEMS];
+    return [...getBaseNavItems(t), ...getAdminNavItems(t)];
   }
   if (userStore.isMember) {
-    return [...BASE_NAV_ITEMS, ...MEMBER_NAV_ITEMS];
+    return [...getBaseNavItems(t), ...getMemberNavItems(t)];
   }
-  return BASE_NAV_ITEMS;
+  return getBaseNavItems(t);
 });
 </script>

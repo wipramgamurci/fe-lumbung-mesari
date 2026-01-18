@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col gap-4">
     <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-8">
-      Savings Management
+      {{ $t("savings.savingsManagement") }}
     </h1>
 
     <!-- Filters Card -->
@@ -11,7 +11,7 @@
           v-model="selectedPeriod"
           :items="monthOptions"
           value-key="value"
-          placeholder="Select Period"
+          :placeholder="$t('savings.selectPeriod')"
           class="w-48"
           @update:model-value="handlePeriodChange"
         />
@@ -20,7 +20,7 @@
           v-model="selectedYear"
           :items="yearOptions"
           value-key="value"
-          placeholder="Select Year"
+          :placeholder="$t('savings.selectYear')"
           class="w-32"
           @update:model-value="handleYearChange"
         />
@@ -32,7 +32,7 @@
           @click="refreshData"
           :loading="loading"
         >
-          Refresh
+          {{ $t("common.refresh") }}
         </UButton>
       </div>
     </UCard>
@@ -67,7 +67,7 @@
               </div>
               <div class="flex flex-col gap-2">
                 <p class="text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Username
+                  {{ $t("savings.username") }}
                 </p>
                 <p class="text-sm text-gray-600 dark:text-gray-400">
                   {{ row.original.user.username }}
@@ -75,7 +75,7 @@
               </div>
               <div class="flex flex-col gap-2">
                 <p class="text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Created At
+                  {{ $t("savings.createdAt") }}
                 </p>
                 <p class="text-sm text-gray-600 dark:text-gray-400">
                   {{ formatDateTime(row.original.createdAt) }}
@@ -83,7 +83,7 @@
               </div>
               <div class="flex flex-col gap-2">
                 <p class="text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Updated At
+                  {{ $t("savings.updatedAt") }}
                 </p>
                 <p class="text-sm text-gray-600 dark:text-gray-400">
                   {{ formatDateTime(row.original.updatedAt) }}
@@ -96,7 +96,7 @@
 
       <div v-if="!savingsData && !loading" class="text-center py-8">
         <p class="text-gray-500 dark:text-gray-400">
-          No data available. Click refresh to load savings records.
+          {{ $t("savings.noDataAvailable") }}
         </p>
       </div>
 
@@ -114,8 +114,8 @@
     <!-- Mark as Paid Confirmation Modal -->
     <UModal
       v-model:open="settleModalOpen"
-      title="Mark as Paid"
-      description="Are you sure you want to mark this savings record as paid?"
+      :title="$t('savings.markAsPaid')"
+      :description="$t('savings.markAsPaidDescription')"
     >
       <template #body>
         <div class="space-y-4">
@@ -128,10 +128,12 @@
                 {{ selectedSavings.user.fullname }}
               </p>
               <p class="text-sm text-gray-600 dark:text-gray-400">
-                Period: {{ formatPeriod(selectedSavings.periodDate) }}
+                {{ $t("savings.period") }}:
+                {{ formatPeriod(selectedSavings.periodDate) }}
               </p>
               <p class="text-sm text-gray-600 dark:text-gray-400">
-                Amount: {{ formatCurrency(selectedSavings.amount) }}
+                {{ $t("savings.amount") }}:
+                {{ formatCurrency(selectedSavings.amount) }}
               </p>
             </div>
           </div>
@@ -145,7 +147,7 @@
             @click="settleModalOpen = false"
             :disabled="isSettling"
           >
-            Cancel
+            {{ $t("common.cancel") }}
           </UButton>
           <UButton
             color="success"
@@ -153,7 +155,7 @@
             :loading="isSettling"
             :disabled="isSettling"
           >
-            Mark as Paid
+            {{ $t("savings.markAsPaid") }}
           </UButton>
         </div>
       </template>
@@ -198,18 +200,18 @@ const isSettling = computed(() => {
 
 // Month options
 const monthOptions = [
-  { label: "January", value: "january" },
-  { label: "February", value: "february" },
-  { label: "March", value: "march" },
-  { label: "April", value: "april" },
-  { label: "May", value: "may" },
-  { label: "June", value: "june" },
-  { label: "July", value: "july" },
-  { label: "August", value: "august" },
-  { label: "September", value: "september" },
-  { label: "October", value: "october" },
-  { label: "November", value: "november" },
-  { label: "December", value: "december" },
+  { label: $t("common.january"), value: "january" },
+  { label: $t("common.february"), value: "february" },
+  { label: $t("common.march"), value: "march" },
+  { label: $t("common.april"), value: "april" },
+  { label: $t("common.may"), value: "may" },
+  { label: $t("common.june"), value: "june" },
+  { label: $t("common.july"), value: "july" },
+  { label: $t("common.august"), value: "august" },
+  { label: $t("common.september"), value: "september" },
+  { label: $t("common.october"), value: "october" },
+  { label: $t("common.november"), value: "november" },
+  { label: $t("common.december"), value: "december" },
 ];
 
 // Year options (current year and 5 years back)
@@ -254,22 +256,22 @@ const columns: TableColumn<SavingsRecord>[] = [
   },
   {
     accessorKey: "user.fullname",
-    header: "Member Name",
+    header: $t("savings.memberName"),
     cell: ({ row }) => row.original.user.fullname,
   },
   {
     accessorKey: "periodDate",
-    header: "Period",
+    header: $t("savings.period"),
     cell: ({ row }) => formatPeriod(row.original.periodDate),
   },
   {
     accessorKey: "amount",
-    header: "Amount",
+    header: $t("savings.amount"),
     cell: ({ row }) => formatCurrency(row.original.amount),
   },
   {
     accessorKey: "status",
-    header: "Status",
+    header: $t("savings.status"),
     cell: ({ row }) => {
       const status = row.getValue("status") as string;
       const color =
@@ -279,26 +281,24 @@ const columns: TableColumn<SavingsRecord>[] = [
           overdue: "error" as const,
         }[status] || "neutral";
 
-      return h(
-        UBadge,
-        { class: "capitalize", variant: "solid", color },
-        () => status
+      return h(UBadge, { class: "capitalize", variant: "solid", color }, () =>
+        $t(`savings.statusOptions.${status}`)
       );
     },
   },
   {
     accessorKey: "paidAt",
-    header: "Paid Date",
+    header: $t("savings.paidDate"),
     cell: ({ row }) => formatDate(row.original.paidAt),
   },
   {
     accessorKey: "processedByUser",
-    header: "Processed By",
+    header: $t("savings.processedBy"),
     cell: ({ row }) => row.original.processedByUser?.fullname || "—",
   },
   {
     id: "actions",
-    header: "Actions",
+    header: $t("common.actions"),
     cell: ({ row }) => {
       const status = row.getValue("status") as string;
       const isSettling = settlingIds.value.has(row.original.id);
@@ -317,7 +317,7 @@ const columns: TableColumn<SavingsRecord>[] = [
             disabled: isSettling,
             onClick: () => openSettleModal(row.original),
           },
-          () => "Mark as Paid"
+          () => $t("savings.markAsPaid")
         ),
       ]);
     },
@@ -405,7 +405,7 @@ const confirmMarkAsPaid = async () => {
     const toast = useToast();
     toast.add({
       title: "Success",
-      description: "Savings record marked as paid successfully.",
+      description: $t("savings.savingsRecordMarkedAsPaidSuccessfully"),
       color: "success",
     });
 
@@ -418,10 +418,7 @@ const confirmMarkAsPaid = async () => {
     const toast = useToast();
     toast.add({
       title: "Error",
-      description:
-        err.data?.message ||
-        err.message ||
-        "Failed to mark as paid. Please try again.",
+      description: err.data?.message || $t("savings.errorMarkingAsPaid"),
       color: "error",
     });
   } finally {

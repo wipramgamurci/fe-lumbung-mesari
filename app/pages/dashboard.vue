@@ -1,14 +1,16 @@
 <template>
   <div>
     <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-8">
-      Dashboard
+      {{ $t("navigation.dashboard") }}
     </h1>
 
     <!-- Balance Summary -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
       <UCard>
         <div class="text-center">
-          <p class="text-sm text-gray-600 dark:text-gray-300">Total Balance</p>
+          <p class="text-sm text-gray-600 dark:text-gray-300">
+            {{ $t("dashboard.totalBalance") }}
+          </p>
           <p
             class="text-2xl font-bold"
             :class="
@@ -30,7 +32,9 @@
 
       <UCard>
         <div class="text-center">
-          <p class="text-sm text-gray-600 dark:text-gray-300">Capital</p>
+          <p class="text-sm text-gray-600 dark:text-gray-300">
+            {{ $t("dashboard.capital") }}
+          </p>
           <p
             class="text-2xl font-bold"
             :class="
@@ -52,7 +56,9 @@
 
       <UCard>
         <div class="text-center">
-          <p class="text-sm text-gray-600 dark:text-gray-300">SHU</p>
+          <p class="text-sm text-gray-600 dark:text-gray-300">
+            {{ $t("dashboard.shu") }}
+          </p>
           <p
             class="text-2xl font-bold"
             :class="
