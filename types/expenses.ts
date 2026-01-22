@@ -35,3 +35,12 @@ export interface ExpensesResponse {
     next: boolean
     prev: boolean
 }
+
+export interface CreateExpenseRequest {
+    expenseCategoryId: string
+    name: string
+    amount: number
+    notes?: string
+    source: 'auto' | 'manual'
+    transactionDate: string
+}
