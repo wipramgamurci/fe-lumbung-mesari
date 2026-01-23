@@ -70,5 +70,23 @@ export const getAdminNavItems = (
       label: t("navigation.savingsManagement"),
       to: "/admin/savings",
     },
+    {
+      icon: "i-heroicons-banknotes",
+      label: t("navigation.expenseManagement"),
+      children: [
+        {
+          icon: "i-heroicons-credit-card",
+          label: t("navigation.createExpense"),
+          description: t("navigation.createExpenseDescription"),
+          to: "/admin/expenses/create",
+        },
+        {
+          icon: "i-heroicons-credit-card",
+          label: t("navigation.expenseList"),
+          description: t("navigation.expenseListDescription"),
+          to: "/admin/expenses",
+        },
+      ]
+    },
   ];
 };

@@ -243,7 +243,12 @@
     "memberManagement": "Manajemen Anggota",
     "memberManagementDesc": "Daftar dan Setujui atau Tolak Anggota",
     "loanManagement": "Manajemen Pinjaman",
-    "savingsManagement": "Manajemen Simpanan"
+    "savingsManagement": "Manajemen Simpanan",
+    "expenseManagement": "Manajemen Pengeluaran",
+    "createExpense": "Buat Pengeluaran",
+    "createExpenseDescription": "Buat pengeluaran baru",
+    "expenseList": "Daftar Pengeluaran",
+    "expenseListDescription": "Lihat daftar pengeluaran"
   },
   "dashboard": {
     "totalBalance": "Total Saldo",
@@ -252,5 +257,25 @@
   },
   "app": {
     "title": "Lumbung Mesari"
+  },
+  "expenses": {
+    "createExpense": "Buat Pengeluaran",
+    "expenseCategory": "Kategori Pengeluaran",
+    "expenseCategoryPlaceholder": "Pilih kategori pengeluaran",
+    "expenseName": "Nama Pengeluaran",
+    "expenseNamePlaceholder": "Masukkan nama pengeluaran",
+    "amount": "Jumlah",
+    "amountPlaceholder": "Masukkan jumlah",
+    "transactionDate": "Tanggal Transaksi",
+    "source": "Sumber Dana",
+    "sourcePlaceholder": "Pilih sumber dana",
+    "notes": "Catatan",
+    "notesPlaceholder": "Tambahkan catatan (opsional)",
+    "sourceOptions": {
+      "auto": "Otomatis",
+      "manual": "Manual"
+    },
+    "successCreate": "Pengeluaran berhasil dibuat",
+    "failedCreate": "Gagal membuat pengeluaran: {message}"
   }
 }
