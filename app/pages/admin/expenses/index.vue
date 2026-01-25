@@ -1,168 +1,315 @@
 <template>
   <div class="flex flex-col gap-4">
-    <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-8">
-      Expenses
-    </h1>
+    <div class="flex items-center justify-between mb-8">
+      <h1 class="text-3xl font-bold text-gray-900 dark:text-white">
+        {{ $t("navigation.expenseList") }}
+      </h1>
+      <UButton
+        color="primary"
+        icon="i-heroicons-plus"
+        to="/admin/expenses/create"
+      >
+        {{ $t("expenses.createExpense") }}
+      </UButton>
+    </div>
 
+    <!-- Filters Card -->
     <UCard>
-      <div class="flex flex-col gap-4">
-        <UButton
-          color="primary"
-          @click="fetchCategories"
-          :loading="loading"
-        >
-          Get Categories
-        </UButton>
+      <div class="flex flex-wrap items-center gap-4">
+        <UInput
+          v-model="searchQuery"
+          :placeholder="$t('common.searchPlaceholder') || 'Search...'"
+          icon="i-heroicons-magnifying-glass"
+          class="flex-1 min-w-64"
+          @keyup.enter="handleSearch"
+        />
+
+        <USelectMenu
+          v-model="selectedCategoryOption"
+          :items="categoryOptions"
+          option-attribute="label"
+          :placeholder="$t('expenses.expenseCategoryPlaceholder')"
+          class="w-64"
+          @update:model-value="handleCategoryChange"
+        />
 
         <UButton
-          color="primary"
-          @click="fetchExpenses"
+          color="neutral"
+          variant="outline"
+          icon="i-heroicons-arrow-path"
+          @click="refreshData"
           :loading="loading"
         >
-          Get Expenses (List)
+          {{ $t("common.refresh") }}
         </UButton>
-
-        <div v-if="error" class="p-4 bg-red-50 dark:bg-red-900/20 rounded-lg">
-          <p class="text-red-600 dark:text-red-400">{{ error }}</p>
-        </div>
-
-        <div v-if="categories" class="flex flex-col gap-2">
-            <h3 class="font-bold">Categories:</h3>
-            <pre class="p-4 bg-gray-100 dark:bg-gray-800 rounded-lg overflow-auto">
-{{ JSON.stringify(categories, null, 2) }}
-            </pre>
-        </div>
-
-        <div v-if="expenses" class="flex flex-col gap-2">
-            <h3 class="font-bold">Expenses:</h3>
-             <pre class="p-4 bg-gray-100 dark:bg-gray-800 rounded-lg overflow-auto">
-{{ JSON.stringify(expenses, null, 2) }}
-            </pre>
-        </div>
-
-        <UButton
-          color="primary"
-          @click="fetchExpenseDetail"
-          :loading="loading"
-        >
-          Get Expense Detail (019bd00a-1773-71a8-a759-783abcdafc1b)
-        </UButton>
-
-        <div v-if="expenseDetail" class="flex flex-col gap-2">
-            <h3 class="font-bold">Expense Detail:</h3>
-             <pre class="p-4 bg-gray-100 dark:bg-gray-800 rounded-lg overflow-auto">
-{{ JSON.stringify(expenseDetail, null, 2) }}
-            </pre>
-        </div>
-
-        <UButton
-          color="primary"
-          @click="createTestExpense"
-          :loading="loading"
-        >
-          Create Test Expense
-        </UButton>
-
-        <div v-if="createdExpense" class="flex flex-col gap-2">
-            <h3 class="font-bold">Created Expense:</h3>
-             <pre class="p-4 bg-gray-100 dark:bg-gray-800 rounded-lg overflow-auto">
-{{ JSON.stringify(createdExpense, null, 2) }}
-            </pre>
-        </div>
       </div>
+    </UCard>
+
+    <!-- Table Card -->
+    <UCard>
+      <div
+        v-if="error"
+        class="mb-4 p-4 bg-red-50 dark:bg-red-900/20 rounded-lg"
+      >
+        <p class="text-red-600 dark:text-red-400">{{ error }}</p>
+      </div>
+
+      <UTable
+        v-if="expensesData"
+        :data="expensesData.data"
+        :columns="columns"
+        :ui="{ tr: 'data-[expanded=true]:bg-elevated/50' }"
+        class="flex-1"
+        :loading="loading"
+      >
+        <template #expanded="{ row }">
+          <div class="p-4">
+            <div class="grid grid-cols-2 gap-4">
+              <!-- Expense Details -->
+              <div class="flex flex-col gap-2">
+                 <p class="text-sm font-medium text-gray-700 dark:text-gray-300">
+                  {{ $t("expenses.transactionDate") }}
+                </p>
+                <p class="text-sm text-gray-600 dark:text-gray-400">
+                  <!-- Fallback to createdAt if transactionDate is missing from type/response -->
+                   {{ formatDate((row.original as any).transactionDate || row.original.createdAt) }}
+                </p>
+              </div>
+
+              <div class="flex flex-col gap-2">
+                <p class="text-sm font-medium text-gray-700 dark:text-gray-300">
+                  {{ $t("expenses.source") }}
+                </p>
+                <p class="text-sm text-gray-600 dark:text-gray-400 capitalize">
+                  {{ row.original.source }}
+                </p>
+              </div>
+
+               <div class="flex flex-col gap-2">
+                <p class="text-sm font-medium text-gray-700 dark:text-gray-300">
+                  {{ $t("expenses.amount") }}
+                </p>
+                <p class="text-sm text-gray-600 dark:text-gray-400">
+                  {{ formatCurrency(row.original.totalAmount) }}
+                </p>
+              </div>
+
+              <div class="flex flex-col gap-2">
+                <p class="text-sm font-medium text-gray-700 dark:text-gray-300">
+                  Created By
+                </p>
+                <p class="text-sm text-gray-600 dark:text-gray-400">
+                  {{ row.original.createdBy }}
+                </p>
+              </div>
+
+               <div class="flex flex-col gap-2">
+                <p class="text-sm font-medium text-gray-700 dark:text-gray-300">
+                  {{ $t("loan.createdAt") }}
+                </p>
+                <p class="text-sm text-gray-600 dark:text-gray-400">
+                  {{ formatDateTime(row.original.createdAt) }}
+                </p>
+              </div>
+              
+               <div class="flex flex-col gap-2">
+                <p class="text-sm font-medium text-gray-700 dark:text-gray-300">
+                  {{ $t("profile.lastUpdated") }}
+                </p>
+                <p class="text-sm text-gray-600 dark:text-gray-400">
+                  {{ formatDateTime(row.original.updatedAt) }}
+                </p>
+              </div>
+
+              <!-- Notes -->
+              <div
+                v-if="row.original.notes"
+                class="flex flex-col gap-2 col-span-2"
+              >
+                <p class="text-sm font-medium text-gray-700 dark:text-gray-300">
+                  {{ $t("expenses.notes") }}
+                </p>
+                <p class="text-sm text-gray-600 dark:text-gray-400 whitespace-pre-wrap">
+                  {{ row.original.notes }}
+                </p>
+              </div>
+            </div>
+          </div>
+        </template>
+      </UTable>
+
+      <div v-if="!expensesData && !loading" class="text-center py-8">
+        <p class="text-gray-500 dark:text-gray-400">
+          {{ $t("loan.noDataAvailable") }}
+        </p>
+      </div>
+
+       <template #footer>
+        <UPagination
+          v-if="expensesData"
+          v-model:page="page"
+          :items-per-page="limit"
+          :total="expensesData.totalData"
+        />
+      </template>
     </UCard>
   </div>
 </template>
 
-
-
 <script setup lang="ts">
-import type { ExpenseCategory, ExpensesResponse, Expense } from '../../../../types/expenses'
+import { h, resolveComponent } from "vue";
+import type { TableColumn } from "@nuxt/ui";
+import type { ExpensesResponse, Expense, ExpenseCategory } from "~~/types/expenses";
+import {
+  formatCurrency,
+  formatDate,
+  formatDateTime,
+} from "~~/utils/formatters";
 
 definePageMeta({
-  layout: 'default',
-  middleware: 'role',
-  roles: ['administrator', 'superadministrator'],
-})
+  layout: "default",
+  middleware: "role",
+  roles: ["administrator", "superadministrator"],
+});
 
-const loading = ref(false)
-const categories = ref<ExpenseCategory[] | null>(null)
-const expenses = ref<ExpensesResponse | null>(null)
-const expenseDetail = ref<Expense | null>(null)
-const error = ref<string | null>(null)
+const { t } = useI18n();
+const UButton = resolveComponent("UButton");
 
+// State
+const loading = ref(false);
+const error = ref<string | null>(null);
+const expensesData = ref<ExpensesResponse | null>(null);
+const categories = ref<ExpenseCategory[]>([]);
+const page = ref(1);
+const limit = ref(10);
+const searchQuery = ref("");
+const selectedCategoryOption = ref<{ label: string; value: string | null } | undefined>(undefined);
+
+// Options
+const categoryOptions = computed(() => [
+  { label: t("expenses.allCategories"), value: null },
+  ...categories.value.map(c => ({
+    label: c.name,
+    value: c.id
+  }))
+]);
+
+// Handlers
+const handleSearch = () => {
+  page.value = 1;
+  fetchExpenses();
+};
+
+const handleCategoryChange = () => {
+  page.value = 1;
+  fetchExpenses();
+};
+
+const refreshData = () => {
+  page.value = 1;
+  fetchExpenses();
+  fetchCategories();
+};
+
+// Fetch Categories
 const fetchCategories = async () => {
-    loading.value = true
-    error.value = null
-    try {
-        const response = await $fetch<ExpenseCategory[]>('/api/expenses/categories')
-        categories.value = response
-    }
-    catch (err: any) {
-        error.value = err.message || 'Failed to fetch categories'
-    }
-    finally {
-        loading.value = false
-    }
-}
+  try {
+    const response = await $fetch<ExpenseCategory[]>("/api/expenses/categories");
+    categories.value = response;
+  } catch (err) {
+    console.error("Error fetching categories:", err);
+  }
+};
 
+// Fetch Expenses
 const fetchExpenses = async () => {
-    loading.value = true
-    error.value = null
-    try {
-        const response = await $fetch<ExpensesResponse>('/api/expenses')
-        expenses.value = response
-    }
-    catch (err: any) {
-        error.value = err.message || 'Failed to fetch expenses'
-    }
-    finally {
-        loading.value = false
-    }
-}
+  loading.value = true;
+  error.value = null;
 
-const fetchExpenseDetail = async () => {
-    loading.value = true
-    error.value = null
-    try {
-        const response = await $fetch<Expense>('/api/expenses/019bd00a-1773-71a8-a759-783abcdafc1b')
-        expenseDetail.value = response
-    }
-    catch (err: any) {
-        error.value = err.message || 'Failed to fetch expense detail'
-    }
-    finally {
-        loading.value = false
-    }
-}
+  try {
+    const queryParams: Record<string, string | number> = {
+      page: page.value,
+      limit: limit.value,
+      sortBy: 'created_at',
+      sortOrder: 'desc'
+    };
 
-const createdExpense = ref<Expense | null>(null)
+    if (selectedCategoryOption.value?.value) {
+      queryParams.category = selectedCategoryOption.value.value;
+    }
 
-const createTestExpense = async () => {
-    loading.value = true
-    error.value = null
-    createdExpense.value = null
-    try {
-        const payload = {
-            expenseCategoryId: "019bb22c-f0c8-70a2-9ee1-79a44b5c85af", // Using 'operational' category ID from previous example for better chance of success
-            name: "Office Supplies Purchase",
-            amount: 150000,
-            notes: "Office supplies purchase for monthly operations",
-            source: "auto",
-            transactionDate: new Date().toISOString()
-        }
-        console.log('Sending payload:', payload)
-        const response = await $fetch<Expense>('/api/expenses', {
-            method: 'POST',
-            body: payload
-        })
-        createdExpense.value = response
+    if (searchQuery.value?.trim()) {
+      queryParams.search = searchQuery.value.trim();
     }
-    catch (err: any) {
-        error.value = err.message || 'Failed to create expense'
-    }
-    finally {
-        loading.value = false
-    }
-}
+
+    const queryString = new URLSearchParams(
+      Object.entries(queryParams).map(([k, v]) => [k, String(v)])
+    ).toString();
+
+    const response = await $fetch<ExpensesResponse>(`/api/expenses?${queryString}`);
+    expensesData.value = response;
+  } catch (err: any) {
+    console.error("Error fetching expenses:", err);
+    error.value = err.data?.message || err.message || "Failed to fetch expenses";
+    expensesData.value = null;
+  } finally {
+    loading.value = false;
+  }
+};
+
+// Watch page changes
+watch(page, () => {
+  fetchExpenses();
+});
+
+// Table columns
+const columns: TableColumn<Expense>[] = [
+  {
+    id: "expand",
+    meta: {
+      class: {
+        th: "w-8",
+        td: "w-8",
+      },
+    },
+    cell: ({ row }) =>
+      h(UButton, {
+        color: "neutral",
+        variant: "ghost",
+        icon: "i-heroicons-chevron-down",
+        square: true,
+        "aria-label": "Expand",
+        ui: {
+          leadingIcon: [
+            "transition-transform",
+            row.getIsExpanded() ? "duration-200 rotate-180" : "",
+          ],
+        },
+        onClick: () => row.toggleExpanded(),
+      }),
+  },
+  {
+    accessorKey: "name",
+    header: t("expenses.expenseName"),
+  },
+  {
+    accessorKey: "category.name",
+    header: t("expenses.expenseCategory"),
+  },
+  {
+    accessorKey: "totalAmount",
+    header: t("expenses.amount"),
+    cell: ({ row }) => formatCurrency(row.getValue("totalAmount")),
+  },
+  {
+    accessorKey: "createdAt",
+    header: t("loan.createdAt"), // Using standard Created At for main view
+    cell: ({ row }) => formatDate(row.getValue("createdAt")),
+  },
+];
+
+onMounted(() => {
+  fetchCategories();
+  fetchExpenses();
+});
 </script>
