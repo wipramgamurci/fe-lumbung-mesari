@@ -28,7 +28,10 @@
     "december": "Desember",
     "profile": "Profil",
     "yes": "Ya",
-    "no": "Tidak"
+    "no": "Tidak",
+    "error": {
+      "required": "Wajib diisi"
+    }
   },
   "auth": {
     "signInToAccount": "Masuk ke akun Anda",
@@ -276,6 +279,7 @@
       "manual": "Manual"
     },
     "successCreate": "Pengeluaran berhasil dibuat",
-    "failedCreate": "Gagal membuat pengeluaran: {message}"
+    "failedCreate": "Gagal membuat pengeluaran: {message}",
+    "ammountError": "Jumlah harus lebih dari 0"
   }
 }

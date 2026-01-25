@@ -28,7 +28,10 @@
     "december": "December",
     "profile": "Profile",
     "yes": "Yes",
-    "no": "No"
+    "no": "No",
+    "error": {
+      "required": "Required"
+    }
   },
   "auth": {
     "signInToAccount": "Sign in to your account",
@@ -243,7 +246,12 @@
     "memberManagement": "Member Management",
     "memberManagementDesc": "List and Approve or Reject Member",
     "loanManagement": "Loan Management",
-    "savingsManagement": "Savings Management"
+    "savingsManagement": "Savings Management",
+    "expenseManagement": "Expense Management",
+    "createExpense": "Create Expense",
+    "createExpenseDescription": "Create new expense",
+    "expenseList": "Expense List",
+    "expenseListDescription": "View expense list"
   },
   "dashboard": {
     "totalBalance": "Total Balance",
@@ -252,5 +260,26 @@
   },
   "app": {
     "title": "Lumbung Mesari"
+  },
+  "expenses": {
+    "createExpense": "Create Expense",
+    "expenseCategory": "Expense Category",
+    "expenseCategoryPlaceholder": "Select expense category",
+    "expenseName": "Expense Name",
+    "expenseNamePlaceholder": "Enter expense name",
+    "amount": "Amount",
+    "amountPlaceholder": "Enter amount",
+    "transactionDate": "Transaction Date",
+    "source": "Source of Funds",
+    "sourcePlaceholder": "Select source of funds",
+    "notes": "Notes",
+    "notesPlaceholder": "Add notes (optional)",
+    "sourceOptions": {
+      "auto": "Auto",
+      "manual": "Manual"
+    },
+    "successCreate": "Expense created successfully",
+    "failedCreate": "Failed to create expense: {message}",
+    "ammountError": "Amount must be greater than 0"
   }
 }

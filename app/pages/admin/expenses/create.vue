@@ -155,15 +155,19 @@ const errors = ref<Record<string, string>>({});
 
 // Options
 const categoryOptions = computed(() => 
-  categories.value.map(c => ({
-    label: `${c.code} - ${c.name}`,
-    value: c.id
-  }))
+  categories.value
+    .filter(c => c.code !== 'loan_disbursement')
+    .map(c => ({
+      label: `${c.name}`,
+      value: c.id
+    }))
 );
 
 const sourceOptions = [
   { label: t("expenses.sourceOptions.manual"), value: "manual" },
   { label: t("expenses.sourceOptions.auto"), value: "auto" },
+  // TODO: Confirm what other source options are available besides "auto" and "manual".
+  // "auto" was provided as an example, but we suspect there might be more.
 ];
 
 // Fetch Categories
@@ -194,23 +198,23 @@ const validate = (): boolean => {
   let isValid = true;
 
   if (!form.value.expenseCategoryId) {
-    errors.value.expenseCategoryId = "Required";
+    errors.value.expenseCategoryId = t("common.error.required");
     isValid = false;
   }
   if (!form.value.name?.trim()) {
-    errors.value.name = "Required";
+    errors.value.name = t("common.error.required");
     isValid = false;
   }
   if (!form.value.amount || form.value.amount <= 0) {
-    errors.value.amount = "Must be greater than 0";
+    errors.value.amount = t("expenses.ammountError");
     isValid = false;
   }
   if (!form.value.transactionDate) {
-    errors.value.transactionDate = "Required";
+    errors.value.transactionDate = t("common.error.required");
     isValid = false;
   }
   if (!form.value.source) {
-    errors.value.source = "Required";
+    errors.value.source = t("common.error.required");
     isValid = false;
   }
 
