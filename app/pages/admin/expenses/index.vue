@@ -133,6 +133,18 @@
                   {{ row.original.notes }}
                 </p>
               </div>
+
+              <!-- Update Button -->
+              <div v-if="userStore.isSuperadministrator" class="col-span-2 flex justify-end">
+                <UButton
+                  color="primary"
+                  variant="soft"
+                  icon="i-heroicons-pencil-square"
+                  :to="`/admin/expenses/${row.original.id}`"
+                >
+                  {{ $t("common.update") }}
+                </UButton>
+              </div>
             </div>
           </div>
         </template>
@@ -165,6 +177,7 @@ import {
   formatDate,
   formatDateTime,
 } from "~~/utils/formatters";
+import { useUserStore } from "~~/app/stores/useUser";
 
 definePageMeta({
   layout: "default",
@@ -174,6 +187,7 @@ definePageMeta({
 
 const { t } = useI18n();
 const UButton = resolveComponent("UButton");
+const userStore = useUserStore();
 
 // State
 const loading = ref(false);

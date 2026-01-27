@@ -31,7 +31,8 @@
     "no": "Tidak",
     "error": {
       "required": "Wajib diisi"
-    }
+    },
+    "update": "Ubah"
   },
   "auth": {
     "signInToAccount": "Masuk ke akun Anda",
@@ -281,6 +282,10 @@
     "successCreate": "Pengeluaran berhasil dibuat",
     "failedCreate": "Gagal membuat pengeluaran: {message}",
     "ammountError": "Jumlah harus lebih dari 0",
-    "allCategories": "Semua Kategori"
+    "allCategories": "Semua Kategori",
+    "editExpense": "Edit Pengeluaran",
+    "editExpenseDescription": "Perbarui detail pengeluaran",
+    "successUpdate": "Pengeluaran berhasil diperbarui",
+    "failedUpdate": "Gagal memperbarui pengeluaran: {message}"
   }
 }

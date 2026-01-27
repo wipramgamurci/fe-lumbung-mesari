@@ -44,3 +44,5 @@ export interface CreateExpenseRequest {
     source: 'auto' | 'manual'
     transactionDate: string
 }
+
+export interface UpdateExpenseRequest extends Partial<Omit<CreateExpenseRequest, 'transactionDate'>> { }
