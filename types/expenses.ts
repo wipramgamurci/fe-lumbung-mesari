@@ -13,10 +13,13 @@ export interface Expense {
     shuAmount: number
     capitalAmount: number
     totalAmount: number
-    createdBy: string
+    createdBy: {
+        id: string
+        fullname: string
+    }
     loanId: string | null
     notes: string | null
-    source: string
+    source: 'auto' | 'shu' | 'capital'
     createdAt: string
     updatedAt: string
     category: {

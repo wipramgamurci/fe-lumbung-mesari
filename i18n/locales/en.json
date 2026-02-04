@@ -32,7 +32,9 @@
     "error": {
       "required": "Required"
     },
-    "update": "Update"
+    "update": "Update",
+    "filter": "Filter",
+    "clearFilter": "Clear Filter"
   },
   "auth": {
     "signInToAccount": "Sign in to your account",
@@ -270,6 +272,11 @@
     "expenseNamePlaceholder": "Enter expense name",
     "amount": "Amount",
     "amountPlaceholder": "Enter amount",
+    "createdBy": "Created By",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "minAmount": "Min Amount",
+    "maxAmount": "Max Amount",
     "transactionDate": "Transaction Date",
     "source": "Source of Funds",
     "sourcePlaceholder": "Select source of funds",

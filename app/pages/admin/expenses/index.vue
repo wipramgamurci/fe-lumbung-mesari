@@ -16,12 +16,31 @@
     <!-- Filters Card -->
     <UCard>
       <div class="flex flex-wrap items-center gap-4">
+
+
         <UInput
-          v-model="searchQuery"
-          :placeholder="$t('common.searchPlaceholder') || 'Search...'"
-          icon="i-heroicons-magnifying-glass"
-          class="flex-1 min-w-64"
-          @keyup.enter="handleSearch"
+          v-model="startDate"
+          type="date"
+          :placeholder="$t('expenses.startDate')"
+          class="w-40"
+        />
+        <UInput
+          v-model="endDate"
+          type="date"
+          :placeholder="$t('expenses.endDate')"
+          class="w-40"
+        />
+        <UInput
+          v-model="minAmount"
+          type="number"
+          :placeholder="$t('expenses.minAmount')"
+          class="w-32"
+        />
+        <UInput
+          v-model="maxAmount"
+          type="number"
+          :placeholder="$t('expenses.maxAmount')"
+          class="w-32"
         />
 
         <USelectMenu
@@ -32,6 +51,24 @@
           class="w-64"
           @update:model-value="handleCategoryChange"
         />
+
+        <UButton
+          color="primary"
+          variant="solid"
+          icon="i-heroicons-funnel"
+          @click="handleFilter"
+        >
+          {{ $t("common.filter") }}
+        </UButton>
+
+        <UButton
+          color="neutral"
+          variant="outline"
+          icon="i-heroicons-x-mark"
+          @click="handleClearFilter"
+        >
+          {{ $t("common.clearFilter") }}
+        </UButton>
 
         <UButton
           color="neutral"
@@ -96,10 +133,10 @@
 
               <div class="flex flex-col gap-2">
                 <p class="text-sm font-medium text-gray-700 dark:text-gray-300">
-                  Created By
+                  {{ $t("expenses.createdBy") }}
                 </p>
                 <p class="text-sm text-gray-600 dark:text-gray-400">
-                  {{ row.original.createdBy }}
+                  {{ row.original.createdBy.fullname }}
                 </p>
               </div>
 
@@ -196,8 +233,11 @@ const expensesData = ref<ExpensesResponse | null>(null);
 const categories = ref<ExpenseCategory[]>([]);
 const page = ref(1);
 const limit = ref(10);
-const searchQuery = ref("");
 const selectedCategoryOption = ref<{ label: string; value: string | null } | undefined>(undefined);
+const startDate = ref<string | null>(null);
+const endDate = ref<string | null>(null);
+const minAmount = ref<number | null>(null);
+const maxAmount = ref<number | null>(null);
 
 // Options
 const categoryOptions = computed(() => [
@@ -209,12 +249,22 @@ const categoryOptions = computed(() => [
 ]);
 
 // Handlers
-const handleSearch = () => {
+const handleCategoryChange = () => {
   page.value = 1;
   fetchExpenses();
 };
 
-const handleCategoryChange = () => {
+const handleFilter = () => {
+  page.value = 1;
+  fetchExpenses();
+};
+
+const handleClearFilter = () => {
+  startDate.value = null;
+  endDate.value = null;
+  minAmount.value = null;
+  maxAmount.value = null;
+  selectedCategoryOption.value = undefined;
   page.value = 1;
   fetchExpenses();
 };
@@ -252,9 +302,10 @@ const fetchExpenses = async () => {
       queryParams.category = selectedCategoryOption.value.value;
     }
 
-    if (searchQuery.value?.trim()) {
-      queryParams.search = searchQuery.value.trim();
-    }
+    if (startDate.value) queryParams.startDate = startDate.value;
+    if (endDate.value) queryParams.endDate = endDate.value;
+    if (minAmount.value) queryParams.minAmount = minAmount.value;
+    if (maxAmount.value) queryParams.maxAmount = maxAmount.value;
 
     const queryString = new URLSearchParams(
       Object.entries(queryParams).map(([k, v]) => [k, String(v)])

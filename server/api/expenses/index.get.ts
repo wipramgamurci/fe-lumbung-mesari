@@ -7,7 +7,7 @@ export default defineEventHandler(async (event): Promise<ExpensesResponse> => {
     // Extract query parameters
     const pageStr = Array.isArray(query.page) ? query.page[0] : query.page
     const limitStr = Array.isArray(query.limit) ? query.limit[0] : query.limit
-    const search = Array.isArray(query.search) ? query.search[0] : query.search
+    // Search removed as per API update
     const sortBy = Array.isArray(query.sortBy) ? query.sortBy[0] : query.sortBy
     const sortOrder = Array.isArray(query.sortOrder) ? query.sortOrder[0] : query.sortOrder
     const category = Array.isArray(query.category) ? query.category[0] : query.category
@@ -56,8 +56,6 @@ export default defineEventHandler(async (event): Promise<ExpensesResponse> => {
         // Build query string
         const queryParams: string[] = [`page=${page}`, `limit=${limit}`]
 
-        if (search)
-            queryParams.push(`search=${encodeURIComponent(search as string)}`)
         if (sortByParam)
             queryParams.push(`sortBy=${encodeURIComponent(sortByParam)}`)
         if (sortOrderParam)

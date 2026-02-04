@@ -32,7 +32,9 @@
     "error": {
       "required": "Wajib diisi"
     },
-    "update": "Ubah"
+    "update": "Ubah",
+    "filter": "Filter",
+    "clearFilter": "Hapus Filter"
   },
   "auth": {
     "signInToAccount": "Masuk ke akun Anda",
@@ -270,6 +272,11 @@
     "expenseNamePlaceholder": "Masukkan nama pengeluaran",
     "amount": "Jumlah",
     "amountPlaceholder": "Masukkan jumlah",
+    "createdBy": "Dibuat Oleh",
+    "startDate": "Tanggal Mulai",
+    "endDate": "Tanggal Selesai",
+    "minAmount": "Jumlah Min",
+    "maxAmount": "Jumlah Maks",
     "transactionDate": "Tanggal Transaksi",
     "source": "Sumber Dana",
     "sourcePlaceholder": "Pilih sumber dana",
