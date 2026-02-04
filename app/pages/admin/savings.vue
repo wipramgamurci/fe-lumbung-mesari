@@ -34,6 +34,16 @@
         >
           {{ $t("common.refresh") }}
         </UButton>
+
+        <UButton
+          color="primary"
+          variant="solid"
+          icon="i-heroicons-arrow-down-tray"
+          @click="downloadReport"
+          :loading="isDownloading"
+        >
+          {{ $t("savings.downloadReport") }}
+        </UButton>
       </div>
     </UCard>
 
@@ -197,6 +207,7 @@ const isSettling = computed(() => {
     ? settlingIds.value.has(selectedSavings.value.id)
     : false;
 });
+const isDownloading = ref(false);
 
 // Month options
 const monthOptions = [
@@ -423,6 +434,67 @@ const confirmMarkAsPaid = async () => {
     });
   } finally {
     settlingIds.value.delete(savingsId);
+  }
+};
+
+
+// Download report
+const downloadReport = async () => {
+  if (!selectedYear.value) return;
+
+  isDownloading.value = true;
+  try {
+    const response = await $fetch.raw<Blob>("/api/reports/mandatory-savings", {
+      query: {
+        year: selectedYear.value,
+      },
+      responseType: "blob",
+    });
+
+    if (!response._data) {
+      throw new Error("No data received");
+    }
+
+    // Extract filename from content-disposition
+    let filename = `mandatory-savings-${selectedYear.value}.xlsx`;
+    const contentDisposition = response.headers.get("content-disposition");
+    if (contentDisposition) {
+      const matches = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/.exec(
+        contentDisposition
+      );
+      if (matches != null && matches[1]) {
+        filename = matches[1].replace(/['"]/g, "");
+      }
+    }
+
+    // Create download link
+    const url = window.URL.createObjectURL(response._data);
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", filename);
+    document.body.appendChild(link);
+    link.click();
+    
+    // Cleanup
+    document.body.removeChild(link);
+    window.URL.revokeObjectURL(url);
+
+    const toast = useToast();
+    toast.add({
+      title: "Success",
+      description: "Report downloaded successfully",
+      color: "success",
+    });
+  } catch (err: any) {
+    console.error("Error downloading report:", err);
+    const toast = useToast();
+    toast.add({
+      title: "Error",
+      description: err.data?.message || "Failed to download report",
+      color: "error",
+    });
+  } finally {
+    isDownloading.value = false;
   }
 };
 
