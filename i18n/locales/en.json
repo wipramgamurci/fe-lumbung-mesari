@@ -284,7 +284,8 @@
     "notesPlaceholder": "Add notes (optional)",
     "sourceOptions": {
       "auto": "Auto",
-      "manual": "Manual"
+      "shu": "SHU",
+      "capital": "Capital"
     },
     "successCreate": "Expense created successfully",
     "failedCreate": "Failed to create expense: {message}",

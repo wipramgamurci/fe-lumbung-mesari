@@ -172,9 +172,9 @@ const categoryOptions = computed(() =>
 );
 
 const sourceOptions = [
-  { label: t("expenses.sourceOptions.manual"), value: "manual" },
   { label: t("expenses.sourceOptions.auto"), value: "auto" },
-  // TODO: Confirm what other source options are available besides "auto" and "manual".
+  { label: t("expenses.sourceOptions.shu"), value: "shu" },
+  { label: t("expenses.sourceOptions.capital"), value: "capital" },
 ];
 
 // Fetch Categories

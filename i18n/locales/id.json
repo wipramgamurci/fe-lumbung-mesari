@@ -284,7 +284,8 @@
     "notesPlaceholder": "Tambahkan catatan (opsional)",
     "sourceOptions": {
       "auto": "Otomatis",
-      "manual": "Manual"
+      "shu": "SHU",
+      "capital": "Modal"
     },
     "successCreate": "Pengeluaran berhasil dibuat",
     "failedCreate": "Gagal membuat pengeluaran: {message}",
