@@ -444,34 +444,18 @@ const downloadReport = async () => {
 
   isDownloading.value = true;
   try {
-    const response = await $fetch.raw<Blob>("/api/reports/mandatory-savings", {
+    const response = await $fetch<Blob>("/api/reports/mandatory-savings", {
       query: {
         year: selectedYear.value,
       },
       responseType: "blob",
     });
 
-    if (!response._data) {
-      throw new Error("No data received");
-    }
-
-    // Extract filename from content-disposition
-    let filename = `mandatory-savings-${selectedYear.value}.xlsx`;
-    const contentDisposition = response.headers.get("content-disposition");
-    if (contentDisposition) {
-      const matches = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/.exec(
-        contentDisposition
-      );
-      if (matches != null && matches[1]) {
-        filename = matches[1].replace(/['"]/g, "");
-      }
-    }
-
     // Create download link
-    const url = window.URL.createObjectURL(response._data);
+    const url = window.URL.createObjectURL(response);
     const link = document.createElement("a");
     link.href = url;
-    link.setAttribute("download", filename);
+    link.setAttribute("download", `mandatory-savings-${selectedYear.value}.xlsx`);
     document.body.appendChild(link);
     link.click();
     

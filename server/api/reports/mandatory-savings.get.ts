@@ -22,7 +22,7 @@ export default defineEventHandler(async (event) => {
     }
 
     try {
-        const response = await $fetch.raw<Blob>(
+        const response = await $fetch<Blob>(
             `${config.public.apiBaseUrl}/api/reports/mandatory-savings`,
             {
                 method: "GET",
@@ -36,17 +36,7 @@ export default defineEventHandler(async (event) => {
             }
         );
 
-        const contentDisposition = response.headers.get("content-disposition");
-        if (contentDisposition) {
-            setResponseHeader(event, "content-disposition", contentDisposition);
-        }
-
-        const contentType = response.headers.get("content-type");
-        if (contentType) {
-            setResponseHeader(event, "content-type", contentType);
-        }
-
-        return response._data;
+        return response;
     } catch (error: any) {
         if (error.statusCode) {
             setResponseStatus(event, error.statusCode);
