@@ -136,7 +136,7 @@ import type {
 definePageMeta({
   layout: "default",
   middleware: "role",
-  roles: ["superadministrator"],
+  roles: ["superadministrator", "administrator"],
 });
 
 const toast = useToast();

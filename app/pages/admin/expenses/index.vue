@@ -172,7 +172,7 @@
               </div>
 
               <!-- Update Button -->
-              <div v-if="userStore.isSuperadministrator" class="col-span-2 flex justify-end">
+              <div v-if="userStore.isSuperadministrator || userStore.isAdmin" class="col-span-2 flex justify-end">
                 <UButton
                   color="primary"
                   variant="soft"
@@ -365,6 +365,11 @@ const columns: TableColumn<Expense>[] = [
     accessorKey: "totalAmount",
     header: t("expenses.amount"),
     cell: ({ row }) => formatCurrency(row.getValue("totalAmount")),
+  },
+  {
+    accessorKey: "txnDate",
+    header: t("expenses.transactionDate"),
+    cell: ({ row }) => formatDate(row.getValue("txnDate")),
   },
   {
     accessorKey: "createdAt",
