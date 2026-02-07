@@ -215,6 +215,7 @@ import {
   formatDateTime,
 } from "~~/utils/formatters";
 import { useUserStore } from "~~/app/stores/useUser";
+import { useExpensesStore } from "~~/app/stores/useExpenses";
 
 definePageMeta({
   layout: "default",
@@ -225,12 +226,13 @@ definePageMeta({
 const { t } = useI18n();
 const UButton = resolveComponent("UButton");
 const userStore = useUserStore();
+const expensesStore = useExpensesStore();
 
 // State
 const loading = ref(false);
 const error = ref<string | null>(null);
 const expensesData = ref<ExpensesResponse | null>(null);
-const categories = ref<ExpenseCategory[]>([]);
+// categories removed, use store
 const page = ref(1);
 const limit = ref(10);
 const selectedCategoryOption = ref<{ label: string; value: string | null } | undefined>(undefined);
@@ -242,7 +244,7 @@ const maxAmount = ref<number | null>(null);
 // Options
 const categoryOptions = computed(() => [
   { label: t("expenses.allCategories"), value: null },
-  ...categories.value.map(c => ({
+  ...expensesStore.categories.map(c => ({
     label: c.name,
     value: c.id
   }))
@@ -272,18 +274,11 @@ const handleClearFilter = () => {
 const refreshData = () => {
   page.value = 1;
   fetchExpenses();
-  fetchCategories();
+  expensesStore.fetchCategories(true); // Force refresh
 };
 
-// Fetch Categories
-const fetchCategories = async () => {
-  try {
-    const response = await $fetch<ExpenseCategory[]>("/api/expenses/categories");
-    categories.value = response;
-  } catch (err) {
-    console.error("Error fetching categories:", err);
-  }
-};
+// Fetch Categories removed, handled by store
+
 
 // Fetch Expenses
 const fetchExpenses = async () => {
@@ -379,7 +374,7 @@ const columns: TableColumn<Expense>[] = [
 ];
 
 onMounted(() => {
-  fetchCategories();
+  expensesStore.fetchCategories();
   fetchExpenses();
 });
 </script>

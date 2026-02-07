@@ -128,10 +128,10 @@
 
 <script setup lang="ts">
 import type {
-  ExpenseCategory,
   UpdateExpenseRequest,
   Expense,
 } from "~~/types/expenses";
+import { useExpensesStore } from "~~/app/stores/useExpenses";
 
 definePageMeta({
   layout: "default",
@@ -143,9 +143,10 @@ const toast = useToast();
 const { t } = useI18n();
 const route = useRoute();
 const router = useRouter();
+const expensesStore = useExpensesStore();
 
 // State
-const categories = ref<ExpenseCategory[]>([]);
+// categories removed, use store
 const loadingCategories = ref(false);
 const loadingExpense = ref(true);
 const isSubmitting = ref(false);
@@ -163,7 +164,7 @@ const errors = ref<Record<string, string>>({});
 
 // Options
 const categoryOptions = computed(() =>
-  categories.value
+  expensesStore.categories
     .filter((c) => c.code !== "loan_disbursement")
     .map((c) => ({
       label: `${c.name}`,
@@ -176,26 +177,6 @@ const sourceOptions = [
   { label: t("expenses.sourceOptions.shu"), value: "shu" },
   { label: t("expenses.sourceOptions.capital"), value: "capital" },
 ];
-
-// Fetch Categories
-const fetchCategories = async () => {
-  loadingCategories.value = true;
-  try {
-    const response = await $fetch<ExpenseCategory[]>(
-      "/api/expenses/categories",
-    );
-    categories.value = response;
-  } catch (error: any) {
-    console.error("Error fetching categories:", error);
-    toast.add({
-      title: "Error",
-      description: error.data?.message || "Failed to fetch expense categories",
-      color: "error",
-    });
-  } finally {
-    loadingCategories.value = false;
-  }
-};
 
 // Fetch Existing Expense
 const fetchExpense = async () => {
@@ -212,11 +193,6 @@ const fetchExpense = async () => {
       source: response.source as "auto" | "manual",
       notes: response.notes || "",
     };
-
-    // If API response has transactionDate (it should if added to schema), use it.
-    // The type definition for Expense currently doesn't show transactionDate explicitly but Create/Update request does.
-    // We should probably rely on what's available or createdAt as fallback.
-    // Using createdAt for now as per type.
   } catch (error: any) {
     console.error("Error fetching expense:", error);
     toast.add({
@@ -231,7 +207,20 @@ const fetchExpense = async () => {
 };
 
 onMounted(async () => {
-  await Promise.all([fetchCategories(), fetchExpense()]);
+  loadingCategories.value = true;
+  try {
+     await expensesStore.fetchCategories();
+  } catch (error) {
+     toast.add({
+      title: "Error",
+      description: "Failed to fetch expense categories",
+      color: "error",
+    });
+  } finally {
+     loadingCategories.value = false;
+  }
+  
+  await fetchExpense();
 });
 
 // Validation

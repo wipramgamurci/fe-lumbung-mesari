@@ -125,7 +125,8 @@
 </template>
 
 <script setup lang="ts">
-import type { ExpenseCategory, CreateExpenseRequest } from "~~/types/expenses";
+import type { CreateExpenseRequest } from "~~/types/expenses";
+import { useExpensesStore } from "~~/app/stores/useExpenses";
 
 definePageMeta({
   layout: "default",
@@ -136,9 +137,10 @@ definePageMeta({
 const toast = useToast();
 const { t } = useI18n();
 const router = useRouter();
+const expensesStore = useExpensesStore();
 
 // State
-const categories = ref<ExpenseCategory[]>([]);
+// categories removed, use store
 const loadingCategories = ref(false);
 const isSubmitting = ref(false);
 
@@ -155,7 +157,7 @@ const errors = ref<Record<string, string>>({});
 
 // Options
 const categoryOptions = computed(() => 
-  categories.value
+  expensesStore.categories
     .filter(c => c.code !== 'loan_disbursement')
     .map(c => ({
       label: `${c.name}`,
@@ -169,26 +171,19 @@ const sourceOptions = [
   { label: t("expenses.sourceOptions.capital"), value: "capital" },
 ];
 
-// Fetch Categories
-const fetchCategories = async () => {
+onMounted(async () => {
   loadingCategories.value = true;
   try {
-    const response = await $fetch<ExpenseCategory[]>("/api/expenses/categories");
-    categories.value = response;
-  } catch (error: any) {
-    console.error("Error fetching categories:", error);
-    toast.add({
+    await expensesStore.fetchCategories();
+  } catch (err) {
+      toast.add({
       title: "Error",
-      description: error.data?.message || "Failed to fetch expense categories",
+      description: "Failed to fetch expense categories",
       color: "error",
     });
   } finally {
     loadingCategories.value = false;
   }
-};
-
-onMounted(() => {
-  fetchCategories();
 });
 
 // Validation
