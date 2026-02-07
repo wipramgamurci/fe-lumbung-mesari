@@ -77,7 +77,7 @@
             v-model="form.transactionDate"
             type="date"
             class="w-full"
-            disabled
+            
           />
         </UFormField>
 
@@ -208,7 +208,7 @@ const fetchExpense = async () => {
       expenseCategoryId: response.expenseCategoryId,
       name: response.name,
       amount: response.totalAmount, // Assuming totalAmount is the main amount field we edit
-      transactionDate: response.createdAt.split("T")[0], // Fallback if transactionDate not in response yet (response usually has createdAt). But if we want accurate date, we need to check if API returns transactionDate. Based on types, Expense has createdAt. Let's assume for now.
+      transactionDate: response.txnDate.split("T")[0],
       source: response.source as "auto" | "manual",
       notes: response.notes || "",
     };
@@ -270,7 +270,20 @@ const handleSubmit = async () => {
   isSubmitting.value = true;
   try {
     const url = `/api/expenses/${route.params.id}`;
-    const { transactionDate, ...payload } = form.value;
+    // Ensure transactionDate is in ISO format if needed by backend, or just properly formatted string
+    // The backend receives UpdateExpenseRequest which has transactionDate: string.
+    // In create.vue: transactionDate: new Date(form.value.transactionDate!).toISOString()
+    // Let's match that behavior.
+    
+    // Create payload from form.value
+    const payload = { ...form.value };
+    
+    if (payload.transactionDate) {
+        // Ensure it's a full ISO string if that's what backend expects (usually is for dates)
+        // The input type="date" gives YYYY-MM-DD.
+        payload.transactionDate = new Date(payload.transactionDate).toISOString();
+    }
+
     await $fetch(url, {
       method: "PUT" as any,
       body: payload as UpdateExpenseRequest,

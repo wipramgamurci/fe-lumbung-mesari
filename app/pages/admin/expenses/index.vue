@@ -109,7 +109,7 @@
                 </p>
                 <p class="text-sm text-gray-600 dark:text-gray-400">
                   <!-- Fallback to createdAt if transactionDate is missing from type/response -->
-                   {{ formatDate((row.original as any).transactionDate || row.original.createdAt) }}
+                   {{ formatDate((row.original as any).txnDate || row.original.createdAt) }}
                 </p>
               </div>
 

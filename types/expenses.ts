@@ -19,7 +19,8 @@ export interface Expense {
     }
     loanId: string | null
     notes: string | null
-    source: 'auto' | 'shu' | 'capital'
+    source: 'auto' | 'shu' | 'capital',
+    txnDate: string
     createdAt: string
     updatedAt: string
     category: {
@@ -48,4 +49,4 @@ export interface CreateExpenseRequest {
     transactionDate: string
 }
 
-export interface UpdateExpenseRequest extends Partial<Omit<CreateExpenseRequest, 'transactionDate'>> { }
+export interface UpdateExpenseRequest extends Partial<CreateExpenseRequest> { }
