@@ -289,7 +289,7 @@
     },
     "successCreate": "Expense created successfully",
     "failedCreate": "Failed to create expense: {message}",
-    "ammountError": "Amount must be greater than 0",
+    "amountError": "Amount must be greater than 0",
     "allCategories": "All Categories",
     "editExpense": "Edit Expense",
     "editExpenseDescription": "Update expense details",

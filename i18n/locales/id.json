@@ -289,7 +289,7 @@
     },
     "successCreate": "Pengeluaran berhasil dibuat",
     "failedCreate": "Gagal membuat pengeluaran: {message}",
-    "ammountError": "Jumlah harus lebih dari 0",
+    "amountError": "Jumlah harus lebih dari 0",
     "allCategories": "Semua Kategori",
     "editExpense": "Edit Pengeluaran",
     "editExpenseDescription": "Perbarui detail pengeluaran",

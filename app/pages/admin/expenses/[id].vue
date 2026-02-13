@@ -237,7 +237,7 @@ const validate = (): boolean => {
     isValid = false;
   }
   if (!form.value.amount || form.value.amount <= 0) {
-    errors.value.amount = t("expenses.ammountError");
+    errors.value.amount = t("expenses.amountError");
     isValid = false;
   }
   if (!form.value.transactionDate) {
