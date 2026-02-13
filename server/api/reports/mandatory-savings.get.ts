@@ -36,6 +36,9 @@ export default defineEventHandler(async (event) => {
             }
         );
 
+        setResponseStatus(event, 200);
+        setResponseHeader(event, "Content-Type", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet");
+        setResponseHeader(event, "Content-Disposition", `attachment; filename="simpanan-wajib-${year}.xlsx"`);
         return response;
     } catch (error: any) {
         if (error.statusCode) {

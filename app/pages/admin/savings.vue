@@ -451,17 +451,20 @@ const downloadReport = async () => {
       responseType: "blob",
     });
 
-    // Create download link
     const url = window.URL.createObjectURL(response);
     const link = document.createElement("a");
     link.href = url;
     link.setAttribute("download", `simpanan-wajib-${selectedYear.value}.xlsx`);
-    document.body.appendChild(link);
-    link.click();
-    
-    // Cleanup
-    document.body.removeChild(link);
-    window.URL.revokeObjectURL(url);
+
+    try {
+      document.body.appendChild(link);
+      link.click();
+    } finally {
+      if (document.body.contains(link)) {
+        document.body.removeChild(link);
+      }
+      window.URL.revokeObjectURL(url);
+    }
 
     const toast = useToast();
     toast.add({
