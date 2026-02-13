@@ -455,7 +455,7 @@ const downloadReport = async () => {
     const url = window.URL.createObjectURL(response);
     const link = document.createElement("a");
     link.href = url;
-    link.setAttribute("download", `mandatory-savings-${selectedYear.value}.xlsx`);
+    link.setAttribute("download", `simpanan-wajib-${selectedYear.value}.xlsx`);
     document.body.appendChild(link);
     link.click();
     
@@ -466,7 +466,7 @@ const downloadReport = async () => {
     const toast = useToast();
     toast.add({
       title: "Success",
-      description: "Report downloaded successfully",
+      description: $t("savings.downloadReportSuccess"),
       color: "success",
     });
   } catch (err: any) {
@@ -474,7 +474,7 @@ const downloadReport = async () => {
     const toast = useToast();
     toast.add({
       title: "Error",
-      description: err.data?.message || "Failed to download report",
+      description: err.data?.message || $t("savings.downloadReportError"),
       color: "error",
     });
   } finally {

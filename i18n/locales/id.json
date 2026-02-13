@@ -202,7 +202,10 @@
     "paidDate": "Tanggal Dibayar",
     "processedBy": "Diproses Oleh",
     "savingsRecordMarkedAsPaidSuccessfully": "Simpanan telah ditandai sebagai dibayar.",
-    "errorMarkingAsPaid": "Gagal menandai simpanan sebagai dibayar. Silakan coba lagi."
+    "errorMarkingAsPaid": "Gagal menandai simpanan sebagai dibayar. Silakan coba lagi.",
+    "downloadReport": "Download Laporan",
+    "downloadReportSuccess": "Laporan berhasil diunduh.",
+    "downloadReportError": "Gagal mengunduh laporan. Silakan coba lagi."
   },
   "profile": {
     "loadingProfile": "Memuat profil...",
