@@ -17,8 +17,8 @@ export default defineEventHandler(async (event): Promise<ExpensesResponse> => {
     const maxAmount = Array.isArray(query.maxAmount) ? query.maxAmount[0] : query.maxAmount
 
     // Parse and set defaults
-    const page = pageStr ? Number.parseInt(pageStr as string, 10) || 1 : 1
-    const limit = limitStr ? Number.parseInt(limitStr as string, 10) || 10 : 10
+    const page = pageStr ? parseInt(pageStr as string, 10) || 1 : 1
+    const limit = limitStr ? parseInt(limitStr as string, 10) || 10 : 10
     const sortByParam = (sortBy as string) || 'created_at'
     const sortOrderParam = (sortOrder as string) || 'desc'
 
