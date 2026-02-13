@@ -1,7 +1,7 @@
 <template>
   <div class="flex flex-col gap-4">
     <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-8">
-      {{ $t("savings.savingsManagement") }}
+      {{ $t("navigation.savingsManagement") }}
     </h1>
 
     <!-- Filters Card -->
