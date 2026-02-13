@@ -149,7 +149,7 @@ const form = ref<Partial<CreateExpenseRequest>>({
   name: "",
   amount: 0,
   transactionDate: new Date().toISOString().split('T')[0], // Today YYYY-MM-DD
-  source: "manual",
+  source: "auto",
   notes: "",
 });
 

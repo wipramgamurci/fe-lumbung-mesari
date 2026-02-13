@@ -45,7 +45,7 @@ export interface CreateExpenseRequest {
     name: string
     amount: number
     notes?: string
-    source: 'auto' | 'manual'
+    source: 'auto' | 'shu' | 'capital'
     transactionDate: string
 }
 

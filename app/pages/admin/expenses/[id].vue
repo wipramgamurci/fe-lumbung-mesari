@@ -156,7 +156,7 @@ const form = ref<Partial<UpdateExpenseRequest> & { transactionDate?: string }>({
   name: "",
   amount: 0,
   transactionDate: new Date().toISOString().split("T")[0],
-  source: "manual",
+  source: "auto",
   notes: "",
 });
 
@@ -190,7 +190,7 @@ const fetchExpense = async () => {
       name: response.name,
       amount: response.totalAmount, // Assuming totalAmount is the main amount field we edit
       transactionDate: response.txnDate.split("T")[0],
-      source: response.source as "auto" | "manual",
+      source: response.source as "auto" | "shu" | "capital",
       notes: response.notes || "",
     };
   } catch (error: any) {
