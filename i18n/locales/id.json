@@ -28,7 +28,13 @@
     "december": "Desember",
     "profile": "Profil",
     "yes": "Ya",
-    "no": "Tidak"
+    "no": "Tidak",
+    "error": {
+      "required": "Wajib diisi"
+    },
+    "update": "Ubah",
+    "filter": "Filter",
+    "clearFilter": "Hapus Filter"
   },
   "auth": {
     "signInToAccount": "Masuk ke akun Anda",
@@ -243,7 +249,12 @@
     "memberManagement": "Manajemen Anggota",
     "memberManagementDesc": "Daftar dan Setujui atau Tolak Anggota",
     "loanManagement": "Manajemen Pinjaman",
-    "savingsManagement": "Manajemen Simpanan"
+    "savingsManagement": "Manajemen Simpanan",
+    "expenseManagement": "Manajemen Pengeluaran",
+    "createExpense": "Buat Pengeluaran",
+    "createExpenseDescription": "Buat pengeluaran baru",
+    "expenseList": "Daftar Pengeluaran",
+    "expenseListDescription": "Lihat daftar pengeluaran"
   },
   "dashboard": {
     "totalBalance": "Total Saldo",
@@ -252,5 +263,37 @@
   },
   "app": {
     "title": "Lumbung Mesari"
+  },
+  "expenses": {
+    "createExpense": "Buat Pengeluaran",
+    "expenseCategory": "Kategori Pengeluaran",
+    "expenseCategoryPlaceholder": "Pilih kategori pengeluaran",
+    "expenseName": "Nama Pengeluaran",
+    "expenseNamePlaceholder": "Masukkan nama pengeluaran",
+    "amount": "Jumlah",
+    "amountPlaceholder": "Masukkan jumlah",
+    "createdBy": "Dibuat Oleh",
+    "startDate": "Tanggal Mulai",
+    "endDate": "Tanggal Selesai",
+    "minAmount": "Jumlah Min",
+    "maxAmount": "Jumlah Maks",
+    "transactionDate": "Tanggal Transaksi",
+    "source": "Sumber Dana",
+    "sourcePlaceholder": "Pilih sumber dana",
+    "notes": "Catatan",
+    "notesPlaceholder": "Tambahkan catatan (opsional)",
+    "sourceOptions": {
+      "auto": "Otomatis",
+      "shu": "SHU",
+      "capital": "Modal"
+    },
+    "successCreate": "Pengeluaran berhasil dibuat",
+    "failedCreate": "Gagal membuat pengeluaran: {message}",
+    "amountError": "Jumlah harus lebih dari 0",
+    "allCategories": "Semua Kategori",
+    "editExpense": "Edit Pengeluaran",
+    "editExpenseDescription": "Perbarui detail pengeluaran",
+    "successUpdate": "Pengeluaran berhasil diperbarui",
+    "failedUpdate": "Gagal memperbarui pengeluaran: {message}"
   }
 }
