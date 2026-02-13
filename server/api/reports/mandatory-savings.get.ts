@@ -1,13 +1,22 @@
 export default defineEventHandler(async (event) => {
     const config = useRuntimeConfig();
     const query = getQuery(event);
-    const year = query.year;
+    const yearStr = Array.isArray(query.year) ? query.year[0] : query.year;
 
-    if (!year) {
+    if (!yearStr) {
         throw createError({
             statusCode: 400,
             statusMessage: "Bad Request",
             message: "Year is required",
+        });
+    }
+
+    const year = parseInt(yearStr as string, 10);
+    if (isNaN(year)) {
+        throw createError({
+            statusCode: 400,
+            statusMessage: "Bad Request",
+            message: "Year must be a number",
         });
     }
 
