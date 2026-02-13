@@ -19,7 +19,7 @@ export interface Expense {
     }
     loanId: string | null
     notes: string | null
-    source: 'auto' | 'shu' | 'capital',
+    source: 'auto' | 'shu' | 'capital'
     txnDate: string
     createdAt: string
     updatedAt: string

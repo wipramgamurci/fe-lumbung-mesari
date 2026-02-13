@@ -16,8 +16,6 @@
     <!-- Filters Card -->
     <UCard>
       <div class="flex flex-wrap items-center gap-4">
-
-
         <UInput
           v-model="startDate"
           type="date"
@@ -104,12 +102,12 @@
             <div class="grid grid-cols-2 gap-4">
               <!-- Expense Details -->
               <div class="flex flex-col gap-2">
-                 <p class="text-sm font-medium text-gray-700 dark:text-gray-300">
+                <p class="text-sm font-medium text-gray-700 dark:text-gray-300">
                   {{ $t("expenses.transactionDate") }}
                 </p>
                 <p class="text-sm text-gray-600 dark:text-gray-400">
                   <!-- Fallback to createdAt if transactionDate is missing from type/response -->
-                   {{ formatDate((row.original as any).txnDate || row.original.createdAt) }}
+                  {{ formatDate(row.original.txnDate || row.original.createdAt) }}
                 </p>
               </div>
 
@@ -122,7 +120,7 @@
                 </p>
               </div>
 
-               <div class="flex flex-col gap-2">
+              <div class="flex flex-col gap-2">
                 <p class="text-sm font-medium text-gray-700 dark:text-gray-300">
                   {{ $t("expenses.amount") }}
                 </p>
@@ -140,7 +138,7 @@
                 </p>
               </div>
 
-               <div class="flex flex-col gap-2">
+              <div class="flex flex-col gap-2">
                 <p class="text-sm font-medium text-gray-700 dark:text-gray-300">
                   {{ $t("loan.createdAt") }}
                 </p>
@@ -149,7 +147,7 @@
                 </p>
               </div>
               
-               <div class="flex flex-col gap-2">
+              <div class="flex flex-col gap-2">
                 <p class="text-sm font-medium text-gray-700 dark:text-gray-300">
                   {{ $t("profile.lastUpdated") }}
                 </p>

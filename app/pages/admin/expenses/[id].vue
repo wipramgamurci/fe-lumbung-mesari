@@ -77,7 +77,6 @@
             v-model="form.transactionDate"
             type="date"
             class="w-full"
-            
           />
         </UFormField>
 
@@ -274,7 +273,7 @@ const handleSubmit = async () => {
     }
 
     await $fetch(url, {
-      method: "PUT" as any,
+      method: "PUT",
       body: payload as UpdateExpenseRequest,
     });
 
