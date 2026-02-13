@@ -4,7 +4,7 @@ export default defineEventHandler(async (event): Promise<Expense> => {
     const config = useRuntimeConfig()
     const id = getRouterParam(event, 'id')
     const body = await readBody<UpdateExpenseRequest>(event)
-    console.log('Update Expense Request Body:', body)
+
 
     // Get access token
     const accessToken = getCookie(event, 'accessToken')

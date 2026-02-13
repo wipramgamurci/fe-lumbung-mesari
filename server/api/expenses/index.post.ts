@@ -3,7 +3,7 @@ import type { CreateExpenseRequest, Expense } from '../../../types/expenses'
 export default defineEventHandler(async (event): Promise<Expense> => {
     const config = useRuntimeConfig()
     const body = await readBody<CreateExpenseRequest>(event)
-    console.log('Create Expense Request Body:', body)
+
 
     // Get access token
     const accessToken = getCookie(event, 'accessToken')
