@@ -466,12 +466,6 @@ const downloadReport = async () => {
       window.URL.revokeObjectURL(url);
     }
 
-    const toast = useToast();
-    toast.add({
-      title: "Success",
-      description: $t("savings.downloadReportSuccess"),
-      color: "success",
-    });
   } catch (err: any) {
     console.error("Error downloading report:", err);
     const toast = useToast();
