@@ -202,7 +202,10 @@
     "paidDate": "Paid Date",
     "processedBy": "Processed By",
     "savingsRecordMarkedAsPaidSuccessfully": "Savings record marked as paid successfully.",
-    "errorMarkingAsPaid": "Failed to mark savings as paid. Please try again."
+    "errorMarkingAsPaid": "Failed to mark savings as paid. Please try again.",
+    "downloadReport": "Download Report",
+    "downloadReportSuccess": "Report downloaded successfully.",
+    "downloadReportError": "Failed to download report. Please try again."
   },
   "profile": {
     "loadingProfile": "Loading profile...",

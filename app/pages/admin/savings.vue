@@ -34,6 +34,17 @@
         >
           {{ $t("common.refresh") }}
         </UButton>
+
+        <UButton
+          color="primary"
+          variant="solid"
+          icon="i-heroicons-arrow-down-tray"
+          @click="downloadReport"
+          :loading="isDownloading"
+          :disabled="!selectedYear"
+        >
+          {{ $t("savings.downloadReport") }}
+        </UButton>
       </div>
     </UCard>
 
@@ -197,6 +208,7 @@ const isSettling = computed(() => {
     ? settlingIds.value.has(selectedSavings.value.id)
     : false;
 });
+const isDownloading = ref(false);
 
 // Month options
 const monthOptions = [
@@ -423,6 +435,62 @@ const confirmMarkAsPaid = async () => {
     });
   } finally {
     settlingIds.value.delete(savingsId);
+  }
+};
+
+
+// Download report
+const downloadReport = async () => {
+  if (!selectedYear.value) return;
+
+  isDownloading.value = true;
+  try {
+    const response = await $fetch<Blob>("/api/reports/mandatory-savings", {
+      query: {
+        year: selectedYear.value,
+      },
+      responseType: "blob",
+    });
+
+    const url = window.URL.createObjectURL(response);
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", `simpanan-wajib-${selectedYear.value}.xlsx`);
+
+    try {
+      document.body.appendChild(link);
+      link.click();
+    } finally {
+      if (document.body.contains(link)) {
+        document.body.removeChild(link);
+      }
+      window.URL.revokeObjectURL(url);
+    }
+
+  } catch (err: any) {
+    console.error("Error downloading report:", err);
+    let errorMessage = err.message || $t("savings.downloadReportError");
+
+    if (err.data instanceof Blob) {
+      try {
+        const text = await err.data.text();
+        const errorJson = JSON.parse(text);
+        errorMessage = errorJson.message || errorMessage;
+      } catch (e) {
+        // Fallback if parsing fails
+      }
+    } else if (err.data?.message) {
+      errorMessage = err.data.message;
+    }
+
+    const toast = useToast();
+    toast.add({
+      title: "Error",
+      description: errorMessage,
+      color: "error",
+    });
+  } finally {
+    isDownloading.value = false;
   }
 };
 
