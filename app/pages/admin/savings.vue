@@ -468,10 +468,24 @@ const downloadReport = async () => {
 
   } catch (err: any) {
     console.error("Error downloading report:", err);
+    let errorMessage = err.message || $t("savings.downloadReportError");
+
+    if (err.data instanceof Blob) {
+      try {
+        const text = await err.data.text();
+        const errorJson = JSON.parse(text);
+        errorMessage = errorJson.message || errorMessage;
+      } catch (e) {
+        // Fallback if parsing fails
+      }
+    } else if (err.data?.message) {
+      errorMessage = err.data.message;
+    }
+
     const toast = useToast();
     toast.add({
       title: "Error",
-      description: err.data?.message || $t("savings.downloadReportError"),
+      description: errorMessage,
       color: "error",
     });
   } finally {
