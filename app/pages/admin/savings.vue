@@ -41,6 +41,7 @@
           icon="i-heroicons-arrow-down-tray"
           @click="downloadReport"
           :loading="isDownloading"
+          :disabled="!selectedYear"
         >
           {{ $t("savings.downloadReport") }}
         </UButton>
