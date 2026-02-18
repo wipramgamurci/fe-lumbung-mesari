@@ -47,11 +47,11 @@
           class="flex items-center gap-2 px-2 py-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
         >
           <template v-if="isUserReady">
-            <UAvatar :alt="userDisplayName" size="sm" />
+            <UAvatar :alt="userFullname" size="sm" />
             <span
               class="hidden sm:block font-medium text-gray-900 dark:text-white"
             >
-              {{ userDisplayName }}
+              {{ userUsername }}
             </span>
           </template>
           <template v-else>
@@ -106,7 +106,8 @@ onMounted(() => {
   hasMounted.value = true;
 });
 const isUserReady = computed(() => hasMounted.value && userStore.isInitialized);
-const userDisplayName = computed(() => currentUser.value?.fullname || "User");
+const userFullname = computed(() => currentUser.value?.fullname || "User");
+const userUsername = computed(() => currentUser.value?.username || "User");
 
 const navItems = computed(() => {
   if (userStore.isAdmin || userStore.isSuperadministrator) {
