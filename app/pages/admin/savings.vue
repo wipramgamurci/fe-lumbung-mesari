@@ -226,9 +226,13 @@ const monthOptions = [
   { label: $t("common.december"), value: "december" },
 ];
 
-// Year options (current year and 5 years back)
+// Year options (from current year back to startYear)
+const config = useRuntimeConfig();
 const currentYear = new Date().getFullYear();
-const yearOptions = Array.from({ length: 6 }, (_, i) => ({
+const startYear = config.public.startYear as number;
+const yearsCount = Math.max(1, currentYear - startYear + 1);
+
+const yearOptions = Array.from({ length: yearsCount }, (_, i) => ({
   label: String(currentYear - i),
   value: currentYear - i,
 }));
