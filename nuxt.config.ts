@@ -21,7 +21,7 @@ export default defineNuxtConfig({
     // Public keys (exposed to client-side)
     public: {
       apiBaseUrl: process.env.API_BASE_URL || "http://localhost:8000",
-      startYear: Number(process.env.START_YEAR),
+      startYear: Number(process.env.START_YEAR) || 2018,
     },
   },
   i18n: {
