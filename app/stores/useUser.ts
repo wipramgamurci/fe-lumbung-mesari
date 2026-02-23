@@ -22,7 +22,7 @@ export const useUserStore = defineStore("user", {
         const headers = import.meta.server
           ? useRequestHeaders(["cookie"])
           : undefined;
-        const user = await $fetch<User>("/api/me", { headers });
+        const user = await $fetch<User>("/api/users/me", { headers });
         this.user = user;
       } catch (error) {
         this.clearUser();
