@@ -77,7 +77,4 @@ export interface LoanStatusUpdateResponse {
   status: LoanStatus;
   loanId: string;
 }
-export type MemberLoan = Pick<
-  LoanListItem,
-  "id" | "principalAmount" | "tenor" | "status" | "notes"
->;
+export type MemberLoan = Omit<LoanListItem, "user">;
