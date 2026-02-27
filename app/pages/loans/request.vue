@@ -1,11 +1,13 @@
 <template>
-  <div class="container mx-auto p-4">
+    <h1 class="text-2xl font-bold text-gray-900 dark:text-white mb-8">
+      {{ $t("navigation.loanRequest") }}
+    </h1>
     <UCard>
-      <template #header>
+      <!-- <template #header>
         <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
           {{ $t("navigation.loanRequest") }}
         </h1>
-      </template>
+      </template> -->
 
       <div class="flex flex-col lg:flex-row gap-6 lg:gap-12">
         <!-- Loan Application Form -->
@@ -187,7 +189,6 @@
         </div>
       </div>
     </UCard>
-  </div>
 </template>
 
 <script setup lang="ts">

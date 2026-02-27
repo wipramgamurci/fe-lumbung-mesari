@@ -33,6 +33,11 @@ export const getMemberNavItems = (
           label: t("navigation.loanRequest"),
           to: "/loans/request",
         },
+        {
+          icon: "i-heroicons-clipboard-document-list",
+          label: "My Loans",
+          to: "/loans",
+        },
       ],
     },
   ];
