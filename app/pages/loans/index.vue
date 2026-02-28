@@ -112,6 +112,18 @@
             {{ formatDate(loan.endDate) }}
           </p>
         </div>
+        <div class="flex flex-col gap-1">
+          <UButton
+            :to="`/loans/${loan.id}`"
+            color="primary"
+            variant="outline"
+            size="sm"
+            icon="i-heroicons-arrow-right"
+            trailing
+          >
+            Lihat Detail
+          </UButton>
+        </div>
       </div>
     </UCard>
   </div>
