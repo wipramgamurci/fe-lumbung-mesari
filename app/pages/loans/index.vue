@@ -112,7 +112,7 @@
             {{ formatDate(loan.endDate) }}
           </p>
         </div>
-        <div class="flex flex-col gap-1">
+        <div class="">
           <UButton
             :to="`/loans/${loan.id}`"
             color="primary"

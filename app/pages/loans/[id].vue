@@ -11,7 +11,7 @@
           variant="ghost"
           icon="i-heroicons-arrow-left"
           class="mb-2 -ml-2"
-          size="sm"
+          size="md"
         >
           Kembali
         </UButton>
@@ -83,7 +83,7 @@
             <p
               class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider"
             >
-              Bunga
+              Tingkat Bunga
             </p>
             <p class="text-sm font-semibold text-gray-900 dark:text-white">
               {{ formatPercentage(loan.interestRate) }}
@@ -143,7 +143,7 @@
             <p
               class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider"
             >
-              Total Bunga
+              Bunga Bulanan
             </p>
             <p class="text-sm font-semibold text-gray-900 dark:text-white">
               {{ formatCurrency(loan.interestAmount) }}
@@ -253,7 +253,7 @@
               </p>
             </div>
             <div class="flex items-center gap-3">
-              <div class="text-right">
+              <div class="text-left sm:text-right">
                 <p class="text-sm font-semibold text-gray-900 dark:text-white">
                   {{ formatCurrency(installment.totalAmount) }}
                 </p>
@@ -261,7 +261,7 @@
                   v-if="installment.penaltyAmount > 0"
                   class="text-xs text-error-600 dark:text-error-400"
                 >
-                  +{{ formatCurrency(installment.penaltyAmount) }} denda
+                  termasuk denda {{ formatCurrency(installment.penaltyAmount) }}
                 </p>
               </div>
               <UBadge
