@@ -1,27 +1,297 @@
 <template>
-  <div>
-    <h1>Loan Detail</h1>
-
-    <div v-if="pendingLoan">Loading loan...</div>
-    <div v-else-if="loanError">Error: {{ loanError.message }}</div>
-    <div v-else-if="loan">
-      <pre>{{ loan }}</pre>
+  <div class="flex flex-col gap-6">
+    <!-- Header -->
+    <div
+      class="flex gap-4 flex-col md:flex-row justify-between items-start md:items-center"
+    >
+      <div>
+        <UButton
+          to="/loans"
+          color="neutral"
+          variant="ghost"
+          icon="i-heroicons-arrow-left"
+          class="mb-2 -ml-2"
+          size="sm"
+        >
+          Kembali
+        </UButton>
+        <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
+          Detail Pinjaman
+        </h1>
+        <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
+          Diajukan pada {{ loan ? formatDate(loan.createdAt) : "..." }}
+        </p>
+      </div>
+      <UBadge
+        v-if="loan"
+        class="capitalize"
+        variant="solid"
+        size="lg"
+        :color="getStatusColor(loan.status)"
+      >
+        {{ formatStatus(loan.status) }}
+      </UBadge>
     </div>
 
-    <h2>Installments</h2>
+    <!-- Loading -->
+    <div v-if="pendingLoan" class="flex justify-center py-12">
+      <UIcon
+        name="i-heroicons-arrow-path"
+        class="animate-spin w-12 h-12 text-primary-600"
+      />
+    </div>
 
-    <div v-if="pendingInstallments">Loading installments...</div>
-    <div v-else-if="installmentsError">
-      Error: {{ installmentsError.message }}
-    </div>
-    <div v-else-if="installments">
-      <pre>{{ installments }}</pre>
-    </div>
+    <!-- Error -->
+    <UAlert
+      v-else-if="loanError"
+      icon="i-heroicons-exclamation-triangle"
+      color="error"
+      variant="soft"
+      title="Gagal memuat detail pinjaman."
+      :description="loanError.message || 'Silakan coba lagi nanti.'"
+    />
+
+    <template v-else-if="loan">
+      <!-- Loan Summary Card -->
+      <UCard>
+        <h2 class="text-base font-semibold text-gray-900 dark:text-white mb-4">
+          Ringkasan Pinjaman
+        </h2>
+
+        <div
+          class="flex flex-col sm:flex-row items-start sm:items-center justify-start sm:justify-between gap-2 mb-4 pb-4 border-b border-gray-100 dark:border-gray-700"
+        >
+          <!-- class="flex items-center justify-between mb-4 pb-4 border-b border-gray-100 dark:border-gray-700" -->
+          <p class="text-sm text-gray-500 dark:text-gray-400">Pokok Pinjaman</p>
+          <p class="text-2xl font-bold text-gray-900 dark:text-white">
+            {{ formatCurrency(loan.principalAmount) }}
+          </p>
+        </div>
+
+        <div class="grid grid-cols-2 gap-4">
+          <div class="flex flex-col gap-1">
+            <p
+              class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider"
+            >
+              Tenor
+            </p>
+            <p class="text-sm font-semibold text-gray-900 dark:text-white">
+              {{ loan.tenor }} Bulan
+            </p>
+          </div>
+          <div class="flex flex-col gap-1">
+            <p
+              class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider"
+            >
+              Bunga
+            </p>
+            <p class="text-sm font-semibold text-gray-900 dark:text-white">
+              {{ formatPercentage(loan.interestRate) }}
+            </p>
+          </div>
+          <div class="flex flex-col gap-1">
+            <p
+              class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider"
+            >
+              Cicilan/Bulan
+            </p>
+            <p class="text-sm font-semibold text-gray-900 dark:text-white">
+              {{ formatCurrency(loan.monthlyPayment) }}
+            </p>
+          </div>
+          <div v-if="loan.lastMonthPayment" class="flex flex-col gap-1">
+            <p
+              class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider"
+            >
+              Cicilan Bulan Terakhir
+            </p>
+            <p class="text-sm font-semibold text-gray-900 dark:text-white">
+              {{ formatCurrency(loan.lastMonthPayment) }}
+            </p>
+          </div>
+          <div class="flex flex-col gap-1">
+            <p
+              class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider"
+            >
+              Total Bayar
+            </p>
+            <p class="text-sm font-semibold text-gray-900 dark:text-white">
+              {{ formatCurrency(loan.totalPayableAmount) }}
+            </p>
+          </div>
+          <div class="flex flex-col gap-1">
+            <p
+              class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider"
+            >
+              Biaya Admin
+            </p>
+            <p class="text-sm font-semibold text-gray-900 dark:text-white">
+              {{ formatCurrency(loan.adminFeeAmount) }}
+            </p>
+          </div>
+          <div class="flex flex-col gap-1">
+            <p
+              class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider"
+            >
+              Dana Dicairkan
+            </p>
+            <p class="text-sm font-semibold text-gray-900 dark:text-white">
+              {{ formatCurrency(loan.disbursedAmount) }}
+            </p>
+          </div>
+          <div class="flex flex-col gap-1">
+            <p
+              class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider"
+            >
+              Total Bunga
+            </p>
+            <p class="text-sm font-semibold text-gray-900 dark:text-white">
+              {{ formatCurrency(loan.interestAmount) }}
+            </p>
+          </div>
+          <div v-if="loan.startDate" class="flex flex-col gap-1">
+            <p
+              class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider"
+            >
+              Tanggal Mulai
+            </p>
+            <p class="text-sm font-semibold text-gray-900 dark:text-white">
+              {{ formatDate(loan.startDate) }}
+            </p>
+          </div>
+          <div v-if="loan.endDate" class="flex flex-col gap-1">
+            <p
+              class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider"
+            >
+              Jatuh Tempo
+            </p>
+            <p class="text-sm font-semibold text-gray-900 dark:text-white">
+              {{ formatDate(loan.endDate) }}
+            </p>
+          </div>
+          <div v-if="loan.disbursedAt" class="flex flex-col gap-1">
+            <p
+              class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider"
+            >
+              Tanggal Pencairan
+            </p>
+            <p class="text-sm font-semibold text-gray-900 dark:text-white">
+              {{ formatDate(loan.disbursedAt) }}
+            </p>
+          </div>
+          <div v-if="loan.installmentLateAmount" class="flex flex-col gap-1">
+            <p
+              class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider"
+            >
+              Denda Keterlambatan
+            </p>
+            <p class="text-sm font-semibold text-error-600 dark:text-error-400">
+              {{ formatCurrency(loan.installmentLateAmount) }}
+            </p>
+          </div>
+        </div>
+
+        <div
+          v-if="loan.notes"
+          class="mt-4 pt-4 border-t border-gray-100 dark:border-gray-700"
+        >
+          <p
+            class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1"
+          >
+            Catatan
+          </p>
+          <p class="text-sm text-gray-600 dark:text-gray-300 italic">
+            "{{ loan.notes }}"
+          </p>
+        </div>
+      </UCard>
+
+      <!-- Installments Card -->
+      <UCard>
+        <h2 class="text-base font-semibold text-gray-900 dark:text-white mb-4">
+          Jadwal Cicilan
+        </h2>
+
+        <div v-if="pendingInstallments" class="flex justify-center py-8">
+          <UIcon
+            name="i-heroicons-arrow-path"
+            class="animate-spin w-8 h-8 text-primary-600"
+          />
+        </div>
+
+        <UAlert
+          v-else-if="installmentsError"
+          icon="i-heroicons-exclamation-triangle"
+          color="error"
+          variant="soft"
+          title="Gagal memuat jadwal cicilan."
+          :description="installmentsError.message || 'Silakan coba lagi nanti.'"
+        />
+
+        <div
+          v-else-if="installments?.length"
+          class="flex flex-col divide-y divide-gray-100 dark:divide-gray-700"
+        >
+          <div
+            v-for="installment in installments"
+            :key="installment.id"
+            class="flex flex-col sm:flex-row items-start sm:items-center justify-start sm:justify-between gap-2 py-3"
+          >
+            <!-- class="flex items-center justify-between py-3" -->
+            <div class="flex flex-col gap-1">
+              <p class="text-sm font-medium text-gray-900 dark:text-white">
+                Cicilan ke-{{ installment.installmentNumber }}
+              </p>
+              <p class="text-xs text-gray-500 dark:text-gray-400">
+                Jatuh tempo {{ formatDate(installment.dueDate) }}
+              </p>
+              <p
+                v-if="installment.paidAt"
+                class="text-xs text-green-600 dark:text-green-400"
+              >
+                Dibayar {{ formatDate(installment.paidAt) }}
+              </p>
+            </div>
+            <div class="flex items-center gap-3">
+              <div class="text-right">
+                <p class="text-sm font-semibold text-gray-900 dark:text-white">
+                  {{ formatCurrency(installment.totalAmount) }}
+                </p>
+                <p
+                  v-if="installment.penaltyAmount > 0"
+                  class="text-xs text-error-600 dark:text-error-400"
+                >
+                  +{{ formatCurrency(installment.penaltyAmount) }} denda
+                </p>
+              </div>
+              <UBadge
+                class="capitalize shrink-0"
+                variant="soft"
+                :color="getInstallmentStatusColor(installment.status)"
+              >
+                {{ formatInstallmentStatus(installment.status) }}
+              </UBadge>
+            </div>
+          </div>
+        </div>
+
+        <div v-else class="text-center py-8">
+          <p class="text-sm text-gray-500 dark:text-gray-400">
+            Belum ada jadwal cicilan.
+          </p>
+        </div>
+      </UCard>
+    </template>
   </div>
 </template>
 
 <script setup lang="ts">
 import type { LoanListItem, Installment } from "~~/types/loan";
+import {
+  formatCurrency,
+  formatDate,
+  formatPercentage,
+} from "~~/utils/formatters";
 
 definePageMeta({
   layout: "default",
@@ -42,4 +312,46 @@ const {
   pending: pendingInstallments,
   error: installmentsError,
 } = await useFetch<Installment[]>(`/api/loans/${id}/installments`);
+
+const formatStatus = (status: string) => {
+  const statusMap: Record<string, string> = {
+    pending: "Menunggu",
+    approved: "Disetujui",
+    rejected: "Ditolak",
+    active: "Aktif",
+    completed: "Selesai",
+  };
+  return statusMap[status] || status;
+};
+
+const getStatusColor = (status: string) => {
+  const colorMap: Record<string, any> = {
+    pending: "warning",
+    approved: "success",
+    active: "info",
+    completed: "success",
+    rejected: "error",
+  };
+  return colorMap[status] || "neutral";
+};
+
+const formatInstallmentStatus = (status: string) => {
+  const statusMap: Record<string, string> = {
+    due: "Belum Bayar",
+    paid: "Lunas",
+    overdue: "Terlambat",
+    partial: "Sebagian",
+  };
+  return statusMap[status] || status;
+};
+
+const getInstallmentStatusColor = (status: string) => {
+  const colorMap: Record<string, any> = {
+    due: "neutral",
+    paid: "success",
+    overdue: "error",
+    partial: "warning",
+  };
+  return colorMap[status] || "neutral";
+};
 </script>
