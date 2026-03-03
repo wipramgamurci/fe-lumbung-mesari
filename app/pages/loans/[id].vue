@@ -13,13 +13,13 @@
           class="mb-2 -ml-2"
           size="md"
         >
-          Kembali
+          {{ $t("common.back") }}
         </UButton>
         <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
-          Detail Pinjaman
+          {{ $t("loan.loanDetailsTitle") }}
         </h1>
         <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-          Diajukan pada {{ loan ? formatDate(loan.createdAt) : "..." }}
+          {{ $t("loan.appliedAt", { date: formatDate(loan?.createdAt) }) }}
         </p>
       </div>
       <UBadge
@@ -55,14 +55,16 @@
       <!-- Loan Summary Card -->
       <UCard>
         <h2 class="text-base font-semibold text-gray-900 dark:text-white mb-4">
-          Ringkasan Pinjaman
+          {{ $t("loan.loanSummaryTitle") }}
         </h2>
 
         <div
           class="flex flex-col sm:flex-row items-start sm:items-center justify-start sm:justify-between gap-2 mb-4 pb-4 border-b border-gray-100 dark:border-gray-700"
         >
           <!-- class="flex items-center justify-between mb-4 pb-4 border-b border-gray-100 dark:border-gray-700" -->
-          <p class="text-sm text-gray-500 dark:text-gray-400">Pokok Pinjaman</p>
+          <p class="text-sm text-gray-500 dark:text-gray-400">
+            {{ $t("loan.principalAmount") }}
+          </p>
           <p class="text-2xl font-bold text-gray-900 dark:text-white">
             {{ formatCurrency(loan.principalAmount) }}
           </p>
@@ -73,17 +75,17 @@
             <p
               class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider"
             >
-              Tenor
+              {{ $t("loan.tenor") }}
             </p>
             <p class="text-sm font-semibold text-gray-900 dark:text-white">
-              {{ loan.tenor }} Bulan
+              {{ loan.tenor }} {{ $t("common.months") }}
             </p>
           </div>
           <div class="flex flex-col gap-1">
             <p
               class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider"
             >
-              Tingkat Bunga
+              {{ $t("loan.interestRate") }}
             </p>
             <p class="text-sm font-semibold text-gray-900 dark:text-white">
               {{ formatPercentage(loan.interestRate) }}
@@ -93,7 +95,7 @@
             <p
               class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider"
             >
-              Cicilan/Bulan
+              {{ $t("loan.monthlyPayment") }}
             </p>
             <p class="text-sm font-semibold text-gray-900 dark:text-white">
               {{ formatCurrency(loan.monthlyPayment) }}
@@ -103,7 +105,7 @@
             <p
               class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider"
             >
-              Cicilan Bulan Terakhir
+              {{ $t("loan.lastMonthPayment") }}
             </p>
             <p class="text-sm font-semibold text-gray-900 dark:text-white">
               {{ formatCurrency(loan.lastMonthPayment) }}
@@ -113,7 +115,7 @@
             <p
               class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider"
             >
-              Total Bayar
+              {{ $t("loan.totalPayableAmount") }}
             </p>
             <p class="text-sm font-semibold text-gray-900 dark:text-white">
               {{ formatCurrency(loan.totalPayableAmount) }}
@@ -123,7 +125,7 @@
             <p
               class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider"
             >
-              Biaya Admin
+              {{ $t("loan.adminFeeAmount") }}
             </p>
             <p class="text-sm font-semibold text-gray-900 dark:text-white">
               {{ formatCurrency(loan.adminFeeAmount) }}
@@ -133,7 +135,7 @@
             <p
               class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider"
             >
-              Dana Dicairkan
+              {{ $t("loan.disbursedAmount") }}
             </p>
             <p class="text-sm font-semibold text-gray-900 dark:text-white">
               {{ formatCurrency(loan.disbursedAmount) }}
@@ -143,7 +145,7 @@
             <p
               class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider"
             >
-              Bunga Bulanan
+              {{ $t("loan.interestAmount") }}
             </p>
             <p class="text-sm font-semibold text-gray-900 dark:text-white">
               {{ formatCurrency(loan.interestAmount) }}
@@ -153,7 +155,7 @@
             <p
               class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider"
             >
-              Tanggal Mulai
+              {{ $t("loan.startDate") }}
             </p>
             <p class="text-sm font-semibold text-gray-900 dark:text-white">
               {{ formatDate(loan.startDate) }}
@@ -163,7 +165,7 @@
             <p
               class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider"
             >
-              Jatuh Tempo
+              {{ $t("loan.endDate") }}
             </p>
             <p class="text-sm font-semibold text-gray-900 dark:text-white">
               {{ formatDate(loan.endDate) }}
@@ -173,7 +175,7 @@
             <p
               class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider"
             >
-              Tanggal Pencairan
+              {{ $t("loan.disburseDate") }}
             </p>
             <p class="text-sm font-semibold text-gray-900 dark:text-white">
               {{ formatDate(loan.disbursedAt) }}
@@ -183,7 +185,7 @@
             <p
               class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider"
             >
-              Denda Keterlambatan
+              {{ $t("loan.installmentLateAmount") }}
             </p>
             <p class="text-sm font-semibold text-error-600 dark:text-error-400">
               {{ formatCurrency(loan.installmentLateAmount) }}
@@ -198,7 +200,7 @@
           <p
             class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider mb-1"
           >
-            Catatan
+            {{ $t("loan.notes") }}
           </p>
           <p class="text-sm text-gray-600 dark:text-gray-300 italic">
             "{{ loan.notes }}"
@@ -209,7 +211,7 @@
       <!-- Installments Card -->
       <UCard>
         <h2 class="text-base font-semibold text-gray-900 dark:text-white mb-4">
-          Jadwal Cicilan
+          {{ $t("installments.title") }}
         </h2>
 
         <div v-if="pendingInstallments" class="flex justify-center py-8">
@@ -240,16 +242,28 @@
             <!-- class="flex items-center justify-between py-3" -->
             <div class="flex flex-col gap-1">
               <p class="text-sm font-medium text-gray-900 dark:text-white">
-                Cicilan ke-{{ installment.installmentNumber }}
+                {{
+                  $t("installments.installmentNumber", {
+                    number: installment.installmentNumber,
+                  })
+                }}
               </p>
               <p class="text-xs text-gray-500 dark:text-gray-400">
-                Jatuh tempo {{ formatDate(installment.dueDate) }}
+                {{
+                  $t("installments.dueDate", {
+                    date: formatDate(installment.dueDate),
+                  })
+                }}
               </p>
               <p
                 v-if="installment.paidAt"
                 class="text-xs text-green-600 dark:text-green-400"
               >
-                Dibayar {{ formatDate(installment.paidAt) }}
+                {{
+                  $t("installments.paidDate", {
+                    date: formatDate(installment.paidAt),
+                  })
+                }}
               </p>
             </div>
             <div class="flex items-center gap-3">
@@ -261,7 +275,11 @@
                   v-if="installment.penaltyAmount > 0"
                   class="text-xs text-error-600 dark:text-error-400"
                 >
-                  termasuk denda {{ formatCurrency(installment.penaltyAmount) }}
+                  {{
+                    $t("installments.penaltyAmount", {
+                      amount: formatCurrency(installment.penaltyAmount),
+                    })
+                  }}
                 </p>
               </div>
               <UBadge
@@ -277,7 +295,7 @@
 
         <div v-else class="text-center py-8">
           <p class="text-sm text-gray-500 dark:text-gray-400">
-            Belum ada jadwal cicilan.
+            {{ $t("installments.noInstallments") }}
           </p>
         </div>
       </UCard>
@@ -286,7 +304,11 @@
 </template>
 
 <script setup lang="ts">
-import type { LoanListItem, Installment } from "~~/types/loan";
+import type {
+  LoanListItem,
+  Installment,
+  InstallmentStatus,
+} from "~~/types/loan";
 import {
   formatCurrency,
   formatDate,
@@ -335,18 +357,12 @@ const getStatusColor = (status: string) => {
   return colorMap[status] || "neutral";
 };
 
-const formatInstallmentStatus = (status: string) => {
-  const statusMap: Record<string, string> = {
-    due: "Belum Bayar",
-    paid: "Lunas",
-    overdue: "Terlambat",
-    partial: "Sebagian",
-  };
-  return statusMap[status] || status;
+const formatInstallmentStatus = (status: InstallmentStatus) => {
+  return $t(`installments.status.${status}`);
 };
 
-const getInstallmentStatusColor = (status: string) => {
-  const colorMap: Record<string, any> = {
+const getInstallmentStatusColor = (status: InstallmentStatus) => {
+  const colorMap: Record<InstallmentStatus, any> = {
     due: "neutral",
     paid: "success",
     overdue: "error",

@@ -1,5 +1,6 @@
 {
   "common": {
+    "back": "Kembali",
     "signIn": "Masuk",
     "register": "Daftar",
     "password": "Kata Sandi",
@@ -141,6 +142,8 @@
       "active": "Aktif",
       "completed": "Selesai"
     },
+    "loanDetailsTitle": "Detail Pinjaman",
+    "loanSummaryTitle": "Ringkasan Pinjaman",
     "noDataAvailable": "Tidak ada data tersedia. Klik refresh untuk memuat pinjaman.",
     "borrower": "Peminjam",
     "disburse": "Cairkan Pinjaman",
@@ -157,6 +160,8 @@
     "startDate": "Tanggal Mulai",
     "endDate": "Tanggal Akhir",
     "createdAt": "Tanggal Dibuat",
+    "appliedAt": "Diajukan pada {date}",
+    "disburseDate": "Tanggal Pencairan",
     "notes": "Catatan",
     "status": "Status",
     "approveLoan": "Setujui Pinjaman",

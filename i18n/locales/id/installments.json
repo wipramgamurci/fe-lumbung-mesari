@@ -1,0 +1,16 @@
+{
+  "installments": {
+    "title": "Jadwal Cicilan",
+    "installmentNumber": "Cicilan ke-{number}",
+    "dueDate": "Jatuh tempo {date}",
+    "paidDate": "Dibayar {date}",
+    "penaltyAmount": "Termasuk denda {amount}",
+    "noInstallments": "Belum ada jadwal cicilan.",
+    "status": {
+      "due": "Belum Bayar",
+      "paid": "Lunas",
+      "overdue": "Terlambat",
+      "partial": "Sebagian"
+    }
+  }
+}
