@@ -31,12 +31,12 @@ export default defineNuxtConfig({
       {
         code: "id",
         name: "Indonesia",
-        files: ["id/id.json", "id/installments.json"],
+        files: ["id/id.json", "id/installments.json", "id/loan.json"],
       },
       {
         code: "en",
         name: "English",
-        files: ["en/en.json", "en/installments.json"],
+        files: ["en/en.json", "en/installments.json", "en/loan.json"],
       },
     ],
     // langDir: "locales", // Directory where locale files are stored
