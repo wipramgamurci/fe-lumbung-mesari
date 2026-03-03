@@ -1,0 +1,34 @@
+{
+  "expenses": {
+    "createExpense": "Buat Pengeluaran",
+    "expenseCategory": "Kategori Pengeluaran",
+    "expenseCategoryPlaceholder": "Pilih kategori pengeluaran",
+    "expenseName": "Nama Pengeluaran",
+    "expenseNamePlaceholder": "Masukkan nama pengeluaran",
+    "amount": "Jumlah",
+    "amountPlaceholder": "Masukkan jumlah",
+    "createdBy": "Dibuat Oleh",
+    "startDate": "Tanggal Mulai",
+    "endDate": "Tanggal Selesai",
+    "minAmount": "Jumlah Min",
+    "maxAmount": "Jumlah Maks",
+    "transactionDate": "Tanggal Transaksi",
+    "source": "Sumber Dana",
+    "sourcePlaceholder": "Pilih sumber dana",
+    "notes": "Catatan",
+    "notesPlaceholder": "Tambahkan catatan (opsional)",
+    "sourceOptions": {
+      "auto": "Otomatis",
+      "shu": "SHU",
+      "capital": "Modal"
+    },
+    "successCreate": "Pengeluaran berhasil dibuat",
+    "failedCreate": "Gagal membuat pengeluaran: {message}",
+    "amountError": "Jumlah harus lebih dari 0",
+    "allCategories": "Semua Kategori",
+    "editExpense": "Edit Pengeluaran",
+    "editExpenseDescription": "Perbarui detail pengeluaran",
+    "successUpdate": "Pengeluaran berhasil diperbarui",
+    "failedUpdate": "Gagal memperbarui pengeluaran: {message}"
+  }
+}

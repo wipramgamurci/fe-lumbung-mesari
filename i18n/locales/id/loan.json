@@ -50,5 +50,23 @@
     "failedToApproveLoan": "Gagal menyetujui pinjaman. Silakan coba lagi.",
     "failedToRejectLoan": "Gagal menolak pinjaman. Silakan coba lagi.",
     "failedToDisburseLoan": "Gagal mencairkan pinjaman. Silakan coba lagi."
+  },
+  "loanRequest": {
+    "error": {
+      "failedToLoadLoanPeriods": "Gagal memuat periode pinjaman.",
+      "failedToCalculateLoan": "Gagal menghitung pinjaman.",
+      "failedToSubmitLoanApplication": "Gagal mengirimkan permintaan pinjaman."
+    },
+    "loanApplication": "Permintaan Pinjaman",
+    "loanAmount": "Jumlah Pinjaman",
+    "loanPeriod": "Periode Pinjaman",
+    "loanPeriodPlaceholder": "Pilih periode pinjaman",
+    "notes": "Catatan (Opsional)",
+    "notesPlaceholder": "Tambahkan catatan tambahan...",
+    "submit": "Kirim Permintaan",
+    "calculate": "Hitung",
+    "loanCalculation": "Perhitungan Pinjaman",
+    "enterLoanAmountAndSelectPeriodThenClickCalculate": "Masukkan jumlah pinjaman dan pilih periode, kemudian klik Hitung",
+    "loanApplicationSubmittedSuccessfully": "Permintaan pinjaman berhasil dikirim."
   }
 }

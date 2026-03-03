@@ -1,0 +1,43 @@
+{
+  "common": {
+    "back": "Kembali",
+    "signIn": "Masuk",
+    "register": "Daftar",
+    "password": "Kata Sandi",
+    "identifier": "Nama Pengguna atau Email",
+    "submit": "Kirim",
+    "loading": "Memuat...",
+    "signOut": "Keluar",
+    "contactAdministrator": "Hubungi Administrator",
+    "cancel": "Batal",
+    "approve": "Setujui",
+    "reject": "Tolak",
+    "actions": "Aksi",
+    "months": "Bulan",
+    "refresh": "Muat Ulang",
+    "january": "Januari",
+    "february": "Februari",
+    "march": "Maret",
+    "april": "April",
+    "may": "Mei",
+    "june": "Juni",
+    "july": "Juli",
+    "august": "Agustus",
+    "september": "September",
+    "october": "Oktober",
+    "november": "November",
+    "december": "Desember",
+    "profile": "Profil",
+    "yes": "Ya",
+    "no": "Tidak",
+    "error": {
+      "required": "Wajib diisi"
+    },
+    "update": "Ubah",
+    "filter": "Filter",
+    "clearFilter": "Hapus Filter"
+  },
+  "app": {
+    "title": "Lumbung Mesari"
+  }
+}
