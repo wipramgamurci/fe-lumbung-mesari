@@ -77,7 +77,21 @@ export interface LoanStatusUpdateResponse {
   status: LoanStatus;
   loanId: string;
 }
-export type MemberLoan = Pick<
-  LoanListItem,
-  "id" | "principalAmount" | "tenor" | "status" | "notes"
->;
+export type MemberLoan = Omit<LoanListItem, "user">;
+
+export type InstallmentStatus = "due" | "paid" | "overdue" | "partial";
+
+export interface Installment {
+  id: string;
+  loanId: string;
+  installmentNumber: number;
+  dueDate: string;
+  principalAmount: number;
+  interestAmount: number;
+  penaltyAmount: number;
+  totalAmount: number;
+  paidAt: string | null;
+  status: InstallmentStatus;
+  createdAt: string;
+  updatedAt: string;
+}
