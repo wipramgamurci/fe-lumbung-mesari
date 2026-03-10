@@ -14,6 +14,7 @@
     "createExpense": "Create Expense",
     "createExpenseDescription": "Create new expense",
     "expenseList": "Expense List",
-    "expenseListDescription": "View expense list"
+    "expenseListDescription": "View expense list",
+    "myLoans": "My Loans"
   }
 }

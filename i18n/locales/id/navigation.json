@@ -14,6 +14,7 @@
     "createExpense": "Buat Pengeluaran",
     "createExpenseDescription": "Buat pengeluaran baru",
     "expenseList": "Daftar Pengeluaran",
-    "expenseListDescription": "Lihat daftar pengeluaran"
+    "expenseListDescription": "Lihat daftar pengeluaran",
+    "myLoans": "Pinjaman Saya"
   }
 }
