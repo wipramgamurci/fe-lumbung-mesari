@@ -49,7 +49,8 @@
     "loanDisbursedDescription": "Loan has been disbursed successfully.",
     "failedToApproveLoan": "Failed to approve loan. Please try again.",
     "failedToRejectLoan": "Failed to reject loan. Please try again.",
-    "failedToDisburseLoan": "Failed to disburse loan. Please try again."
+    "failedToDisburseLoan": "Failed to disburse loan. Please try again.",
+    "errorLoadingLoanDetails": "Failed to load loan details."
   },
   "loanRequest": {
     "error": {

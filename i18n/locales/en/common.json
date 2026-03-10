@@ -35,7 +35,8 @@
     },
     "update": "Update",
     "filter": "Filter",
-    "clearFilter": "Clear Filter"
+    "clearFilter": "Clear Filter",
+    "pleaseTryAgainLater": "Please try again later."
   },
   "app": {
     "title": "Lumbung Mesari"

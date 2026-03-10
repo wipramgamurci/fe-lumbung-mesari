@@ -47,8 +47,8 @@
       icon="i-heroicons-exclamation-triangle"
       color="error"
       variant="soft"
-      title="Gagal memuat detail pinjaman."
-      :description="loanError.message || 'Silakan coba lagi nanti.'"
+      :title="$t('loan.errorLoadingLoanDetails')"
+      :description="loanError.message || $t('common.pleaseTryAgainLater')"
     />
 
     <template v-else-if="loan">
@@ -61,7 +61,6 @@
         <div
           class="flex flex-col sm:flex-row items-start sm:items-center justify-start sm:justify-between gap-2 mb-4 pb-4 border-b border-gray-100 dark:border-gray-700"
         >
-          <!-- class="flex items-center justify-between mb-4 pb-4 border-b border-gray-100 dark:border-gray-700" -->
           <p class="text-sm text-gray-500 dark:text-gray-400">
             {{ $t("loan.principalAmount") }}
           </p>
@@ -226,8 +225,10 @@
           icon="i-heroicons-exclamation-triangle"
           color="error"
           variant="soft"
-          title="Gagal memuat jadwal cicilan."
-          :description="installmentsError.message || 'Silakan coba lagi nanti.'"
+          :title="$t('installments.errorLoadingInstallments')"
+          :description="
+            installmentsError.message || $t('common.pleaseTryAgainLater')
+          "
         />
 
         <div
@@ -239,7 +240,6 @@
             :key="installment.id"
             class="flex flex-col sm:flex-row items-start sm:items-center justify-start sm:justify-between gap-2 py-3"
           >
-            <!-- class="flex items-center justify-between py-3" -->
             <div class="flex flex-col gap-1">
               <p class="text-sm font-medium text-gray-900 dark:text-white">
                 {{
@@ -336,14 +336,15 @@ const {
 } = await useFetch<Installment[]>(`/api/loans/${id}/installments`);
 
 const formatStatus = (status: string) => {
-  const statusMap: Record<string, string> = {
-    pending: "Menunggu",
-    approved: "Disetujui",
-    rejected: "Ditolak",
-    active: "Aktif",
-    completed: "Selesai",
-  };
-  return statusMap[status] || status;
+  // const statusMap: Record<string, string> = {
+  //   pending: $t("loan.statusOptions.pending"),
+  //   approved: $t("loan.statusOptions.approved"),
+  //   rejected: $t("loan.statusOptions.rejected"),
+  //   active: $t("loan.statusOptions.active"),
+  //   completed: $t("loan.statusOptions.completed"),
+  // };
+  // return statusMap[status] || status;
+  return $t(`loan.statusOptions.${status}`);
 };
 
 const getStatusColor = (status: string) => {
