@@ -28,7 +28,7 @@
     "createdAt": "Tanggal Dibuat",
     "appliedAt": "Diajukan pada {date}",
     "disburseDate": "Tanggal Pencairan",
-    "disbursedAt": "Dicarikan pada {date}",
+    "disbursedAt": "Dicairkan pada {date}",
     "notes": "Catatan",
     "status": "Status",
     "approveLoan": "Setujui Pinjaman",

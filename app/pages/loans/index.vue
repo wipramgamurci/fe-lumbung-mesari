@@ -130,7 +130,7 @@
 </template>
 
 <script setup lang="ts">
-import type { MemberLoan } from "~~/types/loan";
+import type { LoanStatus, MemberLoan } from "~~/types/loan";
 import { formatCurrency, formatDate } from "~~/utils/formatters";
 
 definePageMeta({
@@ -145,11 +145,11 @@ const {
   error,
 } = await useFetch<MemberLoan[]>("/api/users/me/loans");
 
-const formatStatus = (status: string) => {
+const formatStatus = (status: LoanStatus) => {
   return $t(`loan.statusOptions.${status}`);
 };
 
-const getStatusColor = (status: string) => {
+const getStatusColor = (status: LoanStatus) => {
   const colorMap: Record<string, any> = {
     pending: "warning",
     approved: "success",

@@ -308,6 +308,7 @@ import type {
   LoanListItem,
   Installment,
   InstallmentStatus,
+  LoanStatus,
 } from "~~/types/loan";
 import {
   formatCurrency,
@@ -335,19 +336,11 @@ const {
   error: installmentsError,
 } = await useFetch<Installment[]>(`/api/loans/${id}/installments`);
 
-const formatStatus = (status: string) => {
-  // const statusMap: Record<string, string> = {
-  //   pending: $t("loan.statusOptions.pending"),
-  //   approved: $t("loan.statusOptions.approved"),
-  //   rejected: $t("loan.statusOptions.rejected"),
-  //   active: $t("loan.statusOptions.active"),
-  //   completed: $t("loan.statusOptions.completed"),
-  // };
-  // return statusMap[status] || status;
+const formatStatus = (status: LoanStatus) => {
   return $t(`loan.statusOptions.${status}`);
 };
 
-const getStatusColor = (status: string) => {
+const getStatusColor = (status: LoanStatus) => {
   const colorMap: Record<string, any> = {
     pending: "warning",
     approved: "success",
