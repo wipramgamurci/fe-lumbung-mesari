@@ -9,7 +9,7 @@ export type NavigationItem = {
 // Functions accept 't' parameter to avoid calling useI18n() inside nested functions
 // useI18n() must be called at the top level of setup function
 export const getBaseNavItems = (
-  t: (key: string) => string
+  t: (key: string) => string,
 ): NavigationItem[] => {
   return [
     {
@@ -21,7 +21,7 @@ export const getBaseNavItems = (
 };
 
 export const getMemberNavItems = (
-  t: (key: string) => string
+  t: (key: string) => string,
 ): NavigationItem[] => {
   return [
     {
@@ -35,7 +35,7 @@ export const getMemberNavItems = (
         },
         {
           icon: "i-heroicons-clipboard-document-list",
-          label: "My Loans",
+          label: t("navigation.myLoans"),
           to: "/loans",
         },
       ],
@@ -44,7 +44,7 @@ export const getMemberNavItems = (
 };
 
 export const getAdminNavItems = (
-  t: (key: string) => string
+  t: (key: string) => string,
 ): NavigationItem[] => {
   return [
     {
@@ -91,7 +91,7 @@ export const getAdminNavItems = (
           description: t("navigation.expenseListDescription"),
           to: "/admin/expenses",
         },
-      ]
+      ],
     },
   ];
 };

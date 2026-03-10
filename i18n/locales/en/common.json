@@ -1,0 +1,46 @@
+{
+  "common": {
+    "back": "Back",
+    "signIn": "Sign In",
+    "register": "Register",
+    "password": "Password",
+    "identifier": "Username or Email",
+    "submit": "Submit",
+    "loading": "Loading...",
+    "signOut": "Sign Out",
+    "contactAdministrator": "Contact Administrator",
+    "cancel": "Cancel",
+    "approve": "Approve",
+    "reject": "Reject",
+    "actions": "Actions",
+    "months": "Months",
+    "refresh": "Refresh",
+    "january": "January",
+    "february": "February",
+    "march": "March",
+    "april": "April",
+    "may": "May",
+    "june": "June",
+    "july": "July",
+    "august": "August",
+    "september": "September",
+    "october": "October",
+    "november": "November",
+    "december": "December",
+    "profile": "Profile",
+    "yes": "Yes",
+    "no": "No",
+    "error": {
+      "required": "Required"
+    },
+    "update": "Update",
+    "filter": "Filter",
+    "clearFilter": "Clear Filter",
+    "errorLoadingData": "An error occurred while loading data.",
+    "pleaseTryAgainLater": "Please try again later.",
+    "viewDetail": "View Detail"
+  },
+  "app": {
+    "title": "Lumbung Mesari"
+  }
+}
