@@ -4,14 +4,14 @@
   >
     <div>
       <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
-        Pinjaman Saya
+        {{ $t("loan.myLoans") }}
       </h1>
       <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">
-        Daftar semua permohonan dan pinjaman aktif Anda.
+        {{ $t("loan.myLoansDescription") }}
       </p>
     </div>
     <UButton to="/loans/request" color="primary" icon="i-heroicons-plus">
-      Ajukan Pinjaman
+      {{ $t("loan.applyForLoan") }}
     </UButton>
   </div>
 
@@ -29,8 +29,8 @@
     icon="i-heroicons-exclamation-triangle"
     color="error"
     variant="soft"
-    title="Terjadi kesalahan saat memuat data."
-    :description="error.message || 'Silakan coba lagi nanti.'"
+    :title="$t('common.errorLoadingData')"
+    :description="error.message || $t('common.pleaseTryAgainLater')"
   />
 
   <!-- Empty State -->
@@ -40,14 +40,14 @@
       class="mx-auto h-12 w-12 text-gray-400"
     />
     <h3 class="mt-2 text-sm font-medium text-gray-900 dark:text-white">
-      Belum ada pinjaman
+      {{ $t("loan.noLoans") }}
     </h3>
     <p class="mt-1 text-sm text-gray-500 dark:text-gray-400">
-      Mulai dengan mengajukan pinjaman pertama Anda.
+      {{ $t("loan.noLoansDescription") }}
     </p>
     <div class="mt-6 flex justify-center">
       <UButton to="/loans/request" color="primary" icon="i-heroicons-plus">
-        Ajukan Pinjaman
+        {{ $t("loan.applyForLoan") }}
       </UButton>
     </div>
   </UCard>
@@ -61,10 +61,10 @@
             v-if="loan.disbursedAt"
             class="text-sm text-gray-500 dark:text-gray-400"
           >
-            Dicarikan pada {{ formatDate(loan.disbursedAt) }}
+            {{ $t("loan.disbursedAt", { date: formatDate(loan.disbursedAt) }) }}
           </p>
           <p v-else class="text-sm text-gray-500 dark:text-gray-400">
-            Diajukan pada {{ formatDate(loan.createdAt) }}
+            {{ $t("loan.appliedAt", { date: formatDate(loan.createdAt) }) }}
           </p>
           <p class="text-2xl font-bold text-gray-900 dark:text-white">
             {{ formatCurrency(loan.principalAmount) }}
@@ -86,17 +86,17 @@
           <p
             class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider"
           >
-            Tenor
+            {{ $t("loan.tenor") }}
           </p>
           <p class="text-sm font-semibold text-gray-900 dark:text-white">
-            {{ loan.tenor }} Bulan
+            {{ loan.tenor }} {{ $t("common.months") }}
           </p>
         </div>
         <div class="flex flex-col gap-1">
           <p
             class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider"
           >
-            Cicilan/Bulan
+            {{ $t("loan.monthlyPayment") }}
           </p>
           <p class="text-sm font-semibold text-gray-900 dark:text-white">
             {{ formatCurrency(loan.monthlyPayment) }}
@@ -106,7 +106,7 @@
           <p
             class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider"
           >
-            Jatuh Tempo
+            {{ $t("loan.endDate") }}
           </p>
           <p class="text-sm font-semibold text-gray-900 dark:text-white">
             {{ formatDate(loan.endDate) }}
@@ -121,7 +121,7 @@
             icon="i-heroicons-arrow-right"
             trailing
           >
-            Lihat Detail
+            {{ $t("common.viewDetail") }}
           </UButton>
         </div>
       </div>
@@ -146,14 +146,7 @@ const {
 } = await useFetch<MemberLoan[]>("/api/users/me/loans");
 
 const formatStatus = (status: string) => {
-  const statusMap: Record<string, string> = {
-    pending: "Menunggu",
-    approved: "Disetujui",
-    rejected: "Ditolak",
-    active: "Aktif",
-    completed: "Selesai",
-  };
-  return statusMap[status] || status;
+  return $t(`loan.statusOptions.${status}`);
 };
 
 const getStatusColor = (status: string) => {

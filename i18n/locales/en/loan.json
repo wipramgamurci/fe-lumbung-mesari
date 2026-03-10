@@ -28,6 +28,7 @@
     "createdAt": "Created At",
     "appliedAt": "Applied on {date}",
     "disburseDate": "Disbursement Date",
+    "disbursedAt": "Disbursed on {date}",
     "notes": "Notes",
     "status": "Status",
     "approveLoan": "Approve Loan",
@@ -50,7 +51,11 @@
     "failedToApproveLoan": "Failed to approve loan. Please try again.",
     "failedToRejectLoan": "Failed to reject loan. Please try again.",
     "failedToDisburseLoan": "Failed to disburse loan. Please try again.",
-    "errorLoadingLoanDetails": "Failed to load loan details."
+    "myLoans": "My Loans",
+    "myLoansDescription": "A list of all your applications and active loans.",
+    "applyForLoan": "Apply for Loan",
+    "noLoans": "No loans yet",
+    "noLoansDescription": "Get started by applying for your first loan."
   },
   "loanRequest": {
     "error": {

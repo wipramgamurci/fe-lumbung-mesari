@@ -36,7 +36,9 @@
     "update": "Update",
     "filter": "Filter",
     "clearFilter": "Clear Filter",
-    "pleaseTryAgainLater": "Please try again later."
+    "errorLoadingData": "An error occurred while loading data.",
+    "pleaseTryAgainLater": "Please try again later.",
+    "viewDetail": "View Detail"
   },
   "app": {
     "title": "Lumbung Mesari"

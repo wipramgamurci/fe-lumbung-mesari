@@ -47,7 +47,7 @@
       icon="i-heroicons-exclamation-triangle"
       color="error"
       variant="soft"
-      :title="$t('loan.errorLoadingLoanDetails')"
+      :title="$t('common.errorLoadingData')"
       :description="loanError.message || $t('common.pleaseTryAgainLater')"
     />
 
@@ -225,7 +225,7 @@
           icon="i-heroicons-exclamation-triangle"
           color="error"
           variant="soft"
-          :title="$t('installments.errorLoadingInstallments')"
+          :title="$t('common.errorLoadingData')"
           :description="
             installmentsError.message || $t('common.pleaseTryAgainLater')
           "

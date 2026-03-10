@@ -24,10 +24,11 @@
     "totalPayableAmount": "Total yang Harus Dibayar",
     "installmentLateAmount": "Denda Keterlambatan",
     "startDate": "Tanggal Mulai",
-    "endDate": "Tanggal Akhir",
+    "endDate": "Tanggal Berakhir",
     "createdAt": "Tanggal Dibuat",
     "appliedAt": "Diajukan pada {date}",
     "disburseDate": "Tanggal Pencairan",
+    "disbursedAt": "Dicarikan pada {date}",
     "notes": "Catatan",
     "status": "Status",
     "approveLoan": "Setujui Pinjaman",
@@ -50,7 +51,11 @@
     "failedToApproveLoan": "Gagal menyetujui pinjaman. Silakan coba lagi.",
     "failedToRejectLoan": "Gagal menolak pinjaman. Silakan coba lagi.",
     "failedToDisburseLoan": "Gagal mencairkan pinjaman. Silakan coba lagi.",
-    "errorLoadingLoanDetails": "Gagal memuat detail pinjaman."
+    "myLoans": "Pinjaman Saya",
+    "myLoansDescription": "Daftar semua permohonan dan pinjaman aktif Anda.",
+    "applyForLoan": "Ajukan Pinjaman",
+    "noLoans": "Belum ada pinjaman",
+    "noLoansDescription": "Mulai dengan mengajukan pinjaman pertama Anda."
   },
   "loanRequest": {
     "error": {
