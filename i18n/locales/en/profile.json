@@ -1,0 +1,19 @@
+{
+  "profile": {
+    "loadingProfile": "Loading profile...",
+    "failedToLoadProfile": "Failed to load profile. Please try again.",
+    "retry": "Retry",
+    "role": {
+      "administrator": "Administrator",
+      "member": "Member"
+    },
+    "verified": "Verified",
+    "notVerified": "Not Verified",
+    "personalInformation": "Personal Information",
+    "accountInformation": "Account Information",
+    "status": "Status",
+    "emailVerified": "Email Verified",
+    "memberSince": "Member Since",
+    "lastUpdated": "Last Updated"
+  }
+}

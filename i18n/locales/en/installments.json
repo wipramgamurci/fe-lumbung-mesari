@@ -1,0 +1,16 @@
+{
+  "installments": {
+    "title": "Installment Schedule",
+    "installmentNumber": "Installment #{number}",
+    "dueDate": "Due on {date}",
+    "paidDate": "Paid on {date}",
+    "penaltyAmount": "Includes penalty {amount}",
+    "noInstallments": "No installments scheduled yet.",
+    "status": {
+      "due": "Due",
+      "paid": "Paid",
+      "overdue": "Overdue",
+      "partial": "Partially Paid"
+    }
+  }
+}

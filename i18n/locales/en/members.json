@@ -1,0 +1,30 @@
+{
+  "adminMembers": {
+    "label": {
+      "fullName": "Full Name",
+      "email": "Email",
+      "status": "Status"
+    },
+    "status": {
+      "pending": "Pending",
+      "active": "Active",
+      "rejected": "Rejected",
+      "waiting_deposit": "Waiting Deposit",
+      "inactive": "Inactive"
+    },
+    "approveMember": "Approve Member",
+    "confirmApprovalOfThisMember": "Are you sure you want to approve this member?",
+    "rejectMember": "Reject Member",
+    "confirmRejectionOfThisMember": "Are you sure you want to reject this member?",
+    "reasonForRejection": "Reason for rejection",
+    "reasonForRejectionPlaceholder": "Please provide a reason for rejecting this member...",
+    "memberApproved": "Member Approved",
+    "memberApprovedDescription": "Member {fullname} has been approved.",
+    "memberRejected": "Member Rejected",
+    "memberRejectedDescription": "Member {fullname} has been rejected.",
+    "errorApprovingMember": "Failed to approve member: {message}",
+    "failedToApproveMember": "Failed to approve member. Please try again.",
+    "errorRejectingMember": "Failed to reject member: {message}",
+    "failedToRejectMember": "Failed to reject member. Please try again."
+  }
+}

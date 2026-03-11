@@ -1,0 +1,34 @@
+{
+  "expenses": {
+    "createExpense": "Create Expense",
+    "expenseCategory": "Expense Category",
+    "expenseCategoryPlaceholder": "Select expense category",
+    "expenseName": "Expense Name",
+    "expenseNamePlaceholder": "Enter expense name",
+    "amount": "Amount",
+    "amountPlaceholder": "Enter amount",
+    "createdBy": "Created By",
+    "startDate": "Start Date",
+    "endDate": "End Date",
+    "minAmount": "Min Amount",
+    "maxAmount": "Max Amount",
+    "transactionDate": "Transaction Date",
+    "source": "Source of Funds",
+    "sourcePlaceholder": "Select source of funds",
+    "notes": "Notes",
+    "notesPlaceholder": "Add notes (optional)",
+    "sourceOptions": {
+      "auto": "Auto",
+      "shu": "SHU",
+      "capital": "Capital"
+    },
+    "successCreate": "Expense created successfully",
+    "failedCreate": "Failed to create expense: {message}",
+    "amountError": "Amount must be greater than 0",
+    "allCategories": "All Categories",
+    "editExpense": "Edit Expense",
+    "editExpenseDescription": "Update expense details",
+    "successUpdate": "Expense updated successfully",
+    "failedUpdate": "Failed to update expense: {message}"
+  }
+}
