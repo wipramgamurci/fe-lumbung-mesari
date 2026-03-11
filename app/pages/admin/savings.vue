@@ -212,18 +212,18 @@ const isDownloading = ref(false);
 
 // Month options
 const monthOptions = [
-  { label: $t("common.january"), value: "january" },
-  { label: $t("common.february"), value: "february" },
-  { label: $t("common.march"), value: "march" },
-  { label: $t("common.april"), value: "april" },
-  { label: $t("common.may"), value: "may" },
-  { label: $t("common.june"), value: "june" },
-  { label: $t("common.july"), value: "july" },
-  { label: $t("common.august"), value: "august" },
-  { label: $t("common.september"), value: "september" },
-  { label: $t("common.october"), value: "october" },
-  { label: $t("common.november"), value: "november" },
-  { label: $t("common.december"), value: "december" },
+  { label: $t("common.monthNames.january"), value: "january" },
+  { label: $t("common.monthNames.february"), value: "february" },
+  { label: $t("common.monthNames.march"), value: "march" },
+  { label: $t("common.monthNames.april"), value: "april" },
+  { label: $t("common.monthNames.may"), value: "may" },
+  { label: $t("common.monthNames.june"), value: "june" },
+  { label: $t("common.monthNames.july"), value: "july" },
+  { label: $t("common.monthNames.august"), value: "august" },
+  { label: $t("common.monthNames.september"), value: "september" },
+  { label: $t("common.monthNames.october"), value: "october" },
+  { label: $t("common.monthNames.november"), value: "november" },
+  { label: $t("common.monthNames.december"), value: "december" },
 ];
 
 // Year options (from current year back to startYear)
