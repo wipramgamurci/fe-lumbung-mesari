@@ -813,6 +813,7 @@ const confirmSettleInstallment = async () => {
     settleModalOpen.value = false;
     selectedInstallment.value = null;
     await refreshInstallments();
+    await refreshLoan();
   } catch (err: any) {
     toast.add({
       title: $t("common.errorLoadingData"),

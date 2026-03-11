@@ -176,7 +176,7 @@ const columns: TableColumn<LoanListItem>[] = [
   {
     accessorKey: "tenor",
     header: $t("loan.tenor"),
-    cell: ({ row }) => `${row.getValue("tenor")} months`,
+    cell: ({ row }) => `${row.getValue("tenor")} ${$t("common.months")}`,
   },
   {
     accessorKey: "status",
