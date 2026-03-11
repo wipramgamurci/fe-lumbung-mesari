@@ -55,7 +55,8 @@
     "myLoansDescription": "A list of all your applications and active loans.",
     "applyForLoan": "Apply for Loan",
     "noLoans": "No loans yet",
-    "noLoansDescription": "Get started by applying for your first loan."
+    "noLoansDescription": "Get started by applying for your first loan.",
+    "searchPlaceholder": "Search by borrower name..."
   },
   "loanRequest": {
     "error": {
