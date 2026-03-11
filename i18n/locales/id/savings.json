@@ -1,29 +1,29 @@
 {
   "savings": {
+    "amount": "Jumlah",
+    "createdAt": "Tanggal Dibuat",
+    "downloadReport": "Download Laporan",
+    "downloadReportError": "Gagal mengunduh laporan. Silakan coba lagi.",
+    "downloadReportSuccess": "Laporan berhasil diunduh.",
+    "errorMarkingAsPaid": "Gagal menandai simpanan sebagai dibayar. Silakan coba lagi.",
+    "markAsPaid": "Tandai Sebagai Dibayar",
+    "markAsPaidDescription": "Apakah Anda yakin untuk menandai simpanan ini sebagai dibayar?",
+    "memberName": "Nama Anggota",
+    "noDataAvailable": "Tidak ada data tersedia. Klik refresh untuk memuat data simpanan.",
+    "paidDate": "Tanggal Dibayar",
+    "period": "Periode",
+    "processedBy": "Diproses Oleh",
+    "savingsRecordMarkedAsPaidSuccessfully": "Simpanan telah ditandai sebagai dibayar.",
+    "selectPeriod": "Pilih Periode",
+    "selectYear": "Pilih Tahun",
+    "status": "Status",
     "statusOptions": {
       "allStatuses": "Semua Status",
       "due": "Jatuh Tempo",
-      "paid": "Dibayar",
-      "overdue": "Terlambat"
+      "overdue": "Terlambat",
+      "paid": "Dibayar"
     },
-    "selectPeriod": "Pilih Periode",
-    "selectYear": "Pilih Tahun",
-    "username": "Nama Pengguna",
-    "createdAt": "Tanggal Dibuat",
     "updatedAt": "Tanggal Diperbarui",
-    "noDataAvailable": "Tidak ada data tersedia. Klik refresh untuk memuat data simpanan.",
-    "markAsPaid": "Tandai Sebagai Dibayar",
-    "markAsPaidDescription": "Apakah Anda yakin untuk menandai simpanan ini sebagai dibayar?",
-    "period": "Periode",
-    "amount": "Jumlah",
-    "status": "Status",
-    "memberName": "Nama Anggota",
-    "paidDate": "Tanggal Dibayar",
-    "processedBy": "Diproses Oleh",
-    "savingsRecordMarkedAsPaidSuccessfully": "Simpanan telah ditandai sebagai dibayar.",
-    "errorMarkingAsPaid": "Gagal menandai simpanan sebagai dibayar. Silakan coba lagi.",
-    "downloadReport": "Download Laporan",
-    "downloadReportSuccess": "Laporan berhasil diunduh.",
-    "downloadReportError": "Gagal mengunduh laporan. Silakan coba lagi."
+    "username": "Nama Pengguna"
   }
 }

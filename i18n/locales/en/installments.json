@@ -1,23 +1,23 @@
 {
   "installments": {
-    "title": "Installment Schedule",
-    "installmentNumber": "Installment #{number}",
-    "dueDate": "Due on {date}",
-    "paidDate": "Paid on {date}",
-    "penaltyAmount": "Includes penalty {amount}",
-    "noInstallments": "No installments scheduled yet.",
-    "markAsPaid": "Mark as paid",
-    "settleInstallmentTitle": "Settle installment",
     "confirmSettleInstallment": "Confirm marking this installment as paid",
     "confirmSettleInstallmentDescription": "This will mark the installment as paid. This action cannot be undone.",
-    "totalAmount": "Total amount",
-    "settleSuccess": "Installment settled successfully",
+    "dueDate": "Due on {date}",
+    "installmentNumber": "Installment #{number}",
+    "markAsPaid": "Mark as paid",
+    "noInstallments": "No installments scheduled yet.",
+    "paidDate": "Paid on {date}",
+    "penaltyAmount": "Includes penalty {amount}",
     "settleFailed": "Failed to settle installment.",
+    "settleInstallmentTitle": "Settle installment",
+    "settleSuccess": "Installment settled successfully",
     "status": {
       "due": "Due",
-      "paid": "Paid",
       "overdue": "Overdue",
+      "paid": "Paid",
       "partial": "Partially Paid"
-    }
+    },
+    "title": "Installment Schedule",
+    "totalAmount": "Total amount"
   }
 }

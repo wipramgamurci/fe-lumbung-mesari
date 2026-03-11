@@ -1,19 +1,21 @@
 {
+  "app": {
+    "title": "Lumbung Mesari"
+  },
   "common": {
-    "back": "Back",
-    "signIn": "Sign In",
-    "register": "Register",
-    "password": "Password",
-    "identifier": "Username or Email",
-    "submit": "Submit",
-    "loading": "Loading...",
-    "signOut": "Sign Out",
-    "contactAdministrator": "Contact Administrator",
-    "cancel": "Cancel",
-    "approve": "Approve",
-    "reject": "Reject",
     "actions": "Actions",
-    "months": "Months",
+    "approve": "Approve",
+    "back": "Back",
+    "cancel": "Cancel",
+    "clearFilter": "Clear Filter",
+    "contactAdministrator": "Contact Administrator",
+    "error": {
+      "required": "Required"
+    },
+    "errorLoadingData": "An error occurred while loading data.",
+    "filter": "Filter",
+    "identifier": "Username or Email",
+    "loading": "Loading...",
     "monthNames": {
       "april": "April",
       "august": "August",
@@ -28,21 +30,19 @@
       "october": "October",
       "september": "September"
     },
+    "months": "Months",
+    "no": "No",
+    "password": "Password",
+    "pleaseTryAgainLater": "Please try again later.",
     "profile": "Profile",
     "refresh": "Refresh",
-    "yes": "Yes",
-    "no": "No",
-    "error": {
-      "required": "Required"
-    },
+    "register": "Register",
+    "reject": "Reject",
+    "signIn": "Sign In",
+    "signOut": "Sign Out",
+    "submit": "Submit",
     "update": "Update",
-    "filter": "Filter",
-    "clearFilter": "Clear Filter",
-    "errorLoadingData": "An error occurred while loading data.",
-    "pleaseTryAgainLater": "Please try again later.",
-    "viewDetail": "View Detail"
-  },
-  "app": {
-    "title": "Lumbung Mesari"
+    "viewDetail": "View Detail",
+    "yes": "Yes"
   }
 }
