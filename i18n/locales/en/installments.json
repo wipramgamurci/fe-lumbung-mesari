@@ -6,6 +6,13 @@
     "paidDate": "Paid on {date}",
     "penaltyAmount": "Includes penalty {amount}",
     "noInstallments": "No installments scheduled yet.",
+    "markAsPaid": "Mark as paid",
+    "settleInstallmentTitle": "Settle installment",
+    "confirmSettleInstallment": "Confirm marking this installment as paid",
+    "confirmSettleInstallmentDescription": "This will mark the installment as paid. This action cannot be undone.",
+    "totalAmount": "Total amount",
+    "settleSuccess": "Installment settled successfully",
+    "settleFailed": "Failed to settle installment.",
     "status": {
       "due": "Due",
       "paid": "Paid",
