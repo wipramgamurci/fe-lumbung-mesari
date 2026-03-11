@@ -1,19 +1,19 @@
 {
   "profile": {
-    "loadingProfile": "Loading profile...",
+    "accountInformation": "Account Information",
+    "emailVerified": "Email Verified",
     "failedToLoadProfile": "Failed to load profile. Please try again.",
+    "lastUpdated": "Last Updated",
+    "loadingProfile": "Loading profile...",
+    "memberSince": "Member Since",
+    "notVerified": "Not Verified",
+    "personalInformation": "Personal Information",
     "retry": "Retry",
     "role": {
       "administrator": "Administrator",
       "member": "Member"
     },
-    "verified": "Verified",
-    "notVerified": "Not Verified",
-    "personalInformation": "Personal Information",
-    "accountInformation": "Account Information",
     "status": "Status",
-    "emailVerified": "Email Verified",
-    "memberSince": "Member Since",
-    "lastUpdated": "Last Updated"
+    "verified": "Verified"
   }
 }

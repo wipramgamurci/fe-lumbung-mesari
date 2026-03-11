@@ -1,30 +1,30 @@
 {
   "adminMembers": {
-    "label": {
-      "fullName": "Nama Lengkap",
-      "email": "Email",
-      "status": "Status"
-    },
-    "status": {
-      "pending": "Menunggu",
-      "active": "Aktif",
-      "rejected": "Ditolak",
-      "waiting_deposit": "Menunggu Deposit",
-      "inactive": "Tidak Aktif"
-    },
     "approveMember": "Setujui Anggota",
     "confirmApprovalOfThisMember": "Apakah Anda yakin untuk menyetujui anggota ini?",
-    "rejectMember": "Tolak Anggota",
     "confirmRejectionOfThisMember": "Apakah Anda yakin untuk menolak anggota ini?",
-    "reasonForRejection": "Alasan penolakan",
-    "reasonForRejectionPlaceholder": "Silakan berikan alasan untuk menolak anggota ini...",
+    "errorApprovingMember": "Gagal menyetujui anggota: {message}",
+    "errorRejectingMember": "Gagal menolak anggota: {message}",
+    "failedToApproveMember": "Gagal menyetujui anggota. Silakan coba lagi.",
+    "failedToRejectMember": "Gagal menolak anggota. Silakan coba lagi.",
+    "label": {
+      "email": "Email",
+      "fullName": "Nama Lengkap",
+      "status": "Status"
+    },
     "memberApproved": "Anggota Disetujui",
     "memberApprovedDescription": "Anggota {fullname} telah disetujui.",
     "memberRejected": "Anggota Ditolak",
     "memberRejectedDescription": "Anggota {fullname} telah ditolak.",
-    "errorApprovingMember": "Gagal menyetujui anggota: {message}",
-    "failedToApproveMember": "Gagal menyetujui anggota. Silakan coba lagi.",
-    "errorRejectingMember": "Gagal menolak anggota: {message}",
-    "failedToRejectMember": "Gagal menolak anggota. Silakan coba lagi."
+    "reasonForRejection": "Alasan penolakan",
+    "reasonForRejectionPlaceholder": "Silakan berikan alasan untuk menolak anggota ini...",
+    "rejectMember": "Tolak Anggota",
+    "status": {
+      "active": "Aktif",
+      "inactive": "Tidak Aktif",
+      "pending": "Menunggu",
+      "rejected": "Ditolak",
+      "waiting_deposit": "Menunggu Deposit"
+    }
   }
 }

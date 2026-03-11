@@ -1,23 +1,23 @@
 {
   "installments": {
-    "title": "Jadwal Cicilan",
-    "installmentNumber": "Cicilan ke-{number}",
-    "dueDate": "Jatuh tempo {date}",
-    "paidDate": "Dibayar {date}",
-    "penaltyAmount": "Termasuk denda {amount}",
-    "noInstallments": "Belum ada jadwal cicilan.",
-    "markAsPaid": "Tandai lunas",
-    "settleInstallmentTitle": "Selesaikan cicilan",
     "confirmSettleInstallment": "Konfirmasi menandai cicilan ini sebagai lunas",
     "confirmSettleInstallmentDescription": "Tindakan ini akan menandai cicilan sebagai lunas. Tindakan ini tidak dapat dibatalkan.",
-    "totalAmount": "Total jumlah",
-    "settleSuccess": "Cicilan berhasil diselesaikan.",
+    "dueDate": "Jatuh tempo {date}",
+    "installmentNumber": "Cicilan ke-{number}",
+    "markAsPaid": "Tandai lunas",
+    "noInstallments": "Belum ada jadwal cicilan.",
+    "paidDate": "Dibayar {date}",
+    "penaltyAmount": "Termasuk denda {amount}",
     "settleFailed": "Gagal menyelesaikan cicilan.",
+    "settleInstallmentTitle": "Selesaikan cicilan",
+    "settleSuccess": "Cicilan berhasil diselesaikan.",
     "status": {
       "due": "Belum Bayar",
-      "paid": "Lunas",
       "overdue": "Terlambat",
+      "paid": "Lunas",
       "partial": "Sebagian"
-    }
+    },
+    "title": "Jadwal Cicilan",
+    "totalAmount": "Total jumlah"
   }
 }

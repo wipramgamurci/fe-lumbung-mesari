@@ -1,19 +1,19 @@
 {
   "profile": {
-    "loadingProfile": "Memuat profil...",
+    "accountInformation": "Informasi Akun",
+    "emailVerified": "Email Terverifikasi",
     "failedToLoadProfile": "Gagal memuat profil. Silakan coba lagi.",
+    "lastUpdated": "Terakhir Diperbarui",
+    "loadingProfile": "Memuat profil...",
+    "memberSince": "Anggota Sejak",
+    "notVerified": "Belum Terverifikasi",
+    "personalInformation": "Informasi Pribadi",
     "retry": "Coba Lagi",
     "role": {
       "administrator": "Administrator",
       "member": "Anggota"
     },
-    "verified": "Terverifikasi",
-    "notVerified": "Belum Terverifikasi",
-    "personalInformation": "Informasi Pribadi",
-    "accountInformation": "Informasi Akun",
     "status": "Status",
-    "emailVerified": "Email Terverifikasi",
-    "memberSince": "Anggota Sejak",
-    "lastUpdated": "Terakhir Diperbarui"
+    "verified": "Terverifikasi"
   }
 }
