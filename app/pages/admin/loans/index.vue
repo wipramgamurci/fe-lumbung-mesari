@@ -106,18 +106,15 @@ const statusOptions = [
 
 // Handlers
 const handleSearch = () => {
-  page.value = 1;
-  fetchLoans();
+  page.value === 1 ? fetchLoans() : (page.value = 1);
 };
 
 const handleStatusChange = () => {
-  page.value = 1;
-  fetchLoans();
+  page.value === 1 ? fetchLoans() : (page.value = 1);
 };
 
 const refreshData = () => {
-  page.value = 1;
-  fetchLoans();
+  page.value === 1 ? fetchLoans() : (page.value = 1);
 };
 
 // Watch page changes
