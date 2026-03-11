@@ -344,7 +344,7 @@
                   variant="outline"
                   size="xs"
                   icon="i-heroicons-check"
-                  @click="handleMarkInstallmentPaid(installment)"
+                  @click="openSettleModal(installment)"
                 >
                   {{ $t("installments.markAsPaid") }}
                 </UButton>
@@ -542,6 +542,72 @@
         </div>
       </template>
     </UModal>
+
+    <!-- Settle Installment Modal -->
+    <UModal
+      v-model:open="settleModalOpen"
+      :title="$t('installments.settleInstallmentTitle')"
+      :description="$t('installments.confirmSettleInstallment')"
+    >
+      <template #body>
+        <div class="space-y-4">
+          <p class="text-gray-600 dark:text-gray-300">
+            {{ $t("installments.confirmSettleInstallmentDescription") }}
+          </p>
+          <div
+            v-if="selectedInstallment"
+            class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg space-y-2"
+          >
+            <p class="font-medium text-gray-900 dark:text-white">
+              {{
+                $t("installments.installmentNumber", {
+                  number: selectedInstallment.installmentNumber,
+                })
+              }}
+            </p>
+            <p class="text-sm text-gray-600 dark:text-gray-400">
+              {{
+                $t("installments.dueDate", {
+                  date: formatDate(selectedInstallment.dueDate),
+                })
+              }}
+            </p>
+            <p class="text-sm font-semibold text-gray-900 dark:text-white">
+              {{ $t("installments.totalAmount") }}:
+              {{ formatCurrency(selectedInstallment.totalAmount) }}
+            </p>
+            <p
+              v-if="selectedInstallment.penaltyAmount > 0"
+              class="text-sm text-error-600 dark:text-error-400"
+            >
+              {{
+                $t("installments.penaltyAmount", {
+                  amount: formatCurrency(selectedInstallment.penaltyAmount),
+                })
+              }}
+            </p>
+          </div>
+        </div>
+      </template>
+      <template #footer>
+        <div class="flex justify-end gap-2">
+          <UButton
+            color="neutral"
+            variant="outline"
+            @click="settleModalOpen = false"
+          >
+            {{ $t("common.cancel") }}
+          </UButton>
+          <UButton
+            color="primary"
+            @click="confirmSettleInstallment"
+            :loading="isProcessing"
+          >
+            {{ $t("installments.markAsPaid") }}
+          </UButton>
+        </div>
+      </template>
+    </UModal>
   </div>
 </template>
 
@@ -614,6 +680,8 @@ const getInstallmentStatusColor = (status: InstallmentStatus) => {
 const approveModalOpen = ref(false);
 const rejectModalOpen = ref(false);
 const disburseModalOpen = ref(false);
+const settleModalOpen = ref(false);
+const selectedInstallment = ref<Installment | null>(null);
 const rejectReason = ref("");
 const isProcessing = ref(false);
 
@@ -720,13 +788,39 @@ const confirmDisburse = async () => {
   await handleLoanAction("disburse", disburseModalOpen);
 };
 
-// Installment mark-as-paid UI only (no backend integration yet)
-const handleMarkInstallmentPaid = (installment: Installment) => {
+// Settle installment (mark as paid)
+const openSettleModal = (installment: Installment) => {
+  selectedInstallment.value = installment;
+  settleModalOpen.value = true;
+};
+
+const confirmSettleInstallment = async () => {
+  if (!selectedInstallment.value) return;
+
+  const installment = selectedInstallment.value;
   const toast = useToast();
-  toast.add({
-    title: $t("installments.markAsPaid"),
-    description: $t("installments.markAsPaidNotImplemented"),
-    color: "neutral",
-  });
+  isProcessing.value = true;
+  try {
+    const response = await $fetch<{ message: string }>(
+      `/api/loans/installments/${installment.id}/settle`,
+      { method: "POST" },
+    );
+    toast.add({
+      title: $t("installments.settleSuccess"),
+      description: response.message,
+      color: "success",
+    });
+    settleModalOpen.value = false;
+    selectedInstallment.value = null;
+    await refreshInstallments();
+  } catch (err: any) {
+    toast.add({
+      title: $t("common.errorLoadingData"),
+      description: err.data?.message ?? $t("installments.settleFailed"),
+      color: "error",
+    });
+  } finally {
+    isProcessing.value = false;
+  }
 };
 </script>

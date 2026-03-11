@@ -6,6 +6,13 @@
     "paidDate": "Dibayar {date}",
     "penaltyAmount": "Termasuk denda {amount}",
     "noInstallments": "Belum ada jadwal cicilan.",
+    "markAsPaid": "Tandai lunas",
+    "settleInstallmentTitle": "Selesaikan cicilan",
+    "confirmSettleInstallment": "Konfirmasi menandai cicilan ini sebagai lunas",
+    "confirmSettleInstallmentDescription": "Tindakan ini akan menandai cicilan sebagai lunas. Tindakan ini tidak dapat dibatalkan.",
+    "totalAmount": "Total jumlah",
+    "settleSuccess": "Cicilan berhasil diselesaikan.",
+    "settleFailed": "Gagal menyelesaikan cicilan.",
     "status": {
       "due": "Belum Bayar",
       "paid": "Lunas",
