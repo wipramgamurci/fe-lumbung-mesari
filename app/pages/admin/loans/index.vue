@@ -9,7 +9,7 @@
       <div class="flex flex-wrap items-center gap-4">
         <UInput
           v-model="searchQuery"
-          placeholder="Search by user name or loan ID..."
+          :placeholder="$t('loan.searchPlaceholder')"
           icon="i-heroicons-magnifying-glass"
           class="flex-1 min-w-64"
           @keyup.enter="handleSearch"
@@ -202,7 +202,7 @@ const columns: TableColumn<LoanListItem>[] = [
     header: $t("loan.createdAt"),
     cell: ({ row }) => formatDate(row.getValue("createdAt")),
   },
-{
+  {
     id: "actions",
     header: "",
     meta: {
@@ -232,4 +232,3 @@ onMounted(() => {
   fetchLoans();
 });
 </script>
-
