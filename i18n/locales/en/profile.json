@@ -8,16 +8,16 @@
     "memberSince": "Member Since",
     "notVerified": "Not Verified",
     "personalInformation": "Personal Information",
+    "resetPasswordInvalidToken": "Reset link is invalid or has expired.",
+    "resetPasswordSubmit": "Update Password",
+    "resetPasswordSuccess": "Password updated successfully. You can now sign in.",
+    "resetPasswordTitle": "Reset Password",
     "retry": "Retry",
     "role": {
       "administrator": "Administrator",
       "member": "Member"
     },
     "status": "Status",
-    "verified": "Verified",
-    "resetPasswordTitle": "Reset Password",
-    "resetPasswordSubmit": "Update Password",
-    "resetPasswordSuccess": "Password updated successfully. You can now sign in.",
-    "resetPasswordInvalidToken": "Reset link is invalid or has expired."
+    "verified": "Verified"
   }
 }

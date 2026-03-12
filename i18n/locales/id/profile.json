@@ -8,16 +8,16 @@
     "memberSince": "Anggota Sejak",
     "notVerified": "Belum Terverifikasi",
     "personalInformation": "Informasi Pribadi",
+    "resetPasswordInvalidToken": "Tautan reset tidak valid atau sudah kedaluwarsa.",
+    "resetPasswordSubmit": "Perbarui Kata Sandi",
+    "resetPasswordSuccess": "Kata sandi berhasil diperbarui. Anda sekarang dapat masuk.",
+    "resetPasswordTitle": "Reset Kata Sandi",
     "retry": "Coba Lagi",
     "role": {
       "administrator": "Administrator",
       "member": "Anggota"
     },
     "status": "Status",
-    "verified": "Terverifikasi",
-    "resetPasswordTitle": "Reset Kata Sandi",
-    "resetPasswordSubmit": "Perbarui Kata Sandi",
-    "resetPasswordSuccess": "Kata sandi berhasil diperbarui. Anda sekarang dapat masuk.",
-    "resetPasswordInvalidToken": "Tautan reset tidak valid atau sudah kedaluwarsa."
+    "verified": "Terverifikasi"
   }
 }
