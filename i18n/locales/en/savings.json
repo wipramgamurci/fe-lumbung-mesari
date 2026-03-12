@@ -1,29 +1,29 @@
 {
   "savings": {
+    "amount": "Amount",
+    "createdAt": "Created At",
+    "downloadReport": "Download Report",
+    "downloadReportError": "Failed to download report. Please try again.",
+    "downloadReportSuccess": "Report downloaded successfully.",
+    "errorMarkingAsPaid": "Failed to mark savings as paid. Please try again.",
+    "markAsPaid": "Mark as Paid",
+    "markAsPaidDescription": "Are you sure you want to mark this savings as paid?",
+    "memberName": "Member Name",
+    "noDataAvailable": "No data available. Click refresh to load savings data.",
+    "paidDate": "Paid Date",
+    "period": "Period",
+    "processedBy": "Processed By",
+    "savingsRecordMarkedAsPaidSuccessfully": "Savings record marked as paid successfully.",
+    "selectPeriod": "Select Period",
+    "selectYear": "Select Year",
+    "status": "Status",
     "statusOptions": {
       "allStatuses": "All Statuses",
       "due": "Due",
-      "paid": "Paid",
-      "overdue": "Overdue"
+      "overdue": "Overdue",
+      "paid": "Paid"
     },
-    "selectPeriod": "Select Period",
-    "selectYear": "Select Year",
-    "username": "Username",
-    "createdAt": "Created At",
     "updatedAt": "Updated At",
-    "noDataAvailable": "No data available. Click refresh to load savings data.",
-    "markAsPaid": "Mark as Paid",
-    "markAsPaidDescription": "Are you sure you want to mark this savings as paid?",
-    "period": "Period",
-    "amount": "Amount",
-    "status": "Status",
-    "memberName": "Member Name",
-    "paidDate": "Paid Date",
-    "processedBy": "Processed By",
-    "savingsRecordMarkedAsPaidSuccessfully": "Savings record marked as paid successfully.",
-    "errorMarkingAsPaid": "Failed to mark savings as paid. Please try again.",
-    "downloadReport": "Download Report",
-    "downloadReportSuccess": "Report downloaded successfully.",
-    "downloadReportError": "Failed to download report. Please try again."
+    "username": "Username"
   }
 }
