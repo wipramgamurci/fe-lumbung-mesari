@@ -6,7 +6,7 @@
         {{ $t("app.title") }}
       </h2>
       <p class="text-gray-600 dark:text-gray-300">
-        {{ $t("profile.resetPasswordTitle") || "Reset Password" }}
+        {{ $t("profile.resetPasswordTitle") }}
       </p>
     </div>
 
@@ -16,12 +16,9 @@
         <UAlert
           color="error"
           variant="soft"
-          :title="
-            $t('profile.resetPasswordInvalidToken') ||
-            'Reset link is invalid or missing.'
-          "
+          :title="$t('profile.resetPasswordInvalidToken')"
         />
-        <NuxtLink to="/forgot-password">
+        <NuxtLink to="/login">
           <UButton color="primary" block variant="soft">
             {{ $t("forgotPassword.backToLogin") }}
           </UButton>
@@ -106,7 +103,7 @@ const handleSubmit = async () => {
   if (!token.value) return;
 
   if (formState.value.newPassword !== formState.value.confirmPassword) {
-    alert(t("register.error.passwordsDoNotMatch") || "Passwords do not match.");
+    alert(t("register.error.passwordsDoNotMatch"));
     return;
   }
 

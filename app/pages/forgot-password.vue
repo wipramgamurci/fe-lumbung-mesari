@@ -87,13 +87,10 @@ const handleSubmit = async () => {
   success.value = false;
 
   try {
-    const response = await $fetch<ResetPasswordResponse>(
-      "/api/auth/reset-password",
-      {
-        method: "POST",
-        body: { email: formState.value.email },
-      },
-    );
+    await $fetch<ResetPasswordResponse>("/api/auth/reset-password", {
+      method: "POST",
+      body: { email: formState.value.email },
+    });
     success.value = true;
   } catch (error: any) {
     const message = error?.data?.message || error?.message || "Unknown error";
