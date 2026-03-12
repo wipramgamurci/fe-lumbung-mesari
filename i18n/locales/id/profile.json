@@ -14,6 +14,10 @@
       "member": "Anggota"
     },
     "status": "Status",
-    "verified": "Terverifikasi"
+    "verified": "Terverifikasi",
+    "resetPasswordTitle": "Reset Kata Sandi",
+    "resetPasswordSubmit": "Perbarui Kata Sandi",
+    "resetPasswordSuccess": "Kata sandi berhasil diperbarui. Anda sekarang dapat masuk.",
+    "resetPasswordInvalidToken": "Tautan reset tidak valid atau sudah kedaluwarsa."
   }
 }

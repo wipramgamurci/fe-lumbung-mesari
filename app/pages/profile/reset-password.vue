@@ -1,0 +1,134 @@
+<template>
+  <div>
+    <!-- Header -->
+    <div class="text-center">
+      <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+        {{ $t("app.title") }}
+      </h2>
+      <p class="text-gray-600 dark:text-gray-300">
+        {{ $t("profile.resetPasswordTitle") || "Reset Password" }}
+      </p>
+    </div>
+
+    <UCard class="mt-8">
+      <!-- Invalid / missing token -->
+      <div v-if="!token" class="space-y-4">
+        <UAlert
+          color="error"
+          variant="soft"
+          :title="
+            $t('profile.resetPasswordInvalidToken') ||
+            'Reset link is invalid or missing.'
+          "
+        />
+        <NuxtLink to="/forgot-password">
+          <UButton color="primary" block variant="soft">
+            {{ $t("forgotPassword.backToLogin") }}
+          </UButton>
+        </NuxtLink>
+      </div>
+
+      <!-- Form -->
+      <UForm
+        v-else-if="!success"
+        :state="formState"
+        @submit="handleSubmit"
+        class="space-y-6"
+      >
+        <UFormField :label="$t('register.label.password')" name="newPassword">
+          <UInput
+            v-model="formState.newPassword"
+            type="password"
+            autocomplete="new-password"
+            required
+            class="w-full"
+          />
+        </UFormField>
+
+        <UFormField
+          :label="$t('register.label.passwordConfirmation')"
+          name="confirmPassword"
+        >
+          <UInput
+            v-model="formState.confirmPassword"
+            type="password"
+            autocomplete="new-password"
+            required
+            class="w-full"
+          />
+        </UFormField>
+
+        <UButton type="submit" color="primary" block :loading="isLoading">
+          {{ $t("profile.resetPasswordSubmit") }}
+        </UButton>
+      </UForm>
+
+      <!-- Success state -->
+      <div v-else class="space-y-4">
+        <UAlert
+          color="success"
+          variant="soft"
+          :title="$t('profile.resetPasswordSuccess')"
+        />
+        <NuxtLink to="/login">
+          <UButton color="primary" block variant="soft">
+            {{ $t("forgotPassword.backToLogin") }}
+          </UButton>
+        </NuxtLink>
+      </div>
+    </UCard>
+  </div>
+</template>
+
+<script setup lang="ts">
+import type { ResetPasswordConfirmRequest } from "~~/types/auth";
+
+definePageMeta({
+  layout: "auth",
+});
+
+const { t } = useI18n();
+const route = useRoute();
+
+const token = computed(() => route.query.token as string | undefined);
+
+const formState = ref<
+  Pick<ResetPasswordConfirmRequest, "newPassword" | "confirmPassword">
+>({
+  newPassword: "",
+  confirmPassword: "",
+});
+
+const isLoading = ref(false);
+const success = ref(false);
+
+const handleSubmit = async () => {
+  if (!token.value) return;
+
+  if (formState.value.newPassword !== formState.value.confirmPassword) {
+    alert(t("register.error.passwordsDoNotMatch") || "Passwords do not match.");
+    return;
+  }
+
+  isLoading.value = true;
+  success.value = false;
+
+  try {
+    await $fetch("/api/auth/reset-password/confirm", {
+      method: "POST",
+      body: {
+        token: token.value,
+        newPassword: formState.value.newPassword,
+        confirmPassword: formState.value.confirmPassword,
+      },
+    });
+
+    success.value = true;
+  } catch (error: any) {
+    const message = error?.data?.message || error?.message || "Unknown error";
+    alert(message);
+  } finally {
+    isLoading.value = false;
+  }
+};
+</script>

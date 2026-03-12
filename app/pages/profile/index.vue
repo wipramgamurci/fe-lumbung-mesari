@@ -140,15 +140,15 @@
           </h3>
           <div class="space-y-4">
             <!-- <div>
-              <p class="text-sm text-gray-600 dark:text-gray-400 mb-1">
-                User ID
-              </p>
-              <p
-                class="text-base font-medium text-gray-900 dark:text-white font-mono"
-              >
-                {{ user.id }}
-              </p>
-            </div> -->
+                <p class="text-sm text-gray-600 dark:text-gray-400 mb-1">
+                  User ID
+                </p>
+                <p
+                  class="text-base font-medium text-gray-900 dark:text-white font-mono"
+                >
+                  {{ user.id }}
+                </p>
+              </div> -->
             <div>
               <p class="text-sm text-gray-600 dark:text-gray-400 mb-1">
                 {{ $t("profile.status") }}
