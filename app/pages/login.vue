@@ -52,6 +52,19 @@
           </NuxtLink>
         </p>
       </div>
+
+      <!-- Reset Password Link -->
+      <div class="mt-2 text-center">
+        <p class="text-sm text-gray-600 dark:text-gray-300">
+          {{ $t("auth.forgotPassword") }}
+          <NuxtLink
+            to="/forgot-password"
+            class="font-medium text-primary-600 hover:text-primary-500 dark:text-primary-400 dark:hover:text-primary-300"
+          >
+            {{ $t("auth.resetPasswordHere") }}
+          </NuxtLink>
+        </p>
+      </div>
     </UCard>
   </div>
 </template>
@@ -88,7 +101,7 @@ const handleLogin = async (): Promise<void> => {
     console.error("Login error:", error);
     alert(
       "Login failed: " +
-        (error.message || error.data?.message || "Unknown error")
+        (error.message || error.data?.message || "Unknown error"),
     );
   } finally {
     isLoading.value = false;
