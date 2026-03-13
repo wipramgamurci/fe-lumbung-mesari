@@ -64,7 +64,12 @@ export default defineEventHandler(async (event): Promise<RegisterResponse> => {
     setResponseStatus(event, 201);
     return response;
   } catch (error: any) {
-    console.error("Registration API error:", error);
+    console.error("Registration API error:", {
+      statusCode: error.statusCode,
+      statusMessage: error.statusMessage,
+      message: error.data?.message ?? error.message,
+      data: error.data,
+    });
 
     // Handle different types of errors from the external API
     if (error.statusCode) {

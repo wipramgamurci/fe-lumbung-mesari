@@ -32,7 +32,12 @@ export default defineEventHandler(
       setResponseStatus(event, 200);
       return response;
     } catch (error: any) {
-      console.error("Reset password API error:", error);
+      console.error("Reset password API error:", {
+        statusCode: error.statusCode,
+        statusMessage: error.statusMessage,
+        message: error.data?.message ?? error.message,
+        data: error.data,
+      });
 
       if (error.statusCode) {
         setResponseStatus(event, error.statusCode);

@@ -36,7 +36,13 @@ export default defineEventHandler(
       setResponseStatus(event, 200);
       return response;
     } catch (error: any) {
-      console.error("Reset password confirm API error:", error);
+      console.error("Reset password confirm API error:", {
+        statusCode: error.statusCode,
+        statusMessage: error.statusMessage,
+        message:
+          error.data?.message ?? "Unable to confirm password reset request.",
+        data: error.data,
+      });
 
       if (error.statusCode) {
         setResponseStatus(event, error.statusCode);
