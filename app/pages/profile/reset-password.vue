@@ -86,6 +86,7 @@ definePageMeta({
 
 const { t } = useI18n();
 const route = useRoute();
+const { logoutSilent } = useAuth();
 
 function normalizeQueryToken(
   value: string | string[] | null | undefined | (string | null)[],
@@ -130,6 +131,9 @@ const handleSubmit = async () => {
     });
 
     success.value = true;
+
+    // After resetting password, clear session so user must re-login
+    await logoutSilent();
   } catch (error: any) {
     const message = error?.data?.message || error?.message || "Unknown error";
     alert(message);
