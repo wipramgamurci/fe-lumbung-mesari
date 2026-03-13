@@ -87,7 +87,16 @@ definePageMeta({
 const { t } = useI18n();
 const route = useRoute();
 
-const token = computed(() => route.query.token as string | undefined);
+function normalizeQueryToken(
+  value: string | string[] | null | undefined | (string | null)[],
+): string | undefined {
+  if (value == null) return undefined;
+  const raw = Array.isArray(value) ? (value[0] ?? "") : value;
+  const trimmed = typeof raw === "string" ? raw.trim() : "";
+  return trimmed || undefined;
+}
+
+const token = computed(() => normalizeQueryToken(route.query.token));
 
 const formState = ref<
   Pick<ResetPasswordConfirmRequest, "newPassword" | "confirmPassword">

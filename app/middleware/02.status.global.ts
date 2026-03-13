@@ -82,7 +82,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
       }
       break;
 
-    case "active":
+    case "active": {
       // Active users have full access - no redirect needed
       // But redirect them away from status-specific pages and public auth pages
       // Exception: allow /profile/reset-password when token is in query (email link flow)
@@ -96,6 +96,7 @@ export default defineNuxtRouteMiddleware(async (to, from) => {
         return navigateTo(DEFAULT_AUTHENTICATED_ROUTE);
       }
       break;
+    }
 
     case "inactive":
       // Inactive users - treat similar to rejected or redirect to login
