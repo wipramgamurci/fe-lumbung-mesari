@@ -2,6 +2,8 @@
  * Formatting utility functions for consistent display across the application
  */
 
+import type { CalendarDate } from "@internationalized/date";
+
 /**
  * Format a number or string as Indonesian Rupiah currency
  * @param amount - The amount to format (number or string)
@@ -35,7 +37,7 @@ export const formatPercentage = (decimal: number): string => {
  */
 export const formatDate = (
   dateString: string | null | undefined,
-  fallback: string = "—"
+  fallback: string = "—",
 ): string => {
   if (!dateString) return fallback;
 
@@ -57,7 +59,7 @@ export const formatDate = (
  */
 export const formatDateTime = (
   dateString: string | null | undefined,
-  fallback: string = "—"
+  fallback: string = "—",
 ): string => {
   if (!dateString) return fallback;
 
@@ -86,4 +88,28 @@ export const formatPeriod = (dateString: string): string => {
     month: "long",
     year: "numeric",
   }).format(date);
+};
+
+/**
+ * Format a single `@internationalized/date` CalendarDate-like object
+ * into an ISO `YYYY-MM-DD` string for query params.
+ */
+export const formatCalendarDateToQuery = (
+  date: CalendarDate | null | undefined,
+): string | undefined => {
+  if (!date) return undefined;
+
+  const { year, month, day } = date;
+  if (
+    typeof year !== "number" ||
+    typeof month !== "number" ||
+    typeof day !== "number"
+  ) {
+    return undefined;
+  }
+
+  return `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(
+    2,
+    "0",
+  )}`;
 };
