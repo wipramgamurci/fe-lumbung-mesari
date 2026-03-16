@@ -1,19 +1,29 @@
 {
   "profile": {
-    "loadingProfile": "Loading profile...",
+    "accountInformation": "Account Information",
+    "emailVerified": "Email Verified",
     "failedToLoadProfile": "Failed to load profile. Please try again.",
+    "lastUpdated": "Last Updated",
+    "loadingProfile": "Loading profile...",
+    "memberSince": "Member Since",
+    "notVerified": "Not Verified",
+    "personalInformation": "Personal Information",
+    "resetPasswordButton": "Reset password",
+    "resetPasswordCheckEmail": "Check your email for the reset password link.",
+    "resetPasswordConfirmBody": "After requesting a password reset, you need to check your email and use the link to set a new password.",
+    "resetPasswordConfirmDescription": "Send reset link to {email}?",
+    "resetPasswordConfirmSend": "Send reset link",
+    "resetPasswordConfirmTitle": "Reset password",
+    "resetPasswordInvalidToken": "Reset link is invalid or has expired.",
+    "resetPasswordSubmit": "Update Password",
+    "resetPasswordSuccess": "Password updated successfully. You can now sign in.",
+    "resetPasswordTitle": "Reset Password",
     "retry": "Retry",
     "role": {
       "administrator": "Administrator",
       "member": "Member"
     },
-    "verified": "Verified",
-    "notVerified": "Not Verified",
-    "personalInformation": "Personal Information",
-    "accountInformation": "Account Information",
     "status": "Status",
-    "emailVerified": "Email Verified",
-    "memberSince": "Member Since",
-    "lastUpdated": "Last Updated"
+    "verified": "Verified"
   }
 }

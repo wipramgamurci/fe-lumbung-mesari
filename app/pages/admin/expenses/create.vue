@@ -62,16 +62,33 @@
         <!-- Date -->
         <UFormField
           :label="$t('expenses.transactionDate')"
+          :description="t('common.dateFormatDescription')"
           name="transactionDate"
           required
           :error="errors.transactionDate"
         >
-          <!-- Using UInput with type date for simplicity, typical in HTML5 -->
-          <UInput
-            v-model="form.transactionDate"
-            type="date"
+          <UInputDate
+            ref="transactionDateInput"
+            v-model="transactionDate"
             class="w-full"
-          />
+          >
+            <template #trailing>
+              <UPopover>
+                <UButton
+                  color="neutral"
+                  variant="link"
+                  size="sm"
+                  icon="i-lucide-calendar"
+                  aria-label="Select a date"
+                  class="px-0"
+                />
+
+                <template #content>
+                  <UCalendar v-model="transactionDate" class="p-2" />
+                </template>
+              </UPopover>
+            </template>
+          </UInputDate>
         </UFormField>
 
         <!-- Source -->
@@ -90,10 +107,7 @@
         </UFormField>
 
         <!-- Notes -->
-        <UFormField
-          :label="$t('expenses.notes')"
-          name="notes"
-        >
+        <UFormField :label="$t('expenses.notes')" name="notes">
           <UTextarea
             v-model="form.notes"
             :placeholder="$t('expenses.notesPlaceholder')"
@@ -102,7 +116,9 @@
           />
         </UFormField>
 
-        <div class="flex justify-end gap-3 pt-4 border-t border-gray-200 dark:border-gray-700">
+        <div
+          class="flex justify-end gap-3 pt-4 border-t border-gray-200 dark:border-gray-700"
+        >
           <UButton
             color="neutral"
             variant="outline"
@@ -111,11 +127,7 @@
           >
             {{ $t("common.cancel") }}
           </UButton>
-          <UButton
-            type="submit"
-            color="primary"
-            :loading="isSubmitting"
-          >
+          <UButton type="submit" color="primary" :loading="isSubmitting">
             {{ $t("common.submit") }}
           </UButton>
         </div>
@@ -125,8 +137,10 @@
 </template>
 
 <script setup lang="ts">
+import { CalendarDate } from "@internationalized/date";
 import type { CreateExpenseRequest } from "~~/types/expenses";
 import { useExpensesStore } from "~~/app/stores/useExpenses";
+import { formatCalendarDateToQuery } from "~~/utils/formatters";
 
 definePageMeta({
   layout: "default",
@@ -148,21 +162,26 @@ const form = ref<Partial<CreateExpenseRequest>>({
   expenseCategoryId: undefined,
   name: "",
   amount: 0,
-  transactionDate: new Date().toISOString().split('T')[0], // Today YYYY-MM-DD
   source: "auto",
   notes: "",
 });
 
+const today = new Date();
+const transactionDateInput = useTemplateRef("transactionDateInput");
+const transactionDate = shallowRef<CalendarDate | null>(
+  new CalendarDate(today.getFullYear(), today.getMonth() + 1, today.getDate()),
+);
+
 const errors = ref<Record<string, string>>({});
 
 // Options
-const categoryOptions = computed(() => 
+const categoryOptions = computed(() =>
   expensesStore.categories
-    .filter(c => c.code !== 'loan_disbursement')
-    .map(c => ({
+    .filter((c) => c.code !== "loan_disbursement")
+    .map((c) => ({
       label: `${c.name}`,
-      value: c.id
-    }))
+      value: c.id,
+    })),
 );
 
 const sourceOptions = [
@@ -176,7 +195,7 @@ onMounted(async () => {
   try {
     await expensesStore.fetchCategories();
   } catch (err) {
-      toast.add({
+    toast.add({
       title: "Error",
       description: "Failed to fetch expense categories",
       color: "error",
@@ -203,7 +222,7 @@ const validate = (): boolean => {
     errors.value.amount = t("expenses.amountError");
     isValid = false;
   }
-  if (!form.value.transactionDate) {
+  if (!transactionDate.value) {
     errors.value.transactionDate = t("common.error.required");
     isValid = false;
   }
@@ -221,11 +240,17 @@ const handleSubmit = async () => {
 
   isSubmitting.value = true;
   try {
+    const formattedDate = transactionDate.value
+      ? formatCalendarDateToQuery(transactionDate.value)
+      : undefined;
+
     await $fetch("/api/expenses", {
       method: "POST",
       body: {
         ...form.value,
-        transactionDate: new Date(form.value.transactionDate!).toISOString(), // Ensure ISO format
+        transactionDate: formattedDate
+          ? new Date(formattedDate).toISOString()
+          : undefined,
       } as CreateExpenseRequest,
     });
 
@@ -241,7 +266,9 @@ const handleSubmit = async () => {
     console.error("Error creating expense:", error);
     toast.add({
       title: "Error",
-      description: t("expenses.failedCreate", { message: error.data?.message || error.message }),
+      description: t("expenses.failedCreate", {
+        message: error.data?.message || error.message,
+      }),
       color: "error",
     });
   } finally {

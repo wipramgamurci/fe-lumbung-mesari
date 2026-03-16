@@ -1,19 +1,29 @@
 {
   "profile": {
-    "loadingProfile": "Memuat profil...",
+    "accountInformation": "Informasi Akun",
+    "emailVerified": "Email Terverifikasi",
     "failedToLoadProfile": "Gagal memuat profil. Silakan coba lagi.",
+    "lastUpdated": "Terakhir Diperbarui",
+    "loadingProfile": "Memuat profil...",
+    "memberSince": "Anggota Sejak",
+    "notVerified": "Belum Terverifikasi",
+    "personalInformation": "Informasi Pribadi",
+    "resetPasswordButton": "Reset kata sandi",
+    "resetPasswordCheckEmail": "Periksa email Anda untuk tautan reset kata sandi.",
+    "resetPasswordConfirmBody": "Setelah meminta reset kata sandi, Anda perlu memeriksa email dan menggunakan tautan untuk mengatur kata sandi baru.",
+    "resetPasswordConfirmDescription": "Kirim tautan reset ke {email}?",
+    "resetPasswordConfirmSend": "Kirim tautan reset",
+    "resetPasswordConfirmTitle": "Reset kata sandi",
+    "resetPasswordInvalidToken": "Tautan reset tidak valid atau sudah kedaluwarsa.",
+    "resetPasswordSubmit": "Perbarui Kata Sandi",
+    "resetPasswordSuccess": "Kata sandi berhasil diperbarui. Anda sekarang dapat masuk.",
+    "resetPasswordTitle": "Reset Kata Sandi",
     "retry": "Coba Lagi",
     "role": {
       "administrator": "Administrator",
       "member": "Anggota"
     },
-    "verified": "Terverifikasi",
-    "notVerified": "Belum Terverifikasi",
-    "personalInformation": "Informasi Pribadi",
-    "accountInformation": "Informasi Akun",
     "status": "Status",
-    "emailVerified": "Email Terverifikasi",
-    "memberSince": "Anggota Sejak",
-    "lastUpdated": "Terakhir Diperbarui"
+    "verified": "Terverifikasi"
   }
 }

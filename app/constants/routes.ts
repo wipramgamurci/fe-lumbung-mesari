@@ -4,7 +4,12 @@
  */
 
 // Public routes that don't require authentication
-export const PUBLIC_ROUTES = ["/login", "/register"] as const;
+export const PUBLIC_ROUTES = [
+  "/login",
+  "/register",
+  "/forgot-password",
+  "/profile/reset-password",
+] as const;
 
 // Status-specific routes that require authentication but have status restrictions
 export const STATUS_ROUTES = [

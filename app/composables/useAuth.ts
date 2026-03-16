@@ -92,7 +92,7 @@ export const useAuth = () => {
     }
   };
 
-  const logout = async (): Promise<void> => {
+  const logoutSilent = async (): Promise<void> => {
     try {
       // Clear httpOnly cookies by calling logout endpoint
       await $fetch("/api/auth/logout", {
@@ -109,10 +109,12 @@ export const useAuth = () => {
       // Clear user store using action (Pinia best practice)
       const userStore = useUserStore();
       userStore.clearUser();
-
-      // Navigate to login page
-      await navigateTo("/login");
     }
+  };
+
+  const logout = async (): Promise<void> => {
+    await logoutSilent();
+    await navigateTo("/login");
   };
 
   return {
@@ -120,6 +122,7 @@ export const useAuth = () => {
     register,
     verifyOtp,
     resendOtp,
+    logoutSilent,
     logout,
   };
 };
