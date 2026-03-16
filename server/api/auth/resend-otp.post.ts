@@ -30,7 +30,12 @@ export default defineEventHandler(async (event): Promise<ResendOtpResponse> => {
     setResponseStatus(event, 200);
     return response;
   } catch (error: any) {
-    console.error("Resend OTP API error:", error);
+    console.error("Resend OTP API error:", {
+      statusCode: error.statusCode,
+      statusMessage: error.statusMessage,
+      message: error.data?.message ?? error.message,
+      data: error.data,
+    });
 
     // Forward the external API error response directly
     if (error.statusCode) {
