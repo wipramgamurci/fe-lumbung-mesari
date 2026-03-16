@@ -16,18 +16,29 @@
     <!-- Filters Card -->
     <UCard>
       <div class="flex flex-wrap items-center gap-4">
-        <UInput
-          v-model="startDate"
-          type="date"
-          :placeholder="$t('expenses.startDate')"
-          class="w-40"
-        />
-        <UInput
-          v-model="endDate"
-          type="date"
-          :placeholder="$t('expenses.endDate')"
-          class="w-40"
-        />
+        <UInputDate ref="inputDate" v-model="dateRange" range class="w-72">
+          <template #trailing>
+            <UPopover :reference="inputDate?.inputsRef[0]?.$el">
+              <UButton
+                color="neutral"
+                variant="link"
+                size="sm"
+                icon="i-lucide-calendar"
+                aria-label="Select a date range"
+                class="px-0"
+              />
+
+              <template #content>
+                <UCalendar
+                  v-model="dateRange"
+                  class="p-2"
+                  :number-of-months="1"
+                  range
+                />
+              </template>
+            </UPopover>
+          </template>
+        </UInputDate>
         <UInput
           v-model="minAmount"
           type="number"
@@ -107,7 +118,9 @@
                 </p>
                 <p class="text-sm text-gray-600 dark:text-gray-400">
                   <!-- Fallback to createdAt if transactionDate is missing from type/response -->
-                  {{ formatDate(row.original.txnDate || row.original.createdAt) }}
+                  {{
+                    formatDate(row.original.txnDate || row.original.createdAt)
+                  }}
                 </p>
               </div>
 
@@ -146,7 +159,7 @@
                   {{ formatDateTime(row.original.createdAt) }}
                 </p>
               </div>
-              
+
               <div class="flex flex-col gap-2">
                 <p class="text-sm font-medium text-gray-700 dark:text-gray-300">
                   {{ $t("profile.lastUpdated") }}
@@ -164,13 +177,18 @@
                 <p class="text-sm font-medium text-gray-700 dark:text-gray-300">
                   {{ $t("expenses.notes") }}
                 </p>
-                <p class="text-sm text-gray-600 dark:text-gray-400 whitespace-pre-wrap">
+                <p
+                  class="text-sm text-gray-600 dark:text-gray-400 whitespace-pre-wrap"
+                >
                   {{ row.original.notes }}
                 </p>
               </div>
 
               <!-- Update Button -->
-              <div v-if="userStore.isSuperadministrator || userStore.isAdmin" class="col-span-2 flex justify-end">
+              <div
+                v-if="userStore.isSuperadministrator || userStore.isAdmin"
+                class="col-span-2 flex justify-end"
+              >
                 <UButton
                   color="primary"
                   variant="soft"
@@ -191,7 +209,7 @@
         </p>
       </div>
 
-       <template #footer>
+      <template #footer>
         <UPagination
           v-if="expensesData"
           v-model:page="page"
@@ -206,11 +224,12 @@
 <script setup lang="ts">
 import { h, resolveComponent } from "vue";
 import type { TableColumn } from "@nuxt/ui";
-import type { ExpensesResponse, Expense, ExpenseCategory } from "~~/types/expenses";
+import type { ExpensesResponse, Expense } from "~~/types/expenses";
 import {
   formatCurrency,
   formatDate,
   formatDateTime,
+  formatCalendarDateToQuery,
 } from "~~/utils/formatters";
 import { useUserStore } from "~~/app/stores/useUser";
 import { useExpensesStore } from "~~/app/stores/useExpenses";
@@ -226,6 +245,8 @@ const UButton = resolveComponent("UButton");
 const userStore = useUserStore();
 const expensesStore = useExpensesStore();
 
+const inputDate = useTemplateRef("inputDate");
+
 // State
 const loading = ref(false);
 const error = ref<string | null>(null);
@@ -233,19 +254,20 @@ const expensesData = ref<ExpensesResponse | null>(null);
 // categories removed, use store
 const page = ref(1);
 const limit = ref(10);
-const selectedCategoryOption = ref<{ label: string; value: string | null } | undefined>(undefined);
-const startDate = ref<string | null>(null);
-const endDate = ref<string | null>(null);
+const selectedCategoryOption = ref<
+  { label: string; value: string | null } | undefined
+>(undefined);
+const dateRange = shallowRef<any | null>(null);
 const minAmount = ref<number | null>(null);
 const maxAmount = ref<number | null>(null);
 
 // Options
 const categoryOptions = computed(() => [
   { label: t("expenses.allCategories"), value: null },
-  ...expensesStore.categories.map(c => ({
+  ...expensesStore.categories.map((c) => ({
     label: c.name,
-    value: c.id
-  }))
+    value: c.id,
+  })),
 ]);
 
 // Handlers
@@ -260,8 +282,7 @@ const handleFilter = () => {
 };
 
 const handleClearFilter = () => {
-  startDate.value = null;
-  endDate.value = null;
+  dateRange.value = null;
   minAmount.value = null;
   maxAmount.value = null;
   selectedCategoryOption.value = undefined;
@@ -277,7 +298,6 @@ const refreshData = () => {
 
 // Fetch Categories removed, handled by store
 
-
 // Fetch Expenses
 const fetchExpenses = async () => {
   loading.value = true;
@@ -287,28 +307,38 @@ const fetchExpenses = async () => {
     const queryParams: Record<string, string | number> = {
       page: page.value,
       limit: limit.value,
-      sortBy: 'created_at',
-      sortOrder: 'desc'
+      sortBy: "created_at",
+      sortOrder: "desc",
     };
 
     if (selectedCategoryOption.value?.value) {
       queryParams.category = selectedCategoryOption.value.value;
     }
 
-    if (startDate.value) queryParams.startDate = startDate.value;
-    if (endDate.value) queryParams.endDate = endDate.value;
+    if (dateRange.value?.start) {
+      const startDate = formatCalendarDateToQuery(dateRange.value.start);
+      if (startDate) queryParams.startDate = startDate;
+    }
+
+    if (dateRange.value?.end) {
+      const endDate = formatCalendarDateToQuery(dateRange.value.end);
+      if (endDate) queryParams.endDate = endDate;
+    }
     if (minAmount.value) queryParams.minAmount = minAmount.value;
     if (maxAmount.value) queryParams.maxAmount = maxAmount.value;
 
     const queryString = new URLSearchParams(
-      Object.entries(queryParams).map(([k, v]) => [k, String(v)])
+      Object.entries(queryParams).map(([k, v]) => [k, String(v)]),
     ).toString();
 
-    const response = await $fetch<ExpensesResponse>(`/api/expenses?${queryString}`);
+    const response = await $fetch<ExpensesResponse>(
+      `/api/expenses?${queryString}`,
+    );
     expensesData.value = response;
   } catch (err: any) {
     console.error("Error fetching expenses:", err);
-    error.value = err.data?.message || err.message || "Failed to fetch expenses";
+    error.value =
+      err.data?.message || err.message || "Failed to fetch expenses";
     expensesData.value = null;
   } finally {
     loading.value = false;

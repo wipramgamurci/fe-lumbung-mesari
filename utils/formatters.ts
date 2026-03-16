@@ -87,3 +87,24 @@ export const formatPeriod = (dateString: string): string => {
     year: "numeric",
   }).format(date);
 };
+
+/**
+ * Format a single `@internationalized/date` CalendarDate-like object
+ * into an ISO `YYYY-MM-DD` string for query params.
+ */
+export const formatCalendarDateToQuery = (
+  date: any | null | undefined,
+): string | undefined => {
+  if (!date) return undefined;
+
+  const { year, month, day } = date;
+  if (typeof year !== "number" || typeof month !== "number" || typeof day !== "number") {
+    return undefined;
+  }
+
+  return `${year}-${String(month).padStart(2, "0")}-${String(day).padStart(
+    2,
+    "0",
+  )}`;
+};
+
