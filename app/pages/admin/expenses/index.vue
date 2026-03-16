@@ -226,6 +226,7 @@
 import { h, resolveComponent } from "vue";
 import type { TableColumn } from "@nuxt/ui";
 import type { ExpensesResponse, Expense } from "~~/types/expenses";
+import type { CalendarDate } from "@internationalized/date";
 import {
   formatCurrency,
   formatDate,
@@ -258,7 +259,9 @@ const limit = ref(10);
 const selectedCategoryOption = ref<
   { label: string; value: string | null } | undefined
 >(undefined);
-const dateRange = shallowRef<any | null>(null);
+const dateRange = shallowRef<{ start: CalendarDate; end: CalendarDate } | null>(
+  null,
+);
 const minAmount = ref<number | null>(null);
 const maxAmount = ref<number | null>(null);
 
@@ -273,8 +276,7 @@ const categoryOptions = computed(() => [
 
 // Handlers
 const handleFilter = () => {
-  page.value = 1;
-  fetchExpenses();
+  page.value === 1 ? fetchExpenses() : (page.value = 1);
 };
 
 const handleClearFilter = () => {
@@ -282,13 +284,11 @@ const handleClearFilter = () => {
   minAmount.value = null;
   maxAmount.value = null;
   selectedCategoryOption.value = undefined;
-  page.value = 1;
-  fetchExpenses();
+  page.value === 1 ? fetchExpenses() : (page.value = 1);
 };
 
 const refreshData = () => {
-  page.value = 1;
-  fetchExpenses();
+  page.value === 1 ? fetchExpenses() : (page.value = 1);
   expensesStore.fetchCategories(true); // Force refresh
 };
 
