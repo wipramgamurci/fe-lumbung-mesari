@@ -1,6 +1,8 @@
 <template>
   <div class="flex flex-col gap-4">
-    <div class="flex items-center justify-between mb-8">
+    <div
+      class="flex flex-col md:flex-row items-start md:items-center justify-between mb-8 gap-4"
+    >
       <h1 class="text-3xl font-bold text-gray-900 dark:text-white">
         {{ $t("navigation.expenseList") }}
       </h1>
@@ -58,7 +60,6 @@
           option-attribute="label"
           :placeholder="$t('expenses.expenseCategoryPlaceholder')"
           class="w-64"
-          @update:model-value="handleCategoryChange"
         />
 
         <UButton
@@ -271,11 +272,6 @@ const categoryOptions = computed(() => [
 ]);
 
 // Handlers
-const handleCategoryChange = () => {
-  page.value = 1;
-  fetchExpenses();
-};
-
 const handleFilter = () => {
   page.value = 1;
   fetchExpenses();
