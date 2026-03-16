@@ -43,7 +43,12 @@ export default defineEventHandler(async (event): Promise<VerifyOtpResponse> => {
     setResponseStatus(event, 200);
     return response;
   } catch (error: any) {
-    console.error("OTP verification API error:", error);
+    console.error("OTP verification API error:", {
+      statusCode: error.statusCode,
+      statusMessage: error.statusMessage,
+      message: error.data?.message ?? error.message,
+      data: error.data,
+    });
 
     // Forward the external API error response directly
     if (error.statusCode) {
