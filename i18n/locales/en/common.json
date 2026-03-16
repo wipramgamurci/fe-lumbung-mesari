@@ -10,6 +10,7 @@
     "clearFilter": "Clear Filter",
     "close": "Close",
     "contactAdministrator": "Contact Administrator",
+    "dateFormatDescription": "Date is in format MM-DD-YYYY",
     "error": {
       "required": "Required"
     },
