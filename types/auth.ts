@@ -47,6 +47,24 @@ export interface VerifyOtpResponse {
   data: VerifyOtpResponseData;
 }
 
+export interface ResetPasswordRequest {
+  email: string;
+}
+
+export interface ResetPasswordResponse {
+  message: string;
+}
+
+export interface ResetPasswordConfirmRequest {
+  token: string;
+  newPassword: string;
+  confirmPassword: string;
+}
+
+export interface ResetPasswordConfirmResponse {
+  message: string;
+}
+
 export interface LoginResponseData {
   emailSent: boolean;
   message: string;

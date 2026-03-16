@@ -38,7 +38,12 @@ export default defineEventHandler(async (event) => {
       message: "Logged out successfully",
     };
   } catch (error: any) {
-    console.error("Logout error:", error);
+    console.error("Logout error:", {
+      statusCode: error.statusCode,
+      statusMessage: error.statusMessage,
+      message: error.data?.message ?? error.message,
+      data: error.data,
+    });
     setResponseStatus(event, 500);
     throw createError({
       statusCode: 500,

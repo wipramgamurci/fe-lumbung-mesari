@@ -140,15 +140,15 @@
           </h3>
           <div class="space-y-4">
             <!-- <div>
-              <p class="text-sm text-gray-600 dark:text-gray-400 mb-1">
-                User ID
-              </p>
-              <p
-                class="text-base font-medium text-gray-900 dark:text-white font-mono"
-              >
-                {{ user.id }}
-              </p>
-            </div> -->
+                <p class="text-sm text-gray-600 dark:text-gray-400 mb-1">
+                  User ID
+                </p>
+                <p
+                  class="text-base font-medium text-gray-900 dark:text-white font-mono"
+                >
+                  {{ user.id }}
+                </p>
+              </div> -->
             <div>
               <p class="text-sm text-gray-600 dark:text-gray-400 mb-1">
                 {{ $t("profile.status") }}
@@ -191,10 +191,68 @@
                 {{ formatDate(user.updatedAt) }}
               </p>
             </div>
+            <div class="mt-4">
+              <UButton
+                variant="outline"
+                color="primary"
+                @click="openResetPasswordModal"
+              >
+                {{ $t("profile.resetPasswordButton") }}
+              </UButton>
+            </div>
           </div>
         </UCard>
       </div>
     </div>
+
+    <!-- Reset password confirmation modal -->
+    <UModal
+      v-model:open="resetPasswordModalOpen"
+      :title="$t('profile.resetPasswordConfirmTitle')"
+      :description="
+        user
+          ? $t('profile.resetPasswordConfirmDescription', { email: user.email })
+          : ''
+      "
+    >
+      <template #body>
+        <div v-if="!resetPasswordSuccess">
+          <p class="text-gray-600 dark:text-gray-400">
+            {{ $t("profile.resetPasswordConfirmBody") }}
+          </p>
+        </div>
+        <div v-if="resetPasswordSuccess" class="space-y-2">
+          <UAlert
+            color="success"
+            variant="soft"
+            :title="$t('profile.resetPasswordCheckEmail')"
+          />
+        </div>
+      </template>
+      <template #footer>
+        <div class="flex justify-end gap-2">
+          <UButton
+            v-if="!resetPasswordSuccess"
+            color="neutral"
+            variant="outline"
+            @click="resetPasswordModalOpen = false"
+          >
+            {{ $t("common.cancel") }}
+          </UButton>
+          <UButton
+            v-if="!resetPasswordSuccess"
+            color="primary"
+            :loading="isResettingPassword"
+            @click="sendResetPasswordEmail"
+          >
+            {{ $t("profile.resetPasswordConfirmSend") }}
+          </UButton>
+          <UButton v-else color="primary" @click="closeResetPasswordModal">
+            {{ $t("common.close") }}
+          </UButton>
+        </div>
+      </template>
+    </UModal>
   </div>
 </template>
 
@@ -254,5 +312,38 @@ const statusConfig: Record<string, { label: string; color: BadgeColor }> = {
 
 const getStatusInfo = (status: string) => {
   return statusConfig[status] || { label: status, color: "neutral" };
+};
+
+// Reset password modal
+const resetPasswordModalOpen = ref(false);
+const isResettingPassword = ref(false);
+const resetPasswordSuccess = ref(false);
+
+const sendResetPasswordEmail = async () => {
+  if (!user.value?.email) return;
+  isResettingPassword.value = true;
+  resetPasswordSuccess.value = false;
+  try {
+    await $fetch("/api/auth/reset-password", {
+      method: "POST",
+      body: { email: user.value.email },
+    });
+    resetPasswordSuccess.value = true;
+  } catch (err: any) {
+    const message = err?.data?.message || err?.message || "Unknown error";
+    alert(message);
+  } finally {
+    isResettingPassword.value = false;
+  }
+};
+
+const openResetPasswordModal = () => {
+  resetPasswordSuccess.value = false;
+  resetPasswordModalOpen.value = true;
+};
+
+const closeResetPasswordModal = () => {
+  resetPasswordModalOpen.value = false;
+  resetPasswordSuccess.value = false;
 };
 </script>

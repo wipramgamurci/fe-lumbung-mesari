@@ -1,13 +1,9 @@
 {
   "common": {
     "back": "Back",
-    "signIn": "Sign In",
-    "register": "Register",
-    "password": "Password",
-    "identifier": "Username or Email",
-    "submit": "Submit",
-    "loading": "Loading...",
-    "signOut": "Sign Out",
+    "cancel": "Cancel",
+    "clearFilter": "Clear Filter",
+    "close": "Close",
     "contactAdministrator": "Contact Administrator",
     "cancel": "Cancel",
     "approve": "Approve",

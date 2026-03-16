@@ -1,13 +1,9 @@
 {
   "common": {
     "back": "Kembali",
-    "signIn": "Masuk",
-    "register": "Daftar",
-    "password": "Kata Sandi",
-    "identifier": "Nama Pengguna atau Email",
-    "submit": "Kirim",
-    "loading": "Memuat...",
-    "signOut": "Keluar",
+    "cancel": "Batal",
+    "clearFilter": "Hapus Filter",
+    "close": "Tutup",
     "contactAdministrator": "Hubungi Administrator",
     "cancel": "Batal",
     "approve": "Setujui",
