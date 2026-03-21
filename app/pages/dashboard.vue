@@ -120,11 +120,44 @@
         </div>
       </div>
     </UCard>
+
+    <!-- Dev: cashbook transactions API -->
+    <UCard class="mt-8">
+      <div
+        class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-4"
+      >
+        <h2 class="text-xl font-semibold text-gray-900 dark:text-white">
+          Test: cashbook transactions
+        </h2>
+        <UButton
+          color="neutral"
+          variant="outline"
+          :loading="txTestLoading"
+          @click="fetchTransactionsTest"
+        >
+          GET /api/cashbook/transactions?page=1&limit=10
+        </UButton>
+      </div>
+      <p v-if="txTestError" class="text-sm text-red-600 dark:text-red-400 mb-2">
+        {{ txTestError }}
+      </p>
+      <pre
+        v-if="txTestResult !== null || txTestLoading"
+        class="text-xs font-mono p-4 rounded-lg bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-200 overflow-auto max-h-96 border border-gray-200 dark:border-gray-700"
+      >{{
+        txTestLoading
+          ? "Loading…"
+          : JSON.stringify(txTestResult, null, 2)
+      }}</pre>
+    </UCard>
   </div>
 </template>
 
 <script setup lang="ts">
-import type { CashbookBalancesResponse } from "~~/types/cashbook";
+import type {
+  CashbookBalancesResponse,
+  CashbookTransactionsResponse,
+} from "~~/types/cashbook";
 import { formatCurrency } from "~~/utils/formatters";
 
 definePageMeta({
@@ -134,6 +167,30 @@ definePageMeta({
 const loading = ref(false);
 const cashbookBalances = ref<CashbookBalancesResponse | null>(null);
 const error = ref<string | null>(null);
+
+const txTestLoading = ref(false);
+const txTestResult = ref<CashbookTransactionsResponse | null>(null);
+const txTestError = ref<string | null>(null);
+
+const fetchTransactionsTest = async () => {
+  txTestLoading.value = true;
+  txTestError.value = null;
+  txTestResult.value = null;
+
+  try {
+    const response = await $fetch<CashbookTransactionsResponse>(
+      "/api/cashbook/transactions",
+      { query: { page: 1, limit: 10 } }
+    );
+    txTestResult.value = response;
+  } catch (err: any) {
+    txTestError.value =
+      err.data?.message || err.message || "Failed to fetch transactions";
+    console.error("Error fetching cashbook transactions:", err);
+  } finally {
+    txTestLoading.value = false;
+  }
+};
 
 const getCashbookBalances = async () => {
   loading.value = true;
