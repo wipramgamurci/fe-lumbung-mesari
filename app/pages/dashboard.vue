@@ -23,8 +23,8 @@
               loading
                 ? "Loading..."
                 : error
-                ? "Error fetching"
-                : formatCurrency(cashbookBalances?.total || 0)
+                  ? "Error fetching"
+                  : formatCurrency(cashbookBalances?.total || 0)
             }}
           </p>
         </div>
@@ -47,8 +47,8 @@
               loading
                 ? "Loading..."
                 : error
-                ? "Error fetching"
-                : formatCurrency(cashbookBalances?.capital || 0)
+                  ? "Error fetching"
+                  : formatCurrency(cashbookBalances?.capital || 0)
             }}
           </p>
         </div>
@@ -71,8 +71,8 @@
               loading
                 ? "Loading..."
                 : error
-                ? "Error fetching"
-                : formatCurrency(cashbookBalances?.shu || 0)
+                  ? "Error fetching"
+                  : formatCurrency(cashbookBalances?.shu || 0)
             }}
           </p>
         </div>
@@ -82,73 +82,63 @@
     <!-- Recent Transactions -->
     <UCard>
       <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-        Recent Transactions
+        {{ $t("dashboard.recentTransactions") }}
       </h2>
-      <div class="space-y-3">
-        <div
-          class="flex items-center justify-between py-2 border-b border-gray-100 dark:border-gray-700"
-        >
-          <div>
-            <p class="font-medium text-gray-900 dark:text-white">
-              Savings Deposit
-            </p>
-            <p class="text-sm text-gray-600 dark:text-gray-300">Today</p>
-          </div>
-          <span class="text-green-600 font-semibold">+Rp 500,000</span>
-        </div>
 
-        <div
-          class="flex items-center justify-between py-2 border-b border-gray-100 dark:border-gray-700"
-        >
-          <div>
-            <p class="font-medium text-gray-900 dark:text-white">
-              Loan Payment
-            </p>
-            <p class="text-sm text-gray-600 dark:text-gray-300">Yesterday</p>
-          </div>
-          <span class="text-red-600 font-semibold">-Rp 100,000</span>
-        </div>
-
-        <div class="flex items-center justify-between py-2">
-          <div>
-            <p class="font-medium text-gray-900 dark:text-white">
-              Interest Earned
-            </p>
-            <p class="text-sm text-gray-600 dark:text-gray-300">2 days ago</p>
-          </div>
-          <span class="text-green-600 font-semibold">+Rp 25,000</span>
-        </div>
-      </div>
-    </UCard>
-
-    <!-- Dev: cashbook transactions API -->
-    <UCard class="mt-8">
-      <div
-        class="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between mb-4"
+      <p
+        v-if="transactionsLoading"
+        class="text-sm text-gray-500 dark:text-gray-400 py-2"
       >
-        <h2 class="text-xl font-semibold text-gray-900 dark:text-white">
-          Test: cashbook transactions
-        </h2>
-        <UButton
-          color="neutral"
-          variant="outline"
-          :loading="txTestLoading"
-          @click="fetchTransactionsTest"
-        >
-          GET /api/cashbook/transactions?page=1&limit=10
-        </UButton>
-      </div>
-      <p v-if="txTestError" class="text-sm text-red-600 dark:text-red-400 mb-2">
-        {{ txTestError }}
+        {{ $t("common.loading") }}
       </p>
-      <pre
-        v-if="txTestResult !== null || txTestLoading"
-        class="text-xs font-mono p-4 rounded-lg bg-gray-50 dark:bg-gray-900 text-gray-800 dark:text-gray-200 overflow-auto max-h-96 border border-gray-200 dark:border-gray-700"
-      >{{
-        txTestLoading
-          ? "Loading…"
-          : JSON.stringify(txTestResult, null, 2)
-      }}</pre>
+      <p
+        v-else-if="transactionsError"
+        class="text-sm text-red-600 dark:text-red-400 py-2"
+      >
+        {{ transactionsError }}
+      </p>
+      <p
+        v-else-if="recentTransactions.length === 0"
+        class="text-sm text-gray-500 dark:text-gray-400 py-2"
+      >
+        {{ $t("common.noDataFound") }}
+      </p>
+
+      <div v-else class="space-y-3">
+        <div
+          v-for="(trx, idx) in recentTransactions"
+          :key="trx.id"
+          class="flex items-start justify-between py-2"
+          :class="{
+            'border-b border-gray-100 dark:border-gray-700':
+              idx < recentTransactions.length - 1,
+          }"
+        >
+          <div class="min-w-0 pr-4">
+            <p class="font-medium text-gray-900 dark:text-white">
+              {{ trx.category.name }}
+            </p>
+            <p class="text-sm text-gray-600 dark:text-gray-300">
+              {{ formatDate(trx.txnDate) }}
+            </p>
+            <p class="text-xs text-gray-500 dark:text-gray-400 mt-1">
+              {{ $t("dashboard.totalBalance") }}:
+              {{ formatCurrency(trx.totalBalanceAfter) }}
+            </p>
+          </div>
+          <span
+            class="font-semibold text-right whitespace-nowrap"
+            :class="
+              trx.type === 'expense'
+                ? 'text-red-600 dark:text-red-400'
+                : 'text-green-600 dark:text-green-400'
+            "
+          >
+            {{ trx.type === "expense" ? "-" : "+"
+            }}{{ formatCurrency(getTransactionAmount(trx)) }}
+          </span>
+        </div>
+      </div>
     </UCard>
   </div>
 </template>
@@ -156,9 +146,10 @@
 <script setup lang="ts">
 import type {
   CashbookBalancesResponse,
+  CashbookTransaction,
   CashbookTransactionsResponse,
 } from "~~/types/cashbook";
-import { formatCurrency } from "~~/utils/formatters";
+import { formatCurrency, formatDate } from "~~/utils/formatters";
 
 definePageMeta({
   layout: "default",
@@ -168,27 +159,29 @@ const loading = ref(false);
 const cashbookBalances = ref<CashbookBalancesResponse | null>(null);
 const error = ref<string | null>(null);
 
-const txTestLoading = ref(false);
-const txTestResult = ref<CashbookTransactionsResponse | null>(null);
-const txTestError = ref<string | null>(null);
+const transactionsLoading = ref(false);
+const transactionsError = ref<string | null>(null);
+const recentTransactions = ref<CashbookTransaction[]>([]);
 
-const fetchTransactionsTest = async () => {
-  txTestLoading.value = true;
-  txTestError.value = null;
-  txTestResult.value = null;
+const getTransactionAmount = (transaction: CashbookTransaction): number => {
+  return transaction.capitalAmount + transaction.shuAmount;
+};
 
+const getRecentTransactions = async () => {
+  transactionsLoading.value = true;
+  transactionsError.value = null;
   try {
     const response = await $fetch<CashbookTransactionsResponse>(
       "/api/cashbook/transactions",
-      { query: { page: 1, limit: 10 } }
+      { query: { page: 1, limit: 10 } },
     );
-    txTestResult.value = response;
+    recentTransactions.value = response.data;
   } catch (err: any) {
-    txTestError.value =
+    transactionsError.value =
       err.data?.message || err.message || "Failed to fetch transactions";
     console.error("Error fetching cashbook transactions:", err);
   } finally {
-    txTestLoading.value = false;
+    transactionsLoading.value = false;
   }
 };
 
@@ -198,7 +191,7 @@ const getCashbookBalances = async () => {
 
   try {
     const response = await $fetch<CashbookBalancesResponse>(
-      "/api/cashbook/balances"
+      "/api/cashbook/balances",
     );
     cashbookBalances.value = response;
   } catch (err: any) {
@@ -212,5 +205,6 @@ const getCashbookBalances = async () => {
 
 onMounted(() => {
   getCashbookBalances();
+  getRecentTransactions();
 });
 </script>

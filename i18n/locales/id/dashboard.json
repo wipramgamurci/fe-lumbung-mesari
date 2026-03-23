@@ -1,7 +1,8 @@
 {
   "dashboard": {
-    "totalBalance": "Total Saldo",
     "capital": "Modal",
-    "shu": "SHU"
+    "recentTransactions": "Transaksi Terbaru",
+    "shu": "SHU",
+    "totalBalance": "Total Kas"
   }
 }

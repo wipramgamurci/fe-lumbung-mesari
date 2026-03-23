@@ -1,7 +1,8 @@
 {
   "dashboard": {
-    "totalBalance": "Total Balance",
     "capital": "Capital",
-    "shu": "SHU"
+    "recentTransactions": "Recent Transactions",
+    "shu": "SHU",
+    "totalBalance": "Total Balance"
   }
 }
