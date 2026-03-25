@@ -140,6 +140,44 @@
         </div>
       </div>
     </UCard>
+
+    <!-- User Savings (Debug) -->
+    <UCard class="mt-8">
+      <div class="flex items-center justify-between gap-4 mb-4">
+        <h2 class="text-xl font-semibold text-gray-900 dark:text-white">
+          User Savings
+        </h2>
+
+        <UButton
+          color="primary"
+          variant="solid"
+          icon="i-heroicons-arrow-path"
+          :loading="userSavingsLoading"
+          @click="fetchUserSavings"
+        >
+          Fetch
+        </UButton>
+      </div>
+
+      <p
+        v-if="userSavingsError"
+        class="text-sm text-red-600 dark:text-red-400 mb-3"
+      >
+        {{ userSavingsError }}
+      </p>
+
+      <pre
+        v-if="userSavingsPretty"
+        class="text-xs overflow-auto max-h-96 bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-800 rounded-lg p-4"
+      >{{ userSavingsPretty }}</pre>
+
+      <p
+        v-else
+        class="text-sm text-gray-500 dark:text-gray-400"
+      >
+        Click “Fetch” to call <code>/api/users/me/savings</code>.
+      </p>
+    </UCard>
   </div>
 </template>
 
@@ -148,6 +186,7 @@ import type { CashbookTransaction } from "~~/types/cashbook";
 import { storeToRefs } from "pinia";
 import { useCashbookStore } from "~/stores/useCashbook";
 import { formatCurrency, formatDate } from "~~/utils/formatters";
+import type { UserMeSavingsResponse } from "~~/server/api/users/me/savings.get";
 
 definePageMeta({
   layout: "default",
@@ -172,6 +211,33 @@ const getDashboardData = async () => {
     await cashbookStore.fetchDashboardData();
   } catch (err) {
     console.error("Error fetching dashboard cashbook data:", err);
+  }
+};
+
+const userSavingsLoading = ref(false);
+const userSavingsError = ref<string | null>(null);
+const userSavingsData = ref<UserMeSavingsResponse | null>(null);
+
+const userSavingsPretty = computed(() => {
+  return userSavingsData.value
+    ? JSON.stringify(userSavingsData.value, null, 2)
+    : "";
+});
+
+const fetchUserSavings = async () => {
+  userSavingsLoading.value = true;
+  userSavingsError.value = null;
+
+  try {
+    const response = await $fetch<UserMeSavingsResponse>("/api/users/me/savings");
+    userSavingsData.value = response;
+  } catch (err: any) {
+    userSavingsData.value = null;
+    userSavingsError.value =
+      err.data?.message || err.message || "Failed to fetch user savings";
+    console.error("Error fetching user savings:", err);
+  } finally {
+    userSavingsLoading.value = false;
   }
 };
 
