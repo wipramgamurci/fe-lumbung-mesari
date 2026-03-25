@@ -144,67 +144,38 @@
 </template>
 
 <script setup lang="ts">
-import type {
-  CashbookBalancesResponse,
-  CashbookTransaction,
-  CashbookTransactionsResponse,
-} from "~~/types/cashbook";
+import type { CashbookTransaction } from "~~/types/cashbook";
+import { storeToRefs } from "pinia";
+import { useCashbookStore } from "~/stores/useCashbook";
 import { formatCurrency, formatDate } from "~~/utils/formatters";
 
 definePageMeta({
   layout: "default",
 });
 
-const loading = ref(false);
-const cashbookBalances = ref<CashbookBalancesResponse | null>(null);
-const error = ref<string | null>(null);
-
-const transactionsLoading = ref(false);
-const transactionsError = ref<string | null>(null);
-const recentTransactions = ref<CashbookTransaction[]>([]);
+const cashbookStore = useCashbookStore();
+const {
+  balances: cashbookBalances,
+  loadingBalances: loading,
+  errorBalances: error,
+  recentTransactions,
+  loadingTransactions: transactionsLoading,
+  errorTransactions: transactionsError,
+} = storeToRefs(cashbookStore);
 
 const getTransactionAmount = (transaction: CashbookTransaction): number => {
   return transaction.capitalAmount + transaction.shuAmount;
 };
 
-const getRecentTransactions = async () => {
-  transactionsLoading.value = true;
-  transactionsError.value = null;
+const getDashboardData = async () => {
   try {
-    const response = await $fetch<CashbookTransactionsResponse>(
-      "/api/cashbook/transactions",
-      { query: { page: 1, limit: 10 } },
-    );
-    recentTransactions.value = response.data;
-  } catch (err: any) {
-    transactionsError.value =
-      err.data?.message || err.message || "Failed to fetch transactions";
-    console.error("Error fetching cashbook transactions:", err);
-  } finally {
-    transactionsLoading.value = false;
-  }
-};
-
-const getCashbookBalances = async () => {
-  loading.value = true;
-  error.value = null;
-
-  try {
-    const response = await $fetch<CashbookBalancesResponse>(
-      "/api/cashbook/balances",
-    );
-    cashbookBalances.value = response;
-  } catch (err: any) {
-    error.value =
-      err.data?.message || err.message || "Failed to fetch balances";
-    console.error("Error fetching cashbook balances:", err);
-  } finally {
-    loading.value = false;
+    await cashbookStore.fetchDashboardData();
+  } catch (err) {
+    console.error("Error fetching dashboard cashbook data:", err);
   }
 };
 
 onMounted(() => {
-  getCashbookBalances();
-  getRecentTransactions();
+  getDashboardData();
 });
 </script>
