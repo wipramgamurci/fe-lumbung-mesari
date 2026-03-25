@@ -21,9 +21,9 @@
           >
             {{
               loading
-                ? "Loading..."
+                ? $t("common.loading")
                 : error
-                  ? "Error fetching"
+                  ? $t("common.errorLoadingData")
                   : formatCurrency(cashbookBalances?.total || 0)
             }}
           </p>
@@ -45,9 +45,9 @@
           >
             {{
               loading
-                ? "Loading..."
+                ? $t("common.loading")
                 : error
-                  ? "Error fetching"
+                  ? $t("common.errorLoadingData")
                   : formatCurrency(cashbookBalances?.capital || 0)
             }}
           </p>
@@ -69,9 +69,9 @@
           >
             {{
               loading
-                ? "Loading..."
+                ? $t("common.loading")
                 : error
-                  ? "Error fetching"
+                  ? $t("common.errorLoadingData")
                   : formatCurrency(cashbookBalances?.shu || 0)
             }}
           </p>

@@ -65,12 +65,7 @@ export const useCashbookStore = defineStore("cashbook", {
     },
 
     async fetchDashboardData(force = false) {
-      if (
-        !force &&
-        this.isLoaded &&
-        this.lastFetchedAt &&
-        Date.now() - this.lastFetchedAt < DASHBOARD_TTL_MS
-      ) {
+      if (!force && this.isLoaded && !this.isStale) {
         return;
       }
 
