@@ -79,6 +79,48 @@
       </UCard>
     </div>
 
+    <!-- Mandatory Saving (not implemented yet, just mockup)-->
+    <UCard class="mb-8">
+      <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">
+        Mandatory Saving
+      </h2>
+      <div class="flex flex-col gap-4">
+        <UCard>
+          <p>this month</p>
+          <p>amount (Rp xxx.xxx)</p>
+          <UBadge variant="subtle">
+            <p>status (paid/due)</p>
+          </UBadge>
+        </UCard>
+        <div class="grid grid-cols-3 gap-4">
+          <UCard>
+            <p>paid</p>
+            <p>paid count (xx)</p>
+          </UCard>
+          <UCard>
+            <p>due</p>
+            <p>due count (xx)</p>
+          </UCard>
+          <UCard>
+            <p>overdue</p>
+            <p>overdue count (xx)</p>
+          </UCard>
+        </div>
+        <p>
+          for detail, go to
+          <UButton
+            to="/savings"
+            color="primary"
+            variant="link"
+            icon="i-heroicons-arrow-right"
+            trailing
+          >
+            mandatory saving page
+          </UButton>
+        </p>
+      </div>
+    </UCard>
+
     <!-- Recent Transactions -->
     <UCard>
       <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">
@@ -169,12 +211,10 @@
       <pre
         v-if="userSavingsPretty"
         class="text-xs overflow-auto max-h-96 bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-800 rounded-lg p-4"
-      >{{ userSavingsPretty }}</pre>
-
-      <p
-        v-else
-        class="text-sm text-gray-500 dark:text-gray-400"
+        >{{ userSavingsPretty }}</pre
       >
+
+      <p v-else class="text-sm text-gray-500 dark:text-gray-400">
         Click “Fetch” to call <code>/api/users/me/savings</code>.
       </p>
     </UCard>
@@ -185,8 +225,8 @@
 import type { CashbookTransaction } from "~~/types/cashbook";
 import { storeToRefs } from "pinia";
 import { useCashbookStore } from "~/stores/useCashbook";
+import { useUserSavingsStore } from "~/stores/useUserSavings";
 import { formatCurrency, formatDate } from "~~/utils/formatters";
-import type { UserMeSavingsResponse } from "~~/server/api/users/me/savings.get";
 
 definePageMeta({
   layout: "default",
@@ -202,6 +242,13 @@ const {
   errorTransactions: transactionsError,
 } = storeToRefs(cashbookStore);
 
+const userSavingsStore = useUserSavingsStore();
+const {
+  savings: userSavingsData,
+  loading: userSavingsLoading,
+  error: userSavingsError,
+} = storeToRefs(userSavingsStore);
+
 const getTransactionAmount = (transaction: CashbookTransaction): number => {
   return transaction.capitalAmount + transaction.shuAmount;
 };
@@ -214,34 +261,16 @@ const getDashboardData = async () => {
   }
 };
 
-const userSavingsLoading = ref(false);
-const userSavingsError = ref<string | null>(null);
-const userSavingsData = ref<UserMeSavingsResponse | null>(null);
-
 const userSavingsPretty = computed(() => {
   return userSavingsData.value
     ? JSON.stringify(userSavingsData.value, null, 2)
     : "";
 });
 
-const fetchUserSavings = async () => {
-  userSavingsLoading.value = true;
-  userSavingsError.value = null;
-
-  try {
-    const response = await $fetch<UserMeSavingsResponse>("/api/users/me/savings");
-    userSavingsData.value = response;
-  } catch (err: any) {
-    userSavingsData.value = null;
-    userSavingsError.value =
-      err.data?.message || err.message || "Failed to fetch user savings";
-    console.error("Error fetching user savings:", err);
-  } finally {
-    userSavingsLoading.value = false;
-  }
-};
+const fetchUserSavings = () => userSavingsStore.fetchSavings();
 
 onMounted(() => {
   getDashboardData();
+  fetchUserSavings();
 });
 </script>
