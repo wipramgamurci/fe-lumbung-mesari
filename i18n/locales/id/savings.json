@@ -2,8 +2,8 @@
   "savings": {
     "statusOptions": {
       "allStatuses": "Semua Status",
-      "due": "Jatuh Tempo",
-      "paid": "Dibayar",
+      "due": "Belum Dibayar",
+      "paid": "Lunas",
       "overdue": "Terlambat"
     },
     "selectPeriod": "Pilih Periode",

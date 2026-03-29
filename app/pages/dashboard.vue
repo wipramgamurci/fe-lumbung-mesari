@@ -79,45 +79,116 @@
       </UCard>
     </div>
 
-    <!-- Mandatory Saving (not implemented yet, just mockup)-->
+    <!-- Mandatory savings -->
     <UCard class="mb-8">
-      <h2 class="text-xl font-semibold text-gray-900 dark:text-white mb-4">
-        Mandatory Saving
-      </h2>
-      <div class="flex flex-col gap-4">
-        <UCard>
-          <p>this month</p>
-          <p>amount (Rp xxx.xxx)</p>
-          <UBadge variant="subtle">
-            <p>status (paid/due)</p>
-          </UBadge>
-        </UCard>
-        <div class="grid grid-cols-3 gap-4">
+      <div class="flex flex-col sm:flex-row gap-1 sm:items-end mb-4">
+        <h2 class="text-xl font-semibold text-gray-900 dark:text-white">
+          Mandatory saving
+        </h2>
+        <p
+          v-if="mandatorySavingsYear !== null"
+          class="text-sm text-gray-500 dark:text-gray-400"
+        >
+          Year {{ mandatorySavingsYear }}
+        </p>
+      </div>
+
+      <p
+        v-if="userSavingsLoading || (!userSavingsData && !userSavingsError)"
+        class="text-sm text-gray-500 dark:text-gray-400 py-2"
+      >
+        Loading…
+      </p>
+      <p
+        v-else-if="userSavingsError"
+        class="text-sm text-red-600 dark:text-red-400 py-2"
+      >
+        {{ userSavingsError }}
+      </p>
+      <div v-else class="flex flex-col gap-4">
+        <p
+          v-if="mandatoryRecords.length === 0"
+          class="text-sm text-gray-500 dark:text-gray-400"
+        >
+          No mandatory savings records for this year.
+        </p>
+
+        <template v-else>
           <UCard>
-            <p>paid</p>
-            <p>paid count (xx)</p>
+            <p class="text-sm text-gray-600 dark:text-gray-300 mb-1">
+              This month
+            </p>
+            <template v-if="thisMonthMandatoryRecord">
+              <p class="text-base font-semibold text-gray-900 dark:text-white">
+                {{ formatPeriod(thisMonthMandatoryRecord.periodDate) }}
+              </p>
+              <p class="text-xl font-bold text-gray-900 dark:text-white mt-2">
+                {{ formatCurrency(thisMonthMandatoryRecord.amount) }}
+              </p>
+              <UBadge
+                class="mt-3"
+                variant="subtle"
+                :color="getSavingStatusColor(thisMonthMandatoryRecord.status)"
+              >
+                {{ formatSavingStatus(thisMonthMandatoryRecord.status) }}
+              </UBadge>
+            </template>
+            <p v-else class="text-sm text-gray-500 dark:text-gray-400">
+              No record for the current month in this year’s data.
+            </p>
           </UCard>
-          <UCard>
-            <p>due</p>
-            <p>due count (xx)</p>
-          </UCard>
-          <UCard>
-            <p>overdue</p>
-            <p>overdue count (xx)</p>
-          </UCard>
-        </div>
-        <p>
-          for detail, go to
+
+          <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+            <UCard>
+              <div class="flex flex-col items-center justify-center">
+                <p class="text-sm text-gray-600 dark:text-gray-300">
+                  {{ $t("savings.statusOptions.paid") }}
+                </p>
+                <p
+                  class="text-2xl font-bold text-green-600 dark:text-green-400"
+                >
+                  {{ statusCounts.paid }}
+                </p>
+              </div>
+            </UCard>
+            <UCard>
+              <div class="flex flex-col items-center justify-center">
+                <p class="text-sm text-gray-600 dark:text-gray-300">
+                  {{ $t("savings.statusOptions.due") }}
+                </p>
+                <p
+                  class="text-2xl font-bold text-amber-600 dark:text-amber-400"
+                >
+                  {{ statusCounts.due }}
+                </p>
+              </div>
+            </UCard>
+            <UCard>
+              <div class="flex flex-col items-center justify-center">
+                <p class="text-sm text-gray-600 dark:text-gray-300">
+                  {{ $t("savings.statusOptions.overdue") }}
+                </p>
+                <p class="text-2xl font-bold text-red-600 dark:text-red-400">
+                  {{ statusCounts.overdue }}
+                </p>
+              </div>
+            </UCard>
+          </div>
+        </template>
+
+        <!-- <p class="text-sm text-gray-600 dark:text-gray-300">
+          For details, go to
           <UButton
             to="/savings"
             color="primary"
             variant="link"
             icon="i-heroicons-arrow-right"
             trailing
+            class="align-baseline"
           >
             mandatory saving page
           </UButton>
-        </p>
+        </p> -->
       </div>
     </UCard>
 
@@ -226,7 +297,8 @@ import type { CashbookTransaction } from "~~/types/cashbook";
 import { storeToRefs } from "pinia";
 import { useCashbookStore } from "~/stores/useCashbook";
 import { useUserSavingsStore } from "~/stores/useUserSavings";
-import { formatCurrency, formatDate } from "~~/utils/formatters";
+import { formatCurrency, formatDate, formatPeriod } from "~~/utils/formatters";
+import type { UserMeSavingsRecord } from "~~/server/api/users/me/savings.get";
 
 definePageMeta({
   layout: "default",
@@ -266,6 +338,48 @@ const userSavingsPretty = computed(() => {
     ? JSON.stringify(userSavingsData.value, null, 2)
     : "";
 });
+
+const mandatoryRecords = computed((): UserMeSavingsRecord[] => {
+  return userSavingsData.value?.data ?? [];
+});
+
+const mandatorySavingsYear = computed((): number | null => {
+  return userSavingsData.value?.year ?? null;
+});
+
+const thisMonthMandatoryRecord = computed((): UserMeSavingsRecord | null => {
+  const now = new Date();
+  const y = now.getFullYear();
+  const m = now.getMonth();
+  for (const row of mandatoryRecords.value) {
+    const d = new Date(row.periodDate);
+    if (Number.isNaN(d.getTime())) continue;
+    if (d.getFullYear() === y && d.getMonth() === m) return row;
+  }
+  return null;
+});
+
+const statusCounts = computed(() => {
+  const paid = mandatoryRecords.value.filter((r) => r.status === "paid").length;
+  const due = mandatoryRecords.value.filter((r) => r.status === "due").length;
+  const overdue = mandatoryRecords.value.filter(
+    (r) => r.status === "overdue",
+  ).length;
+  return { paid, due, overdue };
+});
+
+function formatSavingStatus(status: UserMeSavingsRecord["status"]): string {
+  return $t(`savings.statusOptions.${status}`);
+}
+
+function getSavingStatusColor(status: UserMeSavingsRecord["status"]) {
+  const colorMap: Record<UserMeSavingsRecord["status"], any> = {
+    paid: "success",
+    due: "warning",
+    overdue: "error",
+  };
+  return colorMap[status] || "neutral";
+}
 
 const fetchUserSavings = () => userSavingsStore.fetchSavings();
 
