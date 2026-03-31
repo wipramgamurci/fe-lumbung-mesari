@@ -1,5 +1,6 @@
 import { defineStore } from "pinia";
 import type { UserMeSavingsResponse } from "~~/server/api/users/me/savings.get";
+import { useUserStore } from "~/stores/useUser";
 
 function defaultYear(): number {
   return new Date().getFullYear();
@@ -7,6 +8,8 @@ function defaultYear(): number {
 
 export const useUserSavingsStore = defineStore("userSavings", {
   state: () => ({
+    /** User id that owns the current cache */
+    ownerUserId: null as string | null,
     /** Cached responses keyed by `response.year` from the API */
     savingsByYear: {} as Record<number, UserMeSavingsResponse>,
     /** Year of the payload exposed as `savings` (last successful fetch or cache hit) */
@@ -29,6 +32,20 @@ export const useUserSavingsStore = defineStore("userSavings", {
 
   actions: {
     async fetchSavings(year?: number, force = false) {
+      const userStore = useUserStore();
+      const currentUserId = userStore.user?.id ?? null;
+
+      // Prevent leaking cached data between different logged-in users.
+      if (this.ownerUserId !== currentUserId) {
+        this.clearSavings();
+        this.ownerUserId = currentUserId;
+      }
+
+      // If there is no authenticated user, keep store empty.
+      if (!currentUserId) {
+        return;
+      }
+
       const targetYear = year ?? defaultYear();
 
       if (!force && this.savingsByYear[targetYear]) {
@@ -45,6 +62,7 @@ export const useUserSavingsStore = defineStore("userSavings", {
           "/api/users/me/savings",
           year !== undefined ? { query: { year } } : {},
         );
+        this.ownerUserId = currentUserId;
         this.savingsByYear[response.year] = response;
         this.lastFetchedYear = response.year;
       } catch (error: any) {
@@ -59,6 +77,7 @@ export const useUserSavingsStore = defineStore("userSavings", {
     },
 
     clearSavings() {
+      this.ownerUserId = null;
       this.savingsByYear = {};
       this.lastFetchedYear = null;
       this.error = null;

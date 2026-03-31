@@ -288,6 +288,7 @@ const {
 } = storeToRefs(userSavingsStore);
 const userStore = useUserStore();
 const isMember = computed(() => userStore.isMember);
+const currentUserId = computed(() => userStore.user?.id ?? null);
 
 const getTransactionAmount = (transaction: CashbookTransaction): number => {
   return transaction.capitalAmount + transaction.shuAmount;
@@ -347,8 +348,18 @@ const fetchUserSavings = () => userSavingsStore.fetchSavings();
 
 onMounted(() => {
   getDashboardData();
-  if (isMember.value) {
-    fetchUserSavings();
-  }
 });
+
+watch(
+  [currentUserId, isMember],
+  async ([userId, member]) => {
+    if (!userId || !member) {
+      userSavingsStore.clearSavings();
+      return;
+    }
+
+    await fetchUserSavings();
+  },
+  { immediate: true },
+);
 </script>
