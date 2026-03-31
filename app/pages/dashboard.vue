@@ -80,16 +80,21 @@
     </div>
 
     <!-- Mandatory savings -->
-    <UCard class="mb-8">
+    <!-- Member Only Section -->
+    <UCard v-if="isMember" class="mb-8">
       <div class="flex flex-col sm:flex-row gap-1 sm:items-end mb-4">
         <h2 class="text-xl font-semibold text-gray-900 dark:text-white">
-          Mandatory saving
+          {{ $t("dashboard.mandatorySaving.title") }}
         </h2>
         <p
           v-if="mandatorySavingsYear !== null"
           class="text-sm text-gray-500 dark:text-gray-400"
         >
-          Year {{ mandatorySavingsYear }}
+          {{
+            $t("dashboard.mandatorySaving.yearLabel", {
+              year: mandatorySavingsYear,
+            })
+          }}
         </p>
       </div>
 
@@ -97,7 +102,7 @@
         v-if="userSavingsLoading || (!userSavingsData && !userSavingsError)"
         class="text-sm text-gray-500 dark:text-gray-400 py-2"
       >
-        Loading…
+        {{ $t("common.loading") }}
       </p>
       <p
         v-else-if="userSavingsError"
@@ -110,13 +115,13 @@
           v-if="mandatoryRecords.length === 0"
           class="text-sm text-gray-500 dark:text-gray-400"
         >
-          No mandatory savings records for this year.
+          {{ $t("common.noDataFound") }}
         </p>
 
         <template v-else>
           <UCard>
             <p class="text-sm text-gray-600 dark:text-gray-300 mb-1">
-              This month
+              {{ $t("dashboard.mandatorySaving.thisMonth") }}
             </p>
             <template v-if="thisMonthMandatoryRecord">
               <p class="text-base font-semibold text-gray-900 dark:text-white">
@@ -134,7 +139,7 @@
               </UBadge>
             </template>
             <p v-else class="text-sm text-gray-500 dark:text-gray-400">
-              No record for the current month in this year’s data.
+              {{ $t("common.noDataFound") }}
             </p>
           </UCard>
 
@@ -176,19 +181,15 @@
           </div>
         </template>
 
-        <!-- <p class="text-sm text-gray-600 dark:text-gray-300">
-          For details, go to
-          <UButton
+        <p class="text-sm text-gray-600 dark:text-gray-300">
+          {{ $t("dashboard.mandatorySaving.detailCtaPrefix") }}
+          <NuxtLink
             to="/savings"
-            color="primary"
-            variant="link"
-            icon="i-heroicons-arrow-right"
-            trailing
-            class="align-baseline"
+            class="text-primary-600 dark:text-primary-400"
           >
-            mandatory saving page
-          </UButton>
-        </p> -->
+            {{ $t("dashboard.mandatorySaving.detailCtaLink") }}
+          </NuxtLink>
+        </p>
       </div>
     </UCard>
 
@@ -253,42 +254,6 @@
         </div>
       </div>
     </UCard>
-
-    <!-- User Savings (Debug) -->
-    <UCard class="mt-8">
-      <div class="flex items-center justify-between gap-4 mb-4">
-        <h2 class="text-xl font-semibold text-gray-900 dark:text-white">
-          User Savings
-        </h2>
-
-        <UButton
-          color="primary"
-          variant="solid"
-          icon="i-heroicons-arrow-path"
-          :loading="userSavingsLoading"
-          @click="fetchUserSavings"
-        >
-          Fetch
-        </UButton>
-      </div>
-
-      <p
-        v-if="userSavingsError"
-        class="text-sm text-red-600 dark:text-red-400 mb-3"
-      >
-        {{ userSavingsError }}
-      </p>
-
-      <pre
-        v-if="userSavingsPretty"
-        class="text-xs overflow-auto max-h-96 bg-gray-50 dark:bg-gray-900/40 border border-gray-200 dark:border-gray-800 rounded-lg p-4"
-        >{{ userSavingsPretty }}</pre
-      >
-
-      <p v-else class="text-sm text-gray-500 dark:text-gray-400">
-        Click “Fetch” to call <code>/api/users/me/savings</code>.
-      </p>
-    </UCard>
   </div>
 </template>
 
@@ -297,6 +262,7 @@ import type { CashbookTransaction } from "~~/types/cashbook";
 import { storeToRefs } from "pinia";
 import { useCashbookStore } from "~/stores/useCashbook";
 import { useUserSavingsStore } from "~/stores/useUserSavings";
+import { useUserStore } from "~/stores/useUser";
 import { formatCurrency, formatDate, formatPeriod } from "~~/utils/formatters";
 import type { UserMeSavingsRecord } from "~~/server/api/users/me/savings.get";
 
@@ -320,6 +286,8 @@ const {
   loading: userSavingsLoading,
   error: userSavingsError,
 } = storeToRefs(userSavingsStore);
+const userStore = useUserStore();
+const isMember = computed(() => userStore.isMember);
 
 const getTransactionAmount = (transaction: CashbookTransaction): number => {
   return transaction.capitalAmount + transaction.shuAmount;
@@ -332,12 +300,6 @@ const getDashboardData = async () => {
     console.error("Error fetching dashboard cashbook data:", err);
   }
 };
-
-const userSavingsPretty = computed(() => {
-  return userSavingsData.value
-    ? JSON.stringify(userSavingsData.value, null, 2)
-    : "";
-});
 
 const mandatoryRecords = computed((): UserMeSavingsRecord[] => {
   return userSavingsData.value?.data ?? [];
@@ -385,6 +347,8 @@ const fetchUserSavings = () => userSavingsStore.fetchSavings();
 
 onMounted(() => {
   getDashboardData();
-  fetchUserSavings();
+  if (isMember.value) {
+    fetchUserSavings();
+  }
 });
 </script>
