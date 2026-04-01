@@ -264,6 +264,7 @@ import { useCashbookStore } from "~/stores/useCashbook";
 import { useUserSavingsStore } from "~/stores/useUserSavings";
 import { useUserStore } from "~/stores/useUser";
 import { formatCurrency, formatDate, formatPeriod } from "~~/utils/formatters";
+import type { NuxtUIColor } from "~~/types/nuxt-ui";
 import type { UserMeSavingsRecord } from "~~/types/savings";
 
 definePageMeta({
@@ -323,25 +324,30 @@ const thisMonthMandatoryRecord = computed((): UserMeSavingsRecord | null => {
 });
 
 const statusCounts = computed(() => {
-  const paid = mandatoryRecords.value.filter((r) => r.status === "paid").length;
-  const due = mandatoryRecords.value.filter((r) => r.status === "due").length;
-  const overdue = mandatoryRecords.value.filter(
-    (r) => r.status === "overdue",
-  ).length;
-  return { paid, due, overdue };
+  return mandatoryRecords.value.reduce(
+    (acc, r) => {
+      if (r.status === "paid") acc.paid += 1;
+      else if (r.status === "due") acc.due += 1;
+      else if (r.status === "overdue") acc.overdue += 1;
+      return acc;
+    },
+    { paid: 0, due: 0, overdue: 0 },
+  );
 });
 
 function formatSavingStatus(status: UserMeSavingsRecord["status"]): string {
   return $t(`savings.statusOptions.${status}`);
 }
 
-function getSavingStatusColor(status: UserMeSavingsRecord["status"]) {
-  const colorMap: Record<UserMeSavingsRecord["status"], any> = {
+function getSavingStatusColor(
+  status: UserMeSavingsRecord["status"],
+): NuxtUIColor {
+  const colorMap: Record<UserMeSavingsRecord["status"], NuxtUIColor> = {
     paid: "success",
     due: "warning",
     overdue: "error",
   };
-  return colorMap[status] || "neutral";
+  return colorMap[status] ?? "neutral";
 }
 
 const fetchUserSavings = () => userSavingsStore.fetchSavings();
