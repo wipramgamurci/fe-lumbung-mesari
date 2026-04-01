@@ -264,7 +264,7 @@ import { useCashbookStore } from "~/stores/useCashbook";
 import { useUserSavingsStore } from "~/stores/useUserSavings";
 import { useUserStore } from "~/stores/useUser";
 import { formatCurrency, formatDate, formatPeriod } from "~~/utils/formatters";
-import type { UserMeSavingsRecord } from "~~/server/api/users/me/savings.get";
+import type { UserMeSavingsRecord } from "~~/types/savings";
 
 definePageMeta({
   layout: "default",

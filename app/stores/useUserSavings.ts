@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import type { UserMeSavingsResponse } from "~~/server/api/users/me/savings.get";
+import type { UserMeSavingsResponse } from "~~/types/savings";
 import { useUserStore } from "~/stores/useUser";
 
 function defaultYear(): number {

@@ -142,7 +142,7 @@ import {
   formatPeriod,
 } from "~~/utils/formatters";
 import { useUserSavingsStore } from "~/stores/useUserSavings";
-import type { UserMeSavingsRecord } from "~~/server/api/users/me/savings.get";
+import type { UserMeSavingsRecord } from "~~/types/savings";
 
 definePageMeta({
   layout: "default",

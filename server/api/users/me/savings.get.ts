@@ -1,19 +1,4 @@
-export interface UserMeSavingsRecord {
-  id: string;
-  userId: string;
-  periodDate: string;
-  amount: string;
-  status: "due" | "paid" | "overdue";
-  paidAt: string | null;
-  createdAt: string;
-  updatedAt: string;
-  processedBy: string | null;
-}
-
-export interface UserMeSavingsResponse {
-  data: UserMeSavingsRecord[];
-  year: number;
-}
+import type { UserMeSavingsResponse } from "~~/types/savings";
 
 export default defineEventHandler(async (event): Promise<UserMeSavingsResponse> => {
   const config = useRuntimeConfig();
