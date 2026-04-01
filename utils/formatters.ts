@@ -84,7 +84,7 @@ export const formatPeriod = (dateString: string): string => {
   const date = new Date(dateString);
   if (isNaN(date.getTime())) return "—";
 
-  return new Intl.DateTimeFormat("en-US", {
+  return new Intl.DateTimeFormat("id-ID", {
     month: "long",
     year: "numeric",
   }).format(date);

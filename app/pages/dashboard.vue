@@ -82,7 +82,7 @@
     <!-- Mandatory savings -->
     <!-- Member Only Section -->
     <UCard v-if="isMember" class="mb-8">
-      <div class="flex flex-col sm:flex-row gap-1 sm:items-end mb-4">
+      <div class="flex flex-col sm:flex-row gap-1 sm:items-baseline mb-4">
         <h2 class="text-xl font-semibold text-gray-900 dark:text-white">
           {{ $t("dashboard.mandatorySaving.title") }}
         </h2>
