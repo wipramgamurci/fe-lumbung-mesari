@@ -1,20 +1,21 @@
 {
   "navigation": {
-    "dashboard": "Dashboard",
-    "loans": "Loans",
-    "loanRequest": "Loan Request",
-    "usersManagement": "Users Management",
     "administratorManagement": "Administrator Management",
     "administratorManagementDesc": "Manage administrators",
-    "memberManagement": "Member Management",
-    "memberManagementDesc": "List and Approve or Reject Member",
-    "loanManagement": "Loan Management",
-    "savingsManagement": "Savings Management",
-    "expenseManagement": "Expense Management",
     "createExpense": "Create Expense",
     "createExpenseDescription": "Create new expense",
+    "dashboard": "Dashboard",
     "expenseList": "Expense List",
     "expenseListDescription": "View expense list",
-    "myLoans": "My Loans"
+    "expenseManagement": "Expense Management",
+    "loanManagement": "Loan Management",
+    "loanRequest": "Loan Request",
+    "loans": "Loans",
+    "memberManagement": "Member Management",
+    "memberManagementDesc": "List and Approve or Reject Member",
+    "myLoans": "My Loans",
+    "mandatorySavings": "Mandatory Savings",
+    "savingsManagement": "Savings Management",
+    "usersManagement": "Users Management"
   }
 }
