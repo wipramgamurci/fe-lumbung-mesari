@@ -2,6 +2,24 @@ import type { User } from "./user";
 
 export type SavingsStatus = "due" | "paid" | "overdue";
 
+/** Current member's mandatory savings row from `/api/users/me/savings` */
+export interface UserMeSavingsRecord {
+  id: string;
+  userId: string;
+  periodDate: string;
+  amount: string;
+  status: SavingsStatus;
+  paidAt: string | null;
+  createdAt: string;
+  updatedAt: string;
+  processedBy: string | null;
+}
+
+export interface UserMeSavingsResponse {
+  data: UserMeSavingsRecord[];
+  year: number;
+}
+
 export interface SavingsUser {
   id: string;
   fullname: string;

@@ -78,13 +78,13 @@ export const formatDateTime = (
 /**
  * Format a date string to month and year only (for periods)
  * @param dateString - ISO date string
- * @returns Formatted period string (e.g., "January 2024")
+ * @returns Formatted period string (e.g., "Januari 2024")
  */
 export const formatPeriod = (dateString: string): string => {
   const date = new Date(dateString);
   if (isNaN(date.getTime())) return "—";
 
-  return new Intl.DateTimeFormat("en-US", {
+  return new Intl.DateTimeFormat("id-ID", {
     month: "long",
     year: "numeric",
   }).format(date);

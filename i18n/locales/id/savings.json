@@ -1,29 +1,33 @@
 {
   "savings": {
-    "statusOptions": {
-      "allStatuses": "Semua Status",
-      "due": "Jatuh Tempo",
-      "paid": "Dibayar",
-      "overdue": "Terlambat"
-    },
-    "selectPeriod": "Pilih Periode",
-    "selectYear": "Pilih Tahun",
-    "username": "Nama Pengguna",
+    "amount": "Jumlah",
     "createdAt": "Tanggal Dibuat",
-    "updatedAt": "Tanggal Diperbarui",
-    "noDataAvailable": "Tidak ada data tersedia. Klik refresh untuk memuat data simpanan.",
+    "downloadReport": "Download Laporan",
+    "downloadReportError": "Gagal mengunduh laporan. Silakan coba lagi.",
+    "downloadReportSuccess": "Laporan berhasil diunduh.",
+    "errorMarkingAsPaid": "Gagal menandai simpanan sebagai dibayar. Silakan coba lagi.",
     "markAsPaid": "Tandai Sebagai Dibayar",
     "markAsPaidDescription": "Apakah Anda yakin untuk menandai simpanan ini sebagai dibayar?",
-    "period": "Periode",
-    "amount": "Jumlah",
-    "status": "Status",
     "memberName": "Nama Anggota",
+    "myMandatorySavings": "Simpanan wajib saya",
+    "myMandatorySavingsDescription": "Daftar simpanan wajib Anda per tahun.",
+    "noDataAvailable": "Tidak ada data tersedia. Klik refresh untuk memuat data simpanan.",
+    "noMandatorySavingsDescription": "Belum ada entri simpanan wajib untuk tahun yang dipilih.",
+    "noMandatorySavingsRecords": "Tidak ada data simpanan untuk tahun ini",
     "paidDate": "Tanggal Dibayar",
+    "period": "Periode",
     "processedBy": "Diproses Oleh",
     "savingsRecordMarkedAsPaidSuccessfully": "Simpanan telah ditandai sebagai dibayar.",
-    "errorMarkingAsPaid": "Gagal menandai simpanan sebagai dibayar. Silakan coba lagi.",
-    "downloadReport": "Download Laporan",
-    "downloadReportSuccess": "Laporan berhasil diunduh.",
-    "downloadReportError": "Gagal mengunduh laporan. Silakan coba lagi."
+    "selectPeriod": "Pilih Periode",
+    "selectYear": "Pilih Tahun",
+    "status": "Status",
+    "statusOptions": {
+      "allStatuses": "Semua Status",
+      "due": "Belum Dibayar",
+      "overdue": "Terlambat",
+      "paid": "Lunas"
+    },
+    "updatedAt": "Tanggal Diperbarui",
+    "username": "Nama Pengguna"
   }
 }

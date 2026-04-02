@@ -40,6 +40,11 @@ export const getMemberNavItems = (
         },
       ],
     },
+    {
+      icon: "i-heroicons-wallet",
+      label: t("navigation.mandatorySavings"),
+      to: "/savings",
+    },
   ];
 };
 
