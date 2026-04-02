@@ -24,9 +24,11 @@
         <template v-else>
           <USkeleton class="h-10 w-10 rounded-md lg:hidden" />
         </template>
-        <span class="font-bold text-lg text-gray-900 dark:text-white">{{
-          $t("app.title")
-        }}</span>
+        <NuxtLink to="/">
+          <span class="font-bold text-lg text-gray-900 dark:text-white">{{
+            $t("app.title")
+          }}</span>
+        </NuxtLink>
       </div>
 
       <div class="hidden lg:block">

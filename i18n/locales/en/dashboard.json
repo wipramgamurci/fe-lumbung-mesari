@@ -1,7 +1,15 @@
 {
   "dashboard": {
-    "totalBalance": "Total Balance",
     "capital": "Capital",
-    "shu": "SHU"
+    "mandatorySaving": {
+      "detailCtaLink": "mandatory saving page",
+      "detailCtaPrefix": "For details, go to",
+      "thisMonth": "This month",
+      "title": "Mandatory saving",
+      "yearLabel": "Year {year}"
+    },
+    "recentTransactions": "Recent Transactions",
+    "shu": "SHU",
+    "totalBalance": "Total Balance"
   }
 }

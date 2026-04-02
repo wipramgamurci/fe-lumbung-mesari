@@ -1,7 +1,15 @@
 {
   "dashboard": {
-    "totalBalance": "Total Saldo",
     "capital": "Modal",
-    "shu": "SHU"
+    "mandatorySaving": {
+      "detailCtaLink": "halaman simpanan wajib",
+      "detailCtaPrefix": "Untuk detail, buka",
+      "thisMonth": "Bulan ini",
+      "title": "Simpanan wajib",
+      "yearLabel": "Tahun {year}"
+    },
+    "recentTransactions": "Transaksi Terbaru",
+    "shu": "SHU",
+    "totalBalance": "Total Kas"
   }
 }
