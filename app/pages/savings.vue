@@ -95,7 +95,7 @@
         </p>
         <p class="text-xs text-gray-500 dark:text-gray-400">
           {{ $t("savings.paidDate") }}:
-          {{ row.paidAt ? formatDate(row.paidAt) : "—" }}
+          {{ formatDate(row.paidAt) }}
         </p>
       </div>
     </UCard>
