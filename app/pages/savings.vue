@@ -52,7 +52,10 @@
   />
 
   <!-- Empty State -->
-  <UCard v-else-if="!displayRecords.length" class="text-center py-20 border-dashed">
+  <UCard
+    v-else-if="!displayRecords.length"
+    class="text-center py-20 border-dashed"
+  >
     <UIcon
       name="i-heroicons-banknotes"
       class="mx-auto h-12 w-12 text-gray-400"
@@ -65,70 +68,35 @@
     </p>
   </UCard>
 
-  <!-- Records list -->
-  <div v-else class="space-y-4">
+  <!-- Records grid -->
+  <div v-else class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
     <UCard v-for="row in displayRecords" :key="row.id">
-      <div class="flex items-start justify-between gap-4">
-        <div class="flex flex-col gap-1 min-w-0">
-          <p class="text-sm text-gray-500 dark:text-gray-400">
+      <div class="space-y-2">
+        <div class="flex items-start justify-between gap-2">
+          <p
+            class="text-xs font-medium text-gray-600 dark:text-gray-300 min-w-0 truncate"
+            :title="formatPeriod(row.periodDate)"
+          >
             {{ formatPeriod(row.periodDate) }}
           </p>
-          <p class="text-2xl font-bold text-gray-900 dark:text-white">
-            {{ formatCurrency(row.amount) }}
-          </p>
-        </div>
-        <UBadge
-          class="capitalize shrink-0"
-          variant="solid"
-          :color="getSavingStatusColor(row.status)"
-        >
-          {{ formatSavingStatus(row.status) }}
-        </UBadge>
-      </div>
-
-      <div
-        class="mt-4 grid grid-cols-2 gap-3 border-t border-gray-100 dark:border-gray-700 pt-4"
-      >
-        <div class="flex flex-col gap-1">
-          <p
-            class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider"
+          <UBadge
+            class="capitalize shrink-0"
+            size="sm"
+            variant="solid"
+            :color="getSavingStatusColor(row.status)"
           >
-            {{ $t("savings.period") }}
-          </p>
-          <p class="text-sm font-semibold text-gray-900 dark:text-white">
-            {{ formatPeriod(row.periodDate) }}
-          </p>
-        </div>
-        <div class="flex flex-col gap-1">
-          <p
-            class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider"
-          >
-            {{ $t("savings.amount") }}
-          </p>
-          <p class="text-sm font-semibold text-gray-900 dark:text-white">
-            {{ formatCurrency(row.amount) }}
-          </p>
-        </div>
-        <div class="flex flex-col gap-1">
-          <p
-            class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider"
-          >
-            {{ $t("savings.paidDate") }}
-          </p>
-          <p class="text-sm font-semibold text-gray-900 dark:text-white">
-            {{ row.paidAt ? formatDate(row.paidAt) : "—" }}
-          </p>
-        </div>
-        <div class="flex flex-col gap-1">
-          <p
-            class="text-xs text-gray-500 dark:text-gray-400 uppercase tracking-wider"
-          >
-            {{ $t("savings.status") }}
-          </p>
-          <p class="text-sm font-semibold text-gray-900 dark:text-white capitalize">
             {{ formatSavingStatus(row.status) }}
-          </p>
+          </UBadge>
         </div>
+        <p
+          class="text-lg font-bold text-gray-900 dark:text-white tabular-nums leading-tight"
+        >
+          {{ formatCurrency(row.amount) }}
+        </p>
+        <p class="text-xs text-gray-500 dark:text-gray-400">
+          {{ $t("savings.paidDate") }}:
+          {{ formatDate(row.paidAt) }}
+        </p>
       </div>
     </UCard>
   </div>
@@ -136,11 +104,7 @@
 
 <script setup lang="ts">
 import { storeToRefs } from "pinia";
-import {
-  formatCurrency,
-  formatDate,
-  formatPeriod,
-} from "~~/utils/formatters";
+import { formatCurrency, formatDate, formatPeriod } from "~~/utils/formatters";
 import { useUserSavingsStore } from "~/stores/useUserSavings";
 import type { UserMeSavingsRecord } from "~~/types/savings";
 
@@ -173,10 +137,7 @@ const displayRecords = computed((): UserMeSavingsRecord[] => {
 });
 
 const showLoading = computed(
-  () =>
-    loading.value &&
-    displayRecords.value.length === 0 &&
-    !error.value,
+  () => loading.value && displayRecords.value.length === 0 && !error.value,
 );
 
 function formatSavingStatus(status: UserMeSavingsRecord["status"]): string {
