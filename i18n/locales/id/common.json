@@ -3,7 +3,6 @@
     "title": "Lumbung Mesari"
   },
   "common": {
-    "delete": "Hapus",
     "actions": "Aksi",
     "approve": "Setujui",
     "back": "Kembali",
@@ -12,6 +11,7 @@
     "close": "Tutup",
     "contactAdministrator": "Hubungi Administrator",
     "dateFormatDescription": "Tanggal dalam format MM-DD-YYYY",
+    "delete": "Hapus",
     "error": {
       "required": "Wajib diisi"
     },
