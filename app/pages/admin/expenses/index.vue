@@ -337,7 +337,7 @@ const categoryOptions = computed(() => [
   { label: t("expenses.allCategories"), value: null },
   ...expensesStore.categories.map((c) => ({
     label: c.name,
-    value: c.id,
+    value: c.code,
   })),
 ]);
 
