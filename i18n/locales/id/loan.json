@@ -55,7 +55,8 @@
     "myLoansDescription": "Daftar semua permohonan dan pinjaman aktif Anda.",
     "applyForLoan": "Ajukan Pinjaman",
     "noLoans": "Belum ada pinjaman",
-    "noLoansDescription": "Mulai dengan mengajukan pinjaman pertama Anda."
+    "noLoansDescription": "Mulai dengan mengajukan pinjaman pertama Anda.",
+    "searchPlaceholder": "Cari berdasarkan nama peminjam..."
   },
   "loanRequest": {
     "error": {
