@@ -29,6 +29,8 @@
     "editExpense": "Edit Expense",
     "editExpenseDescription": "Update expense details",
     "successUpdate": "Expense updated successfully",
-    "failedUpdate": "Failed to update expense: {message}"
+    "failedUpdate": "Failed to update expense: {message}",
+    "deleteExpense": "Delete Expense",
+    "deleteExpenseDescription": "This action cannot be undone."
   }
 }

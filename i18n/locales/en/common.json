@@ -3,6 +3,7 @@
     "title": "Lumbung Mesari"
   },
   "common": {
+    "delete": "Delete",
     "actions": "Actions",
     "approve": "Approve",
     "back": "Back",

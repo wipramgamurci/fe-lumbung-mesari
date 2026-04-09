@@ -29,6 +29,8 @@
     "editExpense": "Edit Pengeluaran",
     "editExpenseDescription": "Perbarui detail pengeluaran",
     "successUpdate": "Pengeluaran berhasil diperbarui",
-    "failedUpdate": "Gagal memperbarui pengeluaran: {message}"
+    "failedUpdate": "Gagal memperbarui pengeluaran: {message}",
+    "deleteExpense": "Hapus Pengeluaran",
+    "deleteExpenseDescription": "Tindakan ini tidak dapat dibatalkan."
   }
 }

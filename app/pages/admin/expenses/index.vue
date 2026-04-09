@@ -187,7 +187,10 @@
 
               <!-- Update Button -->
               <div
-                v-if="userStore.isSuperadministrator || userStore.isAdmin"
+                v-if="
+                  row.original.category?.code !== 'loan_disbursement' &&
+                  (userStore.isSuperadministrator || userStore.isAdmin)
+                "
                 class="col-span-2 flex justify-end"
               >
                 <div class="flex items-center gap-2">
@@ -208,7 +211,7 @@
                     :disabled="deletingExpenseId !== null"
                     @click="openDeleteModal(row.original)"
                   >
-                    Delete
+                    {{ $t("common.delete") }}
                   </UButton>
                 </div>
               </div>
@@ -235,8 +238,8 @@
 
     <UModal
       v-model:open="deleteModalOpen"
-      title="Delete Expense"
-      description="This action cannot be undone."
+      :title="$t('expenses.deleteExpense')"
+      :description="$t('expenses.deleteExpenseDescription')"
     >
       <template #body>
         <div class="space-y-4">
@@ -269,7 +272,7 @@
             :disabled="isDeletingSelectedExpense || !selectedExpenseForDelete"
             @click="confirmDeleteExpense"
           >
-            Delete
+            {{ $t("common.delete") }}
           </UButton>
         </div>
       </template>
