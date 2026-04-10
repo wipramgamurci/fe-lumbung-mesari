@@ -16,6 +16,7 @@
     "expenseName": "Expense Name",
     "expenseNamePlaceholder": "Enter expense name",
     "failedCreate": "Failed to create expense: {message}",
+    "failedDelete": "Failed to delete expense: {message}",
     "failedUpdate": "Failed to update expense: {message}",
     "maxAmount": "Max Amount",
     "minAmount": "Min Amount",
@@ -30,6 +31,7 @@
     "sourcePlaceholder": "Select source of funds",
     "startDate": "Start Date",
     "successCreate": "Expense created successfully",
+    "successDelete": "Expense deleted successfully",
     "successUpdate": "Expense updated successfully",
     "transactionDate": "Transaction Date"
   }

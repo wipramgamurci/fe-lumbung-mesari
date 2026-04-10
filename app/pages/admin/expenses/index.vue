@@ -379,10 +379,10 @@ const confirmDeleteExpense = async () => {
   const id = selectedExpenseForDelete.value.id;
   deletingExpenseId.value = id;
   try {
-    await $fetch(`/api/expenses/${id}` as any, { method: "DELETE" });
+    await $fetch<void>(`/api/expenses/${id}`, { method: "DELETE" });
     toast.add({
       title: "Success",
-      description: "Expense deleted successfully",
+      description: t("expenses.successDelete"),
       color: "success",
     });
     deleteModalOpen.value = false;
@@ -391,8 +391,9 @@ const confirmDeleteExpense = async () => {
   } catch (err: any) {
     toast.add({
       title: "Error",
-      description:
-        err.data?.message || err.message || "Failed to delete expense",
+      description: t("expenses.failedDelete", {
+        message: err.data?.message || err.message,
+      }),
       color: "error",
     });
   } finally {

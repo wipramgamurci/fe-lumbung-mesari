@@ -16,6 +16,7 @@
     "expenseName": "Nama Pengeluaran",
     "expenseNamePlaceholder": "Masukkan nama pengeluaran",
     "failedCreate": "Gagal membuat pengeluaran: {message}",
+    "failedDelete": "Gagal menghapus pengeluaran: {message}",
     "failedUpdate": "Gagal memperbarui pengeluaran: {message}",
     "maxAmount": "Jumlah Maks",
     "minAmount": "Jumlah Min",
@@ -30,6 +31,7 @@
     "sourcePlaceholder": "Pilih sumber dana",
     "startDate": "Tanggal Mulai",
     "successCreate": "Pengeluaran berhasil dibuat",
+    "successDelete": "Pengeluaran berhasil dihapus",
     "successUpdate": "Pengeluaran berhasil diperbarui",
     "transactionDate": "Tanggal Transaksi"
   }
