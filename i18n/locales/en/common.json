@@ -11,6 +11,7 @@
     "close": "Close",
     "contactAdministrator": "Contact Administrator",
     "dateFormatDescription": "Date is in format MM-DD-YYYY",
+    "delete": "Delete",
     "error": {
       "required": "Required"
     },

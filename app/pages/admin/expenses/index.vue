@@ -187,17 +187,33 @@
 
               <!-- Update Button -->
               <div
-                v-if="userStore.isSuperadministrator || userStore.isAdmin"
+                v-if="
+                  row.original.category?.code !== 'loan_disbursement' &&
+                  (userStore.isSuperadministrator || userStore.isAdmin)
+                "
                 class="col-span-2 flex justify-end"
               >
-                <UButton
-                  color="primary"
-                  variant="soft"
-                  icon="i-heroicons-pencil-square"
-                  :to="`/admin/expenses/${row.original.id}`"
-                >
-                  {{ $t("common.update") }}
-                </UButton>
+                <div class="flex items-center gap-2">
+                  <UButton
+                    color="primary"
+                    variant="soft"
+                    icon="i-heroicons-pencil-square"
+                    :to="`/admin/expenses/${row.original.id}`"
+                  >
+                    {{ $t("common.update") }}
+                  </UButton>
+                  <UButton
+                    v-if="userStore.isSuperadministrator"
+                    color="error"
+                    variant="soft"
+                    icon="i-heroicons-trash"
+                    :loading="deletingExpenseId === row.original.id"
+                    :disabled="deletingExpenseId !== null"
+                    @click="openDeleteModal(row.original)"
+                  >
+                    {{ $t("common.delete") }}
+                  </UButton>
+                </div>
               </div>
             </div>
           </div>
@@ -219,6 +235,48 @@
         />
       </template>
     </UCard>
+
+    <UModal
+      v-model:open="deleteModalOpen"
+      :title="$t('expenses.deleteExpense')"
+      :description="$t('expenses.deleteExpenseDescription')"
+    >
+      <template #body>
+        <div class="space-y-4">
+          <div
+            v-if="selectedExpenseForDelete"
+            class="bg-gray-50 dark:bg-gray-800 p-4 rounded-lg"
+          >
+            <p class="font-medium text-gray-900 dark:text-white">
+              {{ selectedExpenseForDelete.name }}
+            </p>
+            <p class="text-sm text-gray-600 dark:text-gray-400">
+              {{ formatCurrency(selectedExpenseForDelete.totalAmount) }}
+            </p>
+          </div>
+        </div>
+      </template>
+      <template #footer>
+        <div class="flex justify-end gap-2">
+          <UButton
+            color="neutral"
+            variant="outline"
+            :disabled="isDeletingSelectedExpense"
+            @click="deleteModalOpen = false"
+          >
+            {{ $t("common.cancel") }}
+          </UButton>
+          <UButton
+            color="error"
+            :loading="isDeletingSelectedExpense"
+            :disabled="isDeletingSelectedExpense || !selectedExpenseForDelete"
+            @click="confirmDeleteExpense"
+          >
+            {{ $t("common.delete") }}
+          </UButton>
+        </div>
+      </template>
+    </UModal>
   </div>
 </template>
 
@@ -243,6 +301,7 @@ definePageMeta({
 });
 
 const { t } = useI18n();
+const toast = useToast();
 const UButton = resolveComponent("UButton");
 const userStore = useUserStore();
 const expensesStore = useExpensesStore();
@@ -264,13 +323,21 @@ const dateRange = shallowRef<{ start: CalendarDate; end: CalendarDate } | null>(
 );
 const minAmount = ref<number | null>(null);
 const maxAmount = ref<number | null>(null);
+const deletingExpenseId = ref<string | null>(null);
+const deleteModalOpen = ref(false);
+const selectedExpenseForDelete = ref<Expense | null>(null);
+const isDeletingSelectedExpense = computed(
+  () =>
+    !!selectedExpenseForDelete.value &&
+    deletingExpenseId.value === selectedExpenseForDelete.value.id,
+);
 
 // Options
 const categoryOptions = computed(() => [
   { label: t("expenses.allCategories"), value: null },
   ...expensesStore.categories.map((c) => ({
     label: c.name,
-    value: c.id,
+    value: c.code,
   })),
 ]);
 
@@ -290,6 +357,48 @@ const handleClearFilter = () => {
 const refreshData = () => {
   page.value === 1 ? fetchExpenses() : (page.value = 1);
   expensesStore.fetchCategories(true); // Force refresh
+};
+
+const openDeleteModal = (expense: Expense) => {
+  if (!userStore.isSuperadministrator || deletingExpenseId.value) {
+    return;
+  }
+  selectedExpenseForDelete.value = expense;
+  deleteModalOpen.value = true;
+};
+
+const confirmDeleteExpense = async () => {
+  if (
+    !userStore.isSuperadministrator ||
+    deletingExpenseId.value ||
+    !selectedExpenseForDelete.value
+  ) {
+    return;
+  }
+
+  const id = selectedExpenseForDelete.value.id;
+  deletingExpenseId.value = id;
+  try {
+    await $fetch<void>(`/api/expenses/${id}`, { method: "DELETE" });
+    toast.add({
+      title: "Success",
+      description: t("expenses.successDelete"),
+      color: "success",
+    });
+    deleteModalOpen.value = false;
+    selectedExpenseForDelete.value = null;
+    await fetchExpenses();
+  } catch (err: any) {
+    toast.add({
+      title: "Error",
+      description: t("expenses.failedDelete", {
+        message: err.data?.message || err.message,
+      }),
+      color: "error",
+    });
+  } finally {
+    deletingExpenseId.value = null;
+  }
 };
 
 // Fetch Categories removed, handled by store
