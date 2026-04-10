@@ -60,6 +60,7 @@
           <UInputNumber
             v-model="form.amount"
             :step="1000"
+            :step-snapping="false"
             :min="0"
             :placeholder="$t('expenses.amountPlaceholder')"
             class="w-full"
@@ -73,11 +74,7 @@
           required
           :error="errors.transactionDate"
         >
-          <UInput
-            v-model="form.transactionDate"
-            type="date"
-            class="w-full"
-          />
+          <UInput v-model="form.transactionDate" type="date" class="w-full" />
         </UFormField>
 
         <!-- Source -->
@@ -126,10 +123,7 @@
 </template>
 
 <script setup lang="ts">
-import type {
-  UpdateExpenseRequest,
-  Expense,
-} from "~~/types/expenses";
+import type { UpdateExpenseRequest, Expense } from "~~/types/expenses";
 import { useExpensesStore } from "~~/app/stores/useExpenses";
 
 definePageMeta({
@@ -208,17 +202,17 @@ const fetchExpense = async () => {
 onMounted(async () => {
   loadingCategories.value = true;
   try {
-     await expensesStore.fetchCategories();
+    await expensesStore.fetchCategories();
   } catch (error) {
-     toast.add({
+    toast.add({
       title: "Error",
       description: "Failed to fetch expense categories",
       color: "error",
     });
   } finally {
-     loadingCategories.value = false;
+    loadingCategories.value = false;
   }
-  
+
   await fetchExpense();
 });
 
@@ -262,14 +256,14 @@ const handleSubmit = async () => {
     // The backend receives UpdateExpenseRequest which has transactionDate: string.
     // In create.vue: transactionDate: new Date(form.value.transactionDate!).toISOString()
     // Let's match that behavior.
-    
+
     // Create payload from form.value
     const payload = { ...form.value };
-    
+
     if (payload.transactionDate) {
-        // Ensure it's a full ISO string if that's what backend expects (usually is for dates)
-        // The input type="date" gives YYYY-MM-DD.
-        payload.transactionDate = new Date(payload.transactionDate).toISOString();
+      // Ensure it's a full ISO string if that's what backend expects (usually is for dates)
+      // The input type="date" gives YYYY-MM-DD.
+      payload.transactionDate = new Date(payload.transactionDate).toISOString();
     }
 
     await $fetch(url, {

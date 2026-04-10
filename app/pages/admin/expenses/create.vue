@@ -53,6 +53,7 @@
           <UInputNumber
             v-model="form.amount"
             :step="1000"
+            :step-snapping="false"
             :min="0"
             :placeholder="$t('expenses.amountPlaceholder')"
             class="w-full"

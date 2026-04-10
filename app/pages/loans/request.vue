@@ -1,194 +1,181 @@
 <template>
-    <h1 class="text-2xl font-bold text-gray-900 dark:text-white mb-8">
-      {{ $t("navigation.loanRequest") }}
-    </h1>
-    <UCard>
-      <!-- <template #header>
+  <h1 class="text-2xl font-bold text-gray-900 dark:text-white mb-8">
+    {{ $t("navigation.loanRequest") }}
+  </h1>
+  <UCard>
+    <!-- <template #header>
         <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
           {{ $t("navigation.loanRequest") }}
         </h1>
       </template> -->
 
-      <div class="flex flex-col lg:flex-row gap-6 lg:gap-12">
-        <!-- Loan Application Form -->
-        <div class="w-full lg:w-1/2">
-          <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4">
-            {{ $t("loanRequest.loanApplication") }}
-          </h2>
+    <div class="flex flex-col lg:flex-row gap-6 lg:gap-12">
+      <!-- Loan Application Form -->
+      <div class="w-full lg:w-1/2">
+        <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4">
+          {{ $t("loanRequest.loanApplication") }}
+        </h2>
 
-          <UForm :state="form" @submit="handleSubmit" class="space-y-4">
-            <UFormField
-              :label="$t('loanRequest.loanAmount')"
-              name="amount"
-              :error="errors.amount"
-              required
+        <UForm :state="form" @submit="handleSubmit" class="space-y-4">
+          <UFormField
+            :label="$t('loanRequest.loanAmount')"
+            name="amount"
+            :error="errors.amount"
+            required
+          >
+            <UInputNumber
+              v-model="form.amount"
+              orientation="vertical"
+              :step="100000"
+              :step-snapping="false"
+              :min="0"
+              placeholder="Enter loan amount"
+              :disabled="isLoadingPeriods || isSubmitting"
+              class="w-full"
+            />
+          </UFormField>
+
+          <UFormField
+            :label="$t('loanRequest.loanPeriod')"
+            name="loanPeriodId"
+            :error="errors.loanPeriodId"
+            required
+          >
+            <USelect
+              v-model="form.loanPeriodId"
+              :items="loanPeriodOptions"
+              :placeholder="$t('loanRequest.loanPeriodPlaceholder')"
+              :disabled="isLoadingPeriods || isSubmitting"
+              :loading="isLoadingPeriods"
+              class="w-full"
+            />
+          </UFormField>
+
+          <UFormField :label="$t('loanRequest.notes')" name="notes">
+            <UTextarea
+              v-model="form.notes"
+              :placeholder="$t('loanRequest.notesPlaceholder')"
+              :disabled="isSubmitting"
+              :rows="3"
+              class="w-full"
+            />
+          </UFormField>
+
+          <UButton
+            :type="calculationResult ? 'submit' : 'button'"
+            :color="calculationResult ? 'primary' : 'neutral'"
+            :variant="calculationResult ? 'solid' : 'outline'"
+            :disabled="isSubmitting || isCalculating || !canCalculate"
+            :loading="isCalculating || isSubmitting"
+            @click="handleButtonClick"
+            block
+          >
+            {{
+              calculationResult
+                ? $t("loanRequest.submit")
+                : $t("loanRequest.calculate")
+            }}
+          </UButton>
+        </UForm>
+      </div>
+
+      <!-- Loan Calculation Results -->
+      <div class="w-full lg:w-1/2">
+        <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4">
+          {{ $t("loanRequest.loanCalculation") }}
+        </h2>
+
+        <div
+          v-if="calculationResult"
+          class="space-y-3 bg-gray-50 dark:bg-gray-800 p-4 rounded-lg"
+        >
+          <div class="flex justify-between">
+            <span class="text-gray-600 dark:text-gray-300"
+              >{{ $t("loan.principalAmount") }}:</span
             >
-              <UInputNumber
-                v-model="form.amount"
-                orientation="vertical"
-                :step="100000"
-                :min="0"
-                placeholder="Enter loan amount"
-                :disabled="isLoadingPeriods || isSubmitting"
-                class="w-full"
-              />
-            </UFormField>
+            <span class="font-semibold text-gray-900 dark:text-white">
+              {{ currencyFormatter.format(calculationResult.principalAmount) }}
+            </span>
+          </div>
 
-            <UFormField
-              :label="$t('loanRequest.loanPeriod')"
-              name="loanPeriodId"
-              :error="errors.loanPeriodId"
-              required
+          <div class="flex justify-between">
+            <span class="text-gray-600 dark:text-gray-300">
+              {{ $t("loan.adminFeeAmount") }}:
+            </span>
+            <span class="font-semibold text-gray-900 dark:text-white">
+              {{ currencyFormatter.format(calculationResult.adminFee) }}
+            </span>
+          </div>
+
+          <div class="flex justify-between border-t pt-2">
+            <span class="text-gray-600 dark:text-gray-300"
+              >{{ $t("loan.disbursedAmount") }}:</span
             >
-              <USelect
-                v-model="form.loanPeriodId"
-                :items="loanPeriodOptions"
-                :placeholder="$t('loanRequest.loanPeriodPlaceholder')"
-                :disabled="isLoadingPeriods || isSubmitting"
-                :loading="isLoadingPeriods"
-                class="w-full"
-              />
-            </UFormField>
+            <span class="font-semibold text-primary-600 dark:text-primary-400">
+              {{ currencyFormatter.format(calculationResult.disbursedAmount) }}
+            </span>
+          </div>
 
-            <UFormField :label="$t('loanRequest.notes')" name="notes">
-              <UTextarea
-                v-model="form.notes"
-                :placeholder="$t('loanRequest.notesPlaceholder')"
-                :disabled="isSubmitting"
-                :rows="3"
-                class="w-full"
-              />
-            </UFormField>
+          <div class="flex justify-between pt-2">
+            <span class="text-gray-600 dark:text-gray-300">
+              {{ $t("loan.tenor") }}:
+            </span>
+            <span class="font-semibold text-gray-900 dark:text-white">
+              {{ calculationResult.tenor }}
+              {{ $t("common.months") }}
+            </span>
+          </div>
 
-            <UButton
-              :type="calculationResult ? 'submit' : 'button'"
-              :color="calculationResult ? 'primary' : 'neutral'"
-              :variant="calculationResult ? 'solid' : 'outline'"
-              :disabled="isSubmitting || isCalculating || !canCalculate"
-              :loading="isCalculating || isSubmitting"
-              @click="handleButtonClick"
-              block
+          <div class="flex justify-between">
+            <span class="text-gray-600 dark:text-gray-300"
+              >{{ $t("loan.interestRate") }}:</span
             >
-              {{
-                calculationResult
-                  ? $t("loanRequest.submit")
-                  : $t("loanRequest.calculate")
-              }}
-            </UButton>
-          </UForm>
-        </div>
+            <span class="font-semibold text-gray-900 dark:text-white">
+              {{ formatPercentage(calculationResult.interestRate) }}
+            </span>
+          </div>
 
-        <!-- Loan Calculation Results -->
-        <div class="w-full lg:w-1/2">
-          <h2 class="text-xl font-bold text-gray-900 dark:text-white mb-4">
-            {{ $t("loanRequest.loanCalculation") }}
-          </h2>
+          <div class="flex justify-between">
+            <span class="text-gray-600 dark:text-gray-300"
+              >{{ $t("loan.interestAmount") }}:</span
+            >
+            <span class="font-semibold text-gray-900 dark:text-white">
+              {{ currencyFormatter.format(calculationResult.monthlyInterest) }}
+            </span>
+          </div>
+
+          <div class="flex justify-between border-t pt-2">
+            <span class="text-gray-600 dark:text-gray-300"
+              >{{ $t("loan.monthlyPayment") }}:</span
+            >
+            <span class="font-semibold text-primary-600 dark:text-primary-400">
+              {{ currencyFormatter.format(calculationResult.monthlyPayment) }}
+            </span>
+          </div>
 
           <div
-            v-if="calculationResult"
-            class="space-y-3 bg-gray-50 dark:bg-gray-800 p-4 rounded-lg"
+            v-if="calculationResult.lastMonthPayment !== undefined"
+            class="flex justify-between"
           >
-            <div class="flex justify-between">
-              <span class="text-gray-600 dark:text-gray-300"
-                >{{ $t("loan.principalAmount") }}:</span
-              >
-              <span class="font-semibold text-gray-900 dark:text-white">
-                {{
-                  currencyFormatter.format(calculationResult.principalAmount)
-                }}
-              </span>
-            </div>
-
-            <div class="flex justify-between">
-              <span class="text-gray-600 dark:text-gray-300">
-                {{ $t("loan.adminFeeAmount") }}:
-              </span>
-              <span class="font-semibold text-gray-900 dark:text-white">
-                {{ currencyFormatter.format(calculationResult.adminFee) }}
-              </span>
-            </div>
-
-            <div class="flex justify-between border-t pt-2">
-              <span class="text-gray-600 dark:text-gray-300"
-                >{{ $t("loan.disbursedAmount") }}:</span
-              >
-              <span
-                class="font-semibold text-primary-600 dark:text-primary-400"
-              >
-                {{
-                  currencyFormatter.format(calculationResult.disbursedAmount)
-                }}
-              </span>
-            </div>
-
-            <div class="flex justify-between pt-2">
-              <span class="text-gray-600 dark:text-gray-300">
-                {{ $t("loan.tenor") }}:
-              </span>
-              <span class="font-semibold text-gray-900 dark:text-white">
-                {{ calculationResult.tenor }}
-                {{ $t("common.months") }}
-              </span>
-            </div>
-
-            <div class="flex justify-between">
-              <span class="text-gray-600 dark:text-gray-300"
-                >{{ $t("loan.interestRate") }}:</span
-              >
-              <span class="font-semibold text-gray-900 dark:text-white">
-                {{ formatPercentage(calculationResult.interestRate) }}
-              </span>
-            </div>
-
-            <div class="flex justify-between">
-              <span class="text-gray-600 dark:text-gray-300"
-                >{{ $t("loan.interestAmount") }}:</span
-              >
-              <span class="font-semibold text-gray-900 dark:text-white">
-                {{
-                  currencyFormatter.format(calculationResult.monthlyInterest)
-                }}
-              </span>
-            </div>
-
-            <div class="flex justify-between border-t pt-2">
-              <span class="text-gray-600 dark:text-gray-300"
-                >{{ $t("loan.monthlyPayment") }}:</span
-              >
-              <span
-                class="font-semibold text-primary-600 dark:text-primary-400"
-              >
-                {{ currencyFormatter.format(calculationResult.monthlyPayment) }}
-              </span>
-            </div>
-
-            <div
-              v-if="calculationResult.lastMonthPayment !== undefined"
-              class="flex justify-between"
+            <span class="text-gray-600 dark:text-gray-300"
+              >{{ $t("loan.lastMonthPayment") }}:</span
             >
-              <span class="text-gray-600 dark:text-gray-300"
-                >{{ $t("loan.lastMonthPayment") }}:</span
-              >
-              <span class="font-semibold text-gray-900 dark:text-white">
-                {{
-                  currencyFormatter.format(calculationResult.lastMonthPayment)
-                }}
-              </span>
-            </div>
-          </div>
-
-          <div v-else class="text-center py-8 text-gray-500 dark:text-gray-400">
-            <p>
-              {{
-                $t(
-                  "loanRequest.enterLoanAmountAndSelectPeriodThenClickCalculate"
-                )
-              }}
-            </p>
+            <span class="font-semibold text-gray-900 dark:text-white">
+              {{ currencyFormatter.format(calculationResult.lastMonthPayment) }}
+            </span>
           </div>
         </div>
+
+        <div v-else class="text-center py-8 text-gray-500 dark:text-gray-400">
+          <p>
+            {{
+              $t("loanRequest.enterLoanAmountAndSelectPeriodThenClickCalculate")
+            }}
+          </p>
+        </div>
       </div>
-    </UCard>
+    </div>
+  </UCard>
 </template>
 
 <script setup lang="ts">
@@ -271,7 +258,7 @@ watch(
         lastCalculatedPeriodId.value = null;
       }
     }
-  }
+  },
 );
 
 // Validate form fields
@@ -348,7 +335,7 @@ const handleCalculate = async () => {
           amount: form.value.amount,
           loanPeriodId: form.value.loanPeriodId,
         },
-      }
+      },
     );
 
     calculationResult.value = response;
