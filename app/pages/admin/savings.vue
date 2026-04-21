@@ -305,7 +305,7 @@ const columns: TableColumn<SavingsRecord>[] = [
   {
     accessorKey: "paidAt",
     header: $t("savings.paidDate"),
-    cell: ({ row }) => formatDate(row.original.paidAt),
+    cell: ({ row }) => formatDateTime(row.original.paidAt),
   },
   {
     accessorKey: "processedByUser",
