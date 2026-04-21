@@ -178,6 +178,7 @@
 import { h, resolveComponent, computed } from "vue";
 import type { TableColumn } from "@nuxt/ui";
 import type { SavingsResponse, SavingsRecord } from "~~/types/savings";
+import { useCashbookStore } from "~/stores/useCashbook";
 import {
   formatCurrency,
   formatDate,
@@ -193,6 +194,7 @@ definePageMeta({
 
 const UBadge = resolveComponent("UBadge");
 const UButton = resolveComponent("UButton");
+const cashbookStore = useCashbookStore();
 
 // State
 const loading = ref(false);
@@ -428,6 +430,7 @@ const confirmMarkAsPaid = async () => {
     // Close modal and refresh data
     settleModalOpen.value = false;
     selectedSavings.value = null;
+    cashbookStore.invalidateDashboardCache();
     await fetchSavings();
   } catch (err: any) {
     console.error("Error settling savings:", err);

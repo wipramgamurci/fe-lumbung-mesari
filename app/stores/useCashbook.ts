@@ -27,6 +27,11 @@ export const useCashbookStore = defineStore("cashbook", {
   },
 
   actions: {
+    invalidateDashboardCache() {
+      this.lastFetchedAt = null;
+      this.isLoaded = false;
+    },
+
     async fetchBalances() {
       this.loadingBalances = true;
       this.errorBalances = null;
@@ -57,7 +62,9 @@ export const useCashbookStore = defineStore("cashbook", {
         this.recentTransactions = response.data;
       } catch (error: any) {
         this.errorTransactions =
-          error.data?.message || error.message || "Failed to fetch transactions";
+          error.data?.message ||
+          error.message ||
+          "Failed to fetch transactions";
         throw error;
       } finally {
         this.loadingTransactions = false;
