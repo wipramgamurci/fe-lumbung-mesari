@@ -125,6 +125,7 @@
 <script setup lang="ts">
 import type { UpdateExpenseRequest, Expense } from "~~/types/expenses";
 import { useExpensesStore } from "~~/app/stores/useExpenses";
+import { useCashbookStore } from "~/stores/useCashbook";
 
 definePageMeta({
   layout: "default",
@@ -137,6 +138,7 @@ const { t } = useI18n();
 const route = useRoute();
 const router = useRouter();
 const expensesStore = useExpensesStore();
+const cashbookStore = useCashbookStore();
 
 // State
 // categories removed, use store
@@ -270,6 +272,8 @@ const handleSubmit = async () => {
       method: "PUT",
       body: payload as UpdateExpenseRequest,
     });
+
+    cashbookStore.invalidateDashboardCache();
 
     toast.add({
       title: "Success",
