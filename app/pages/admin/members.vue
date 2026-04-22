@@ -148,6 +148,7 @@
 import { h, resolveComponent } from "vue";
 import type { TableColumn } from "@nuxt/ui";
 import type { User } from "~~/types/user";
+import { useCashbookStore } from "~/stores/useCashbook";
 
 definePageMeta({
   layout: "default",
@@ -228,6 +229,8 @@ const {
   limit,
 });
 
+const cashbookStore = useCashbookStore();
+
 const handleApprove = (id: string) => {
   const member = members.value.find((m) => m.id === id);
   if (member) {
@@ -253,6 +256,8 @@ const confirmApprove = async () => {
     await $fetch(`/api/users/${selectedMember.value.id}/approve`, {
       method: "POST",
     });
+
+    cashbookStore.invalidateDashboardCache();
 
     // Show success message
     const toast = useToast();
@@ -374,7 +379,7 @@ const columns: TableColumn<User>[] = [
       }[row.getValue("status") as string];
 
       return h(UBadge, { class: "capitalize", variant: "solid", color }, () =>
-        $t(`adminMembers.status.${row.getValue("status")}`)
+        $t(`adminMembers.status.${row.getValue("status")}`),
       );
     },
   },
@@ -391,7 +396,7 @@ const columns: TableColumn<User>[] = [
                 color: "success",
                 onClick: () => handleApprove(row.original.id),
               },
-              () => $t("common.approve")
+              () => $t("common.approve"),
             ),
             h(
               UButton,
@@ -400,7 +405,7 @@ const columns: TableColumn<User>[] = [
                 color: "error",
                 onClick: () => handleReject(row.original.id),
               },
-              () => $t("common.reject")
+              () => $t("common.reject"),
             ),
           ])
         : null,
