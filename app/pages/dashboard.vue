@@ -11,7 +11,7 @@
       <p class="text-sm text-gray-500 dark:text-gray-400">
         {{
           $t("dashboard.lastFetchedAt", {
-            datetime: formatLastFetchedAt(cashbookLastFetchedAt),
+            datetime: formatDateTime(cashbookLastFetchedAt),
           })
         }}
       </p>
@@ -130,7 +130,7 @@
           <p class="text-sm text-gray-500 dark:text-gray-400">
             {{
               $t("dashboard.lastFetchedAt", {
-                datetime: formatLastFetchedAt(mandatorySavingsLastFetchedAt),
+                datetime: formatDateTime(mandatorySavingsLastFetchedAt),
               })
             }}
           </p>
@@ -312,7 +312,12 @@ import { storeToRefs } from "pinia";
 import { useCashbookStore } from "~/stores/useCashbook";
 import { useUserSavingsStore } from "~/stores/useUserSavings";
 import { useUserStore } from "~/stores/useUser";
-import { formatCurrency, formatDate, formatPeriod } from "~~/utils/formatters";
+import {
+  formatCurrency,
+  formatDate,
+  formatDateTime,
+  formatPeriod,
+} from "~~/utils/formatters";
 import type { NuxtUIColor } from "~~/types/nuxt-ui";
 import type { UserMeSavingsRecord } from "~~/types/savings";
 
@@ -424,14 +429,6 @@ const mandatorySavingsLastFetchedAt = computed(() => {
   if (year === null) return null;
   return lastFetchedAtByYear.value[year] ?? null;
 });
-
-const formatLastFetchedAt = (timestamp: number | null): string => {
-  if (!timestamp) return "-";
-  return new Intl.DateTimeFormat(undefined, {
-    dateStyle: "medium",
-    timeStyle: "short",
-  }).format(timestamp);
-};
 
 onMounted(() => {
   getDashboardData();

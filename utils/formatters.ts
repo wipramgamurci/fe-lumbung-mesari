@@ -53,17 +53,17 @@ export const formatDate = (
 
 /**
  * Format a date string to Indonesian date and time format
- * @param dateString - ISO date string
+ * @param dateInput - Date input (ISO string, timestamp, or Date)
  * @param fallback - Optional fallback text if dateString is null/undefined
  * @returns Formatted date and time string (e.g., "1 Januari 2024, 10:30")
  */
 export const formatDateTime = (
-  dateString: string | null | undefined,
+  dateInput: string | number | Date | null | undefined,
   fallback: string = "—",
 ): string => {
-  if (!dateString) return fallback;
+  if (dateInput === null || dateInput === undefined) return fallback;
 
-  const date = new Date(dateString);
+  const date = new Date(dateInput);
   if (isNaN(date.getTime())) return fallback;
 
   return date.toLocaleString("id-ID", {
