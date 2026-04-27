@@ -1,6 +1,7 @@
 {
   "dashboard": {
     "capital": "Capital",
+    "lastFetchedAt": "Last fetched at: {datetime}",
     "mandatorySaving": {
       "detailCtaLink": "mandatory saving page",
       "detailCtaPrefix": "For details, go to",

@@ -9,7 +9,11 @@
       class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-4"
     >
       <p class="text-sm text-gray-500 dark:text-gray-400">
-        Last fetched at: {{ formatLastFetchedAt(cashbookLastFetchedAt) }}
+        {{
+          $t("dashboard.lastFetchedAt", {
+            datetime: formatLastFetchedAt(cashbookLastFetchedAt),
+          })
+        }}
       </p>
       <UButton
         color="neutral"
@@ -124,8 +128,11 @@
           class="flex flex-col sm:flex-row items-start sm:items-center gap-3"
         >
           <p class="text-sm text-gray-500 dark:text-gray-400">
-            Last fetched at:
-            {{ formatLastFetchedAt(mandatorySavingsLastFetchedAt) }}
+            {{
+              $t("dashboard.lastFetchedAt", {
+                datetime: formatLastFetchedAt(mandatorySavingsLastFetchedAt),
+              })
+            }}
           </p>
           <UButton
             color="neutral"

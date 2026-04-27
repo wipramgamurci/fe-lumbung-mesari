@@ -1,6 +1,7 @@
 {
   "dashboard": {
     "capital": "Modal",
+    "lastFetchedAt": "Terakhir diperbarui: {datetime}",
     "mandatorySaving": {
       "detailCtaLink": "halaman simpanan wajib",
       "detailCtaPrefix": "Untuk detail, buka",
