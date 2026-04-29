@@ -624,6 +624,7 @@ import {
   formatDate,
   formatPercentage,
 } from "~~/utils/formatters";
+import { useCashbookStore } from "~/stores/useCashbook";
 
 definePageMeta({
   layout: "default",
@@ -646,6 +647,8 @@ const {
   error: installmentsError,
   refresh: refreshInstallments,
 } = await useFetch<Installment[]>(`/api/loans/${id}/installments`);
+
+const cashbookStore = useCashbookStore();
 
 const formatStatus = (status: LoanStatus) => {
   return $t(`loan.statusOptions.${status}`);
@@ -752,6 +755,7 @@ const handleLoanAction = async (
     await refreshLoan();
     if (action === "disburse") {
       await refreshInstallments();
+      cashbookStore.invalidateDashboardCache();
     }
   } catch (err: any) {
     console.error(`Error ${action}ing loan:`, err);
@@ -814,6 +818,7 @@ const confirmSettleInstallment = async () => {
     selectedInstallment.value = null;
     await refreshInstallments();
     await refreshLoan();
+    cashbookStore.invalidateDashboardCache();
   } catch (err: any) {
     toast.add({
       title: $t("common.errorLoadingData"),

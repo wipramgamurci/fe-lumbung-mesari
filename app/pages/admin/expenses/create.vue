@@ -141,6 +141,7 @@
 import { CalendarDate } from "@internationalized/date";
 import type { CreateExpenseRequest } from "~~/types/expenses";
 import { useExpensesStore } from "~~/app/stores/useExpenses";
+import { useCashbookStore } from "~/stores/useCashbook";
 import { formatCalendarDateToQuery } from "~~/utils/formatters";
 
 definePageMeta({
@@ -153,6 +154,7 @@ const toast = useToast();
 const { t } = useI18n();
 const router = useRouter();
 const expensesStore = useExpensesStore();
+const cashbookStore = useCashbookStore();
 
 // State
 // categories removed, use store
@@ -254,6 +256,8 @@ const handleSubmit = async () => {
           : undefined,
       } as CreateExpenseRequest,
     });
+
+    cashbookStore.invalidateDashboardCache();
 
     toast.add({
       title: "Success",

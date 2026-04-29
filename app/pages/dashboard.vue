@@ -4,6 +4,30 @@
       {{ $t("navigation.dashboard") }}
     </h1>
 
+    <!-- Cashbook Header -->
+    <div
+      class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-4"
+    >
+      <p class="text-sm text-gray-500 dark:text-gray-400">
+        {{
+          $t("dashboard.lastFetchedAt", {
+            datetime: formatDateTime(cashbookLastFetchedAt),
+          })
+        }}
+      </p>
+      <UButton
+        color="neutral"
+        variant="outline"
+        size="sm"
+        class="w-fit"
+        icon="i-heroicons-arrow-path"
+        :loading="loading || transactionsLoading"
+        @click="refreshCashbookData"
+      >
+        {{ $t("common.refresh") }}
+      </UButton>
+    </div>
+
     <!-- Balance Summary -->
     <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
       <UCard>
@@ -82,20 +106,45 @@
     <!-- Mandatory savings -->
     <!-- Member Only Section -->
     <UCard v-if="isMember" class="mb-8">
-      <div class="flex flex-col sm:flex-row gap-1 sm:items-baseline mb-4">
-        <h2 class="text-xl font-semibold text-gray-900 dark:text-white">
-          {{ $t("dashboard.mandatorySaving.title") }}
-        </h2>
-        <p
-          v-if="mandatorySavingsYear !== null"
-          class="text-sm text-gray-500 dark:text-gray-400"
+      <div
+        class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-4"
+      >
+        <div class="flex flex-col sm:flex-row gap-1 sm:items-baseline">
+          <h2 class="text-xl font-semibold text-gray-900 dark:text-white">
+            {{ $t("dashboard.mandatorySaving.title") }}
+          </h2>
+          <p
+            v-if="mandatorySavingsYear !== null"
+            class="text-sm text-gray-500 dark:text-gray-400"
+          >
+            {{
+              $t("dashboard.mandatorySaving.yearLabel", {
+                year: mandatorySavingsYear,
+              })
+            }}
+          </p>
+        </div>
+        <div
+          class="flex flex-col sm:flex-row items-start sm:items-center gap-3"
         >
-          {{
-            $t("dashboard.mandatorySaving.yearLabel", {
-              year: mandatorySavingsYear,
-            })
-          }}
-        </p>
+          <p class="text-sm text-gray-500 dark:text-gray-400">
+            {{
+              $t("dashboard.lastFetchedAt", {
+                datetime: formatDateTime(mandatorySavingsLastFetchedAt),
+              })
+            }}
+          </p>
+          <UButton
+            color="neutral"
+            variant="outline"
+            size="sm"
+            icon="i-heroicons-arrow-path"
+            :loading="userSavingsLoading"
+            @click="refreshMandatorySavings"
+          >
+            {{ $t("common.refresh") }}
+          </UButton>
+        </div>
       </div>
 
       <p
@@ -263,7 +312,12 @@ import { storeToRefs } from "pinia";
 import { useCashbookStore } from "~/stores/useCashbook";
 import { useUserSavingsStore } from "~/stores/useUserSavings";
 import { useUserStore } from "~/stores/useUser";
-import { formatCurrency, formatDate, formatPeriod } from "~~/utils/formatters";
+import {
+  formatCurrency,
+  formatDate,
+  formatDateTime,
+  formatPeriod,
+} from "~~/utils/formatters";
 import type { NuxtUIColor } from "~~/types/nuxt-ui";
 import type { UserMeSavingsRecord } from "~~/types/savings";
 
@@ -279,6 +333,7 @@ const {
   recentTransactions,
   loadingTransactions: transactionsLoading,
   errorTransactions: transactionsError,
+  lastFetchedAt: cashbookLastFetchedAt,
 } = storeToRefs(cashbookStore);
 
 const userSavingsStore = useUserSavingsStore();
@@ -286,6 +341,7 @@ const {
   savings: userSavingsData,
   loading: userSavingsLoading,
   error: userSavingsError,
+  lastFetchedAtByYear,
 } = storeToRefs(userSavingsStore);
 const userStore = useUserStore();
 const isMember = computed(() => userStore.isMember);
@@ -351,6 +407,28 @@ function getSavingStatusColor(
 }
 
 const fetchUserSavings = () => userSavingsStore.fetchSavings();
+
+const refreshCashbookData = async () => {
+  try {
+    await cashbookStore.fetchDashboardData(true);
+  } catch (err) {
+    console.error("Error refreshing dashboard cashbook data:", err);
+  }
+};
+
+const refreshMandatorySavings = async () => {
+  try {
+    await userSavingsStore.fetchSavings(undefined, true);
+  } catch (err) {
+    console.error("Error refreshing mandatory savings data:", err);
+  }
+};
+
+const mandatorySavingsLastFetchedAt = computed(() => {
+  const year = mandatorySavingsYear.value;
+  if (year === null) return null;
+  return lastFetchedAtByYear.value[year] ?? null;
+});
 
 onMounted(() => {
   getDashboardData();

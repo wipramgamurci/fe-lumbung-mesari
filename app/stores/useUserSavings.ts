@@ -12,6 +12,8 @@ export const useUserSavingsStore = defineStore("userSavings", {
     ownerUserId: null as string | null,
     /** Cached responses keyed by `response.year` from the API */
     savingsByYear: {} as Record<number, UserMeSavingsResponse>,
+    /** Last successful fetch timestamp keyed by response year */
+    lastFetchedAtByYear: {} as Record<number, number>,
     /** Year of the payload exposed as `savings` (last successful fetch or cache hit) */
     lastFetchedYear: null as number | null,
     loading: false,
@@ -64,6 +66,7 @@ export const useUserSavingsStore = defineStore("userSavings", {
         );
         this.ownerUserId = currentUserId;
         this.savingsByYear[response.year] = response;
+        this.lastFetchedAtByYear[response.year] = Date.now();
         this.lastFetchedYear = response.year;
       } catch (error: any) {
         this.error =
@@ -79,12 +82,14 @@ export const useUserSavingsStore = defineStore("userSavings", {
     clearSavings() {
       this.ownerUserId = null;
       this.savingsByYear = {};
+      this.lastFetchedAtByYear = {};
       this.lastFetchedYear = null;
       this.error = null;
     },
 
     clearSavingsYear(year: number) {
       delete this.savingsByYear[year];
+      delete this.lastFetchedAtByYear[year];
       if (this.lastFetchedYear === year) {
         this.lastFetchedYear = null;
       }

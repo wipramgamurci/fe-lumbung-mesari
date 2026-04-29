@@ -293,6 +293,7 @@ import {
 } from "~~/utils/formatters";
 import { useUserStore } from "~~/app/stores/useUser";
 import { useExpensesStore } from "~~/app/stores/useExpenses";
+import { useCashbookStore } from "~/stores/useCashbook";
 
 definePageMeta({
   layout: "default",
@@ -305,6 +306,7 @@ const toast = useToast();
 const UButton = resolveComponent("UButton");
 const userStore = useUserStore();
 const expensesStore = useExpensesStore();
+const cashbookStore = useCashbookStore();
 
 const inputDate = useTemplateRef("inputDate");
 
@@ -380,6 +382,7 @@ const confirmDeleteExpense = async () => {
   deletingExpenseId.value = id;
   try {
     await $fetch<void>(`/api/expenses/${id}`, { method: "DELETE" });
+    cashbookStore.invalidateDashboardCache();
     toast.add({
       title: "Success",
       description: t("expenses.successDelete"),
