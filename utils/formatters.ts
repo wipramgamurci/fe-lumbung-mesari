@@ -52,9 +52,9 @@ export const formatDate = (
 };
 
 /**
- * Format a date string to Indonesian date and time format
+ * Format a date input to Indonesian date and time format
  * @param dateInput - Date input (ISO string, timestamp, or Date)
- * @param fallback - Optional fallback text if dateString is null/undefined
+ * @param fallback - Optional fallback text if dateInput is null, undefined, or invalid
  * @returns Formatted date and time string (e.g., "1 Januari 2024, 10:30")
  */
 export const formatDateTime = (
