@@ -33,6 +33,16 @@
         >
           {{ $t("common.refresh") }}
         </UButton>
+
+        <UButton
+          color="primary"
+          variant="solid"
+          icon="i-heroicons-arrow-down-tray"
+          @click="isReportModalOpen = true"
+          :loading="isDownloadingReport"
+        >
+          Download Report
+        </UButton>
       </div>
     </UCard>
 
@@ -68,6 +78,50 @@
         />
       </template>
     </UCard>
+
+    <UModal
+      v-model:open="isReportModalOpen"
+      title="Download Monthly Loans Report"
+      description="Select month and year for the report period."
+    >
+      <template #body>
+        <div class="space-y-4">
+          <USelectMenu
+            v-model="selectedReportMonth"
+            :items="monthOptions"
+            value-key="value"
+            placeholder="Select month"
+          />
+          <USelectMenu
+            v-model="selectedReportYear"
+            :items="yearOptions"
+            value-key="value"
+            placeholder="Select year"
+          />
+        </div>
+      </template>
+
+      <template #footer>
+        <div class="flex justify-end gap-2">
+          <UButton
+            color="neutral"
+            variant="outline"
+            :disabled="isDownloadingReport"
+            @click="isReportModalOpen = false"
+          >
+            {{ $t("common.cancel") }}
+          </UButton>
+          <UButton
+            color="primary"
+            :loading="isDownloadingReport"
+            :disabled="!selectedReportMonth || !selectedReportYear"
+            @click="downloadMonthlyLoansReport"
+          >
+            Download
+          </UButton>
+        </div>
+      </template>
+    </UModal>
   </div>
 </template>
 
@@ -93,6 +147,35 @@ const page = ref(1);
 const limit = ref(10);
 const searchQuery = ref("");
 const selectedStatus = ref<string | null>(null);
+const isReportModalOpen = ref(false);
+const isDownloadingReport = ref(false);
+
+const monthOptions = [
+  { label: $t("common.monthNames.january"), value: 1 },
+  { label: $t("common.monthNames.february"), value: 2 },
+  { label: $t("common.monthNames.march"), value: 3 },
+  { label: $t("common.monthNames.april"), value: 4 },
+  { label: $t("common.monthNames.may"), value: 5 },
+  { label: $t("common.monthNames.june"), value: 6 },
+  { label: $t("common.monthNames.july"), value: 7 },
+  { label: $t("common.monthNames.august"), value: 8 },
+  { label: $t("common.monthNames.september"), value: 9 },
+  { label: $t("common.monthNames.october"), value: 10 },
+  { label: $t("common.monthNames.november"), value: 11 },
+  { label: $t("common.monthNames.december"), value: 12 },
+];
+
+const config = useRuntimeConfig();
+const currentYear = new Date().getFullYear();
+const startYear = config.public.startYear as number;
+const yearsCount = Math.max(1, currentYear - startYear + 1);
+const yearOptions = Array.from({ length: yearsCount }, (_, i) => ({
+  label: String(currentYear - i),
+  value: currentYear - i,
+}));
+
+const selectedReportMonth = ref<number>(new Date().getMonth() + 1);
+const selectedReportYear = ref<number>(currentYear);
 
 // Status options
 const statusOptions = [
@@ -115,6 +198,66 @@ const handleStatusChange = () => {
 
 const refreshData = () => {
   page.value === 1 ? fetchLoans() : (page.value = 1);
+};
+
+const downloadMonthlyLoansReport = async () => {
+  if (!selectedReportMonth.value || !selectedReportYear.value) return;
+
+  isDownloadingReport.value = true;
+  try {
+    const response = await $fetch<Blob>("/api/reports/monthly-loans", {
+      query: {
+        month: selectedReportMonth.value,
+        year: selectedReportYear.value,
+      },
+      responseType: "blob",
+    });
+
+    const url = window.URL.createObjectURL(response);
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute(
+      "download",
+      `pinjaman-bulanan-${selectedReportYear.value}-${String(
+        selectedReportMonth.value,
+      ).padStart(2, "0")}.xlsx`,
+    );
+
+    try {
+      document.body.appendChild(link);
+      link.click();
+      isReportModalOpen.value = false;
+    } finally {
+      if (document.body.contains(link)) {
+        document.body.removeChild(link);
+      }
+      window.URL.revokeObjectURL(url);
+    }
+  } catch (err: any) {
+    console.error("Error downloading monthly loans report:", err);
+    let errorMessage = err.message || "Failed to download report";
+
+    if (err.data instanceof Blob) {
+      try {
+        const text = await err.data.text();
+        const errorJson = JSON.parse(text);
+        errorMessage = errorJson.message || errorMessage;
+      } catch {
+        // Fallback if parsing fails
+      }
+    } else if (err.data?.message) {
+      errorMessage = err.data.message;
+    }
+
+    const toast = useToast();
+    toast.add({
+      title: "Error",
+      description: errorMessage,
+      color: "error",
+    });
+  } finally {
+    isDownloadingReport.value = false;
+  }
 };
 
 // Watch page changes
