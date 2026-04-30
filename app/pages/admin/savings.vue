@@ -181,10 +181,10 @@ import type { SavingsResponse, SavingsRecord } from "~~/types/savings";
 import { useCashbookStore } from "~/stores/useCashbook";
 import {
   formatCurrency,
-  formatDate,
   formatDateTime,
   formatPeriod,
 } from "~~/utils/formatters";
+import { downloadBlobReport } from "~~/utils/downloadBlob";
 
 definePageMeta({
   layout: "default",
@@ -451,47 +451,18 @@ const downloadReport = async () => {
 
   isDownloading.value = true;
   try {
-    const response = await $fetch<Blob>("/api/reports/mandatory-savings", {
-      query: {
-        year: selectedYear.value,
-      },
-      responseType: "blob",
+    await downloadBlobReport("/api/reports/mandatory-savings", {
+      query: { year: selectedYear.value },
+      fileName: `simpanan-wajib-${selectedYear.value}.xlsx`,
+      fallbackErrorMessage: $t("common.downloadReportError"),
     });
-
-    const url = window.URL.createObjectURL(response);
-    const link = document.createElement("a");
-    link.href = url;
-    link.setAttribute("download", `simpanan-wajib-${selectedYear.value}.xlsx`);
-
-    try {
-      document.body.appendChild(link);
-      link.click();
-    } finally {
-      if (document.body.contains(link)) {
-        document.body.removeChild(link);
-      }
-      window.URL.revokeObjectURL(url);
-    }
-  } catch (err: any) {
+  } catch (err: unknown) {
     console.error("Error downloading report:", err);
-    let errorMessage = err.message || $t("common.downloadReportError");
-
-    if (err.data instanceof Blob) {
-      try {
-        const text = await err.data.text();
-        const errorJson = JSON.parse(text);
-        errorMessage = errorJson.message || errorMessage;
-      } catch (e) {
-        // Fallback if parsing fails
-      }
-    } else if (err.data?.message) {
-      errorMessage = err.data.message;
-    }
-
     const toast = useToast();
     toast.add({
-      title: "Error",
-      description: errorMessage,
+      title: $t("common.error.title"),
+      description:
+        err instanceof Error ? err.message : $t("common.downloadReportError"),
       color: "error",
     });
   } finally {

@@ -132,6 +132,7 @@ import { h, resolveComponent } from "vue";
 import type { TableColumn } from "@nuxt/ui";
 import type { LoanListItem, LoansResponse } from "~~/types/loan";
 import { formatCurrency, formatDate } from "~~/utils/formatters";
+import { downloadBlobReport } from "~~/utils/downloadBlob";
 
 definePageMeta({
   layout: "default",
@@ -207,54 +208,26 @@ const downloadMonthlyLoansReport = async () => {
 
   isDownloadingReport.value = true;
   try {
-    const response = await $fetch<Blob>("/api/reports/monthly-loans", {
+    await downloadBlobReport("/api/reports/monthly-loans", {
       query: {
         month: selectedReportMonth.value,
         year: selectedReportYear.value,
       },
-      responseType: "blob",
-    });
-
-    const url = window.URL.createObjectURL(response);
-    const link = document.createElement("a");
-    link.href = url;
-    link.setAttribute(
-      "download",
-      `pinjaman-bulanan-${selectedReportYear.value}-${String(
+      fileName: `pinjaman-bulanan-${selectedReportYear.value}-${String(
         selectedReportMonth.value,
       ).padStart(2, "0")}.xlsx`,
-    );
-
-    try {
-      document.body.appendChild(link);
-      link.click();
-      isReportModalOpen.value = false;
-    } finally {
-      if (document.body.contains(link)) {
-        document.body.removeChild(link);
-      }
-      window.URL.revokeObjectURL(url);
-    }
-  } catch (err: any) {
+      fallbackErrorMessage: $t("common.downloadReportError"),
+      onSuccess: () => {
+        isReportModalOpen.value = false;
+      },
+    });
+  } catch (err: unknown) {
     console.error("Error downloading monthly loans report:", err);
-    let errorMessage = err.message || $t("common.downloadReportError");
-
-    if (err.data instanceof Blob) {
-      try {
-        const text = await err.data.text();
-        const errorJson = JSON.parse(text);
-        errorMessage = errorJson.message || errorMessage;
-      } catch {
-        // Fallback if parsing fails
-      }
-    } else if (err.data?.message) {
-      errorMessage = err.data.message;
-    }
-
     const toast = useToast();
     toast.add({
       title: $t("common.error.title"),
-      description: errorMessage,
+      description:
+        err instanceof Error ? err.message : $t("common.downloadReportError"),
       color: "error",
     });
   } finally {
