@@ -12,8 +12,12 @@
     "contactAdministrator": "Contact Administrator",
     "dateFormatDescription": "Date is in format MM-DD-YYYY",
     "delete": "Delete",
+    "downloadReport": "Download Report",
+    "downloadReportError": "Failed to download report. Please try again.",
+    "downloadReportSuccess": "Report downloaded successfully.",
     "error": {
-      "required": "Required"
+      "required": "Required",
+      "title": "Error"
     },
     "errorLoadingData": "An error occurred while loading data.",
     "filter": "Filter",

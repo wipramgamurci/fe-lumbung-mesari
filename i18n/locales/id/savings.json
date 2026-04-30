@@ -2,9 +2,6 @@
   "savings": {
     "amount": "Jumlah",
     "createdAt": "Tanggal Dibuat",
-    "downloadReport": "Download Laporan",
-    "downloadReportError": "Gagal mengunduh laporan. Silakan coba lagi.",
-    "downloadReportSuccess": "Laporan berhasil diunduh.",
     "errorMarkingAsPaid": "Gagal menandai simpanan sebagai dibayar. Silakan coba lagi.",
     "markAsPaid": "Tandai Sebagai Dibayar",
     "markAsPaidDescription": "Apakah Anda yakin untuk menandai simpanan ini sebagai dibayar?",
