@@ -19,7 +19,7 @@
           v-model="selectedStatus"
           :items="statusOptions"
           value-key="value"
-          placeholder="Filter by Status"
+          :placeholder="$t('loan.filterByStatus')"
           class="w-48"
           @update:model-value="handleStatusChange"
         />
@@ -41,7 +41,7 @@
           @click="isReportModalOpen = true"
           :loading="isDownloadingReport"
         >
-          Download Report
+          {{ $t("common.downloadReport") }}
         </UButton>
       </div>
     </UCard>
@@ -81,22 +81,24 @@
 
     <UModal
       v-model:open="isReportModalOpen"
-      title="Download Monthly Loans Report"
-      description="Select month and year for the report period."
+      :title="$t('loan.monthlyReportModalTitle')"
+      :description="$t('loan.monthlyReportModalDescription')"
     >
       <template #body>
-        <div class="space-y-4">
-          <USelectMenu
+        <div class="flex gap-2">
+          <USelect
             v-model="selectedReportMonth"
             :items="monthOptions"
             value-key="value"
-            placeholder="Select month"
+            :placeholder="$t('loan.selectMonth')"
+            class="w-32"
           />
-          <USelectMenu
+          <USelect
             v-model="selectedReportYear"
             :items="yearOptions"
             value-key="value"
-            placeholder="Select year"
+            :placeholder="$t('loan.selectYear')"
+            class="w-24"
           />
         </div>
       </template>
@@ -117,7 +119,7 @@
             :disabled="!selectedReportMonth || !selectedReportYear"
             @click="downloadMonthlyLoansReport"
           >
-            Download
+            {{ $t("common.downloadReport") }}
           </UButton>
         </div>
       </template>
@@ -235,7 +237,7 @@ const downloadMonthlyLoansReport = async () => {
     }
   } catch (err: any) {
     console.error("Error downloading monthly loans report:", err);
-    let errorMessage = err.message || "Failed to download report";
+    let errorMessage = err.message || $t("common.downloadReportError");
 
     if (err.data instanceof Blob) {
       try {
@@ -251,7 +253,7 @@ const downloadMonthlyLoansReport = async () => {
 
     const toast = useToast();
     toast.add({
-      title: "Error",
+      title: $t("common.error.title"),
       description: errorMessage,
       color: "error",
     });
@@ -294,7 +296,7 @@ const fetchLoans = async () => {
   } catch (err: any) {
     console.error("Error fetching loans:", err);
     error.value =
-      err.data?.message || err.message || "Failed to fetch loans data";
+      err.data?.message || err.message || $t("loan.failedToFetchLoans");
     loansData.value = null;
   } finally {
     loading.value = false;

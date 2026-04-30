@@ -2,9 +2,6 @@
   "savings": {
     "amount": "Amount",
     "createdAt": "Created At",
-    "downloadReport": "Download Report",
-    "downloadReportError": "Failed to download report. Please try again.",
-    "downloadReportSuccess": "Report downloaded successfully.",
     "errorMarkingAsPaid": "Failed to mark savings as paid. Please try again.",
     "markAsPaid": "Mark as Paid",
     "markAsPaidDescription": "Are you sure you want to mark this savings as paid?",

@@ -43,7 +43,7 @@
           :loading="isDownloading"
           :disabled="!selectedYear"
         >
-          {{ $t("savings.downloadReport") }}
+          {{ $t("common.downloadReport") }}
         </UButton>
       </div>
     </UCard>
@@ -474,7 +474,7 @@ const downloadReport = async () => {
     }
   } catch (err: any) {
     console.error("Error downloading report:", err);
-    let errorMessage = err.message || $t("savings.downloadReportError");
+    let errorMessage = err.message || $t("common.downloadReportError");
 
     if (err.data instanceof Blob) {
       try {
