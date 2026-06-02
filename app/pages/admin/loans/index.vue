@@ -133,6 +133,7 @@ import type { TableColumn } from "@nuxt/ui";
 import type { LoanListItem, LoansResponse } from "~~/types/loan";
 import { formatCurrency, formatDate } from "~~/utils/formatters";
 import { downloadBlobReport } from "~~/utils/downloadBlob";
+import { useUserStore } from "~~/app/stores/useUser";
 
 definePageMeta({
   layout: "default",
@@ -142,6 +143,9 @@ definePageMeta({
 
 const UBadge = resolveComponent("UBadge");
 const UButton = resolveComponent("UButton");
+
+const userStore = useUserStore();
+const isSuperAdmin = computed(() => userStore.isSuperadministrator);
 
 const loading = ref(false);
 const error = ref<string | null>(null);
@@ -327,18 +331,20 @@ const columns: TableColumn<LoanListItem>[] = [
       },
     },
     cell: ({ row }) =>
-      h(
-        UButton,
-        {
-          color: "primary",
-          variant: "outline",
-          size: "xs",
-          icon: "i-heroicons-arrow-right",
-          trailing: true,
-          to: `/admin/loans/${row.original.id}`,
-        },
-        () => $t("common.viewDetail"),
-      ),
+      isSuperAdmin.value
+        ? h(
+            UButton,
+            {
+              color: "primary",
+              variant: "outline",
+              size: "xs",
+              icon: "i-heroicons-arrow-right",
+              trailing: true,
+              to: `/admin/loans/${row.original.id}`,
+            },
+            () => $t("common.viewDetail"),
+          )
+        : null,
   },
 ];
 
