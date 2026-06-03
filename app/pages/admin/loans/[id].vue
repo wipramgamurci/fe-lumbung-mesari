@@ -212,7 +212,10 @@
 
         <!-- Admin actions -->
         <div
-          v-if="loan.status === 'pending' || loan.status === 'approved'"
+          v-if="
+            isSuperadministrator &&
+            (loan.status === 'pending' || loan.status === 'approved')
+          "
           class="mt-6 pt-4 border-t border-gray-100 dark:border-gray-700 flex flex-wrap gap-2"
         >
           <UButton
@@ -625,6 +628,7 @@ import {
   formatPercentage,
 } from "~~/utils/formatters";
 import { useCashbookStore } from "~/stores/useCashbook";
+import { useUserStore } from "~/stores/useUser";
 
 definePageMeta({
   layout: "default",
@@ -634,6 +638,9 @@ definePageMeta({
 
 const route = useRoute();
 const id = route.params.id as string;
+
+const userStore = useUserStore();
+const isSuperadministrator = computed(() => userStore.isSuperadministrator);
 
 const {
   data: loan,
