@@ -63,16 +63,23 @@ export default defineEventHandler(async (event): Promise<User> => {
   }
 
   try {
-    return await $fetch<User>(`${config.public.apiBaseUrl}/api/users/me`, {
-      method: "PATCH",
-      body: payload,
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${accessToken}`,
+    const response = await $fetch<User>(
+      `${config.public.apiBaseUrl}/api/users/me`,
+      {
+        method: "PATCH",
+        body: payload,
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${accessToken}`,
+        },
       },
-    });
+    );
+
+    setResponseStatus(event, 200);
+    return response;
   } catch (error: any) {
     if (error.statusCode) {
+      setResponseStatus(event, error.statusCode);
       throw createError({
         statusCode: error.statusCode,
         statusMessage: error.statusMessage,
@@ -81,6 +88,7 @@ export default defineEventHandler(async (event): Promise<User> => {
       });
     }
 
+    setResponseStatus(event, 500);
     throw createError({
       statusCode: 500,
       statusMessage: "Internal server error",

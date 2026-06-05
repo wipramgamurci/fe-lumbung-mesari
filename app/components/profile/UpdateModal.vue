@@ -1,10 +1,7 @@
 <template>
-  <UModal
-    v-model:open="open"
-    :title="$t('profile.updateProfileTitle')"
-  >
+  <UModal v-model:open="open" :title="$t('profile.updateProfileTitle')">
     <template #body>
-      <UForm :state="formState" @submit="handleSubmit">
+      <UForm id="update-profile-form" :state="formState" @submit="handleSubmit">
         <div class="space-y-4">
           <UFormField :label="$t('register.label.username')" name="username">
             <UInput
@@ -51,17 +48,14 @@
 
     <template #footer>
       <div class="flex justify-end gap-2">
-        <UButton
-          color="neutral"
-          variant="outline"
-          @click="open = false"
-        >
+        <UButton color="neutral" variant="outline" @click="open = false">
           {{ $t("common.cancel") }}
         </UButton>
         <UButton
+          type="submit"
+          form="update-profile-form"
           color="primary"
           :loading="isSubmitting"
-          @click="handleSubmit"
         >
           {{ $t("common.update") }}
         </UButton>
@@ -140,8 +134,7 @@ const handleSubmit = async () => {
   } catch (error: any) {
     toast.add({
       title: $t("common.error.title"),
-      description:
-        error.data?.message || $t("profile.updateProfileFailed"),
+      description: error.data?.message || $t("profile.updateProfileFailed"),
       color: "error",
     });
   } finally {
