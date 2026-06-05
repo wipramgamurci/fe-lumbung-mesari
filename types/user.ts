@@ -27,3 +27,7 @@ export interface UserStatusUpdateResponse {
   status: "pending" | "active" | "rejected" | "waiting_deposit" | "inactive";
   userId: string;
 }
+
+export type UpdateUserRequest = Partial<
+  Pick<User, "username" | "fullname" | "address" | "phoneNumber">
+>;
