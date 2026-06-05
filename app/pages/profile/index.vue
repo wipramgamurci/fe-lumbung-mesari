@@ -130,6 +130,15 @@
                 {{ user.address }}
               </p>
             </div>
+            <div class="mt-4">
+              <UButton
+                variant="outline"
+                color="secondary"
+                @click="updateProfileModalOpen = true"
+              >
+                {{ $t("profile.updateProfileButton") }}
+              </UButton>
+            </div>
           </div>
         </UCard>
 
@@ -253,6 +262,11 @@
         </div>
       </template>
     </UModal>
+
+    <ProfileUpdateModal
+      v-model:open="updateProfileModalOpen"
+      :user="user"
+    />
   </div>
 </template>
 
@@ -313,6 +327,9 @@ const statusConfig: Record<string, { label: string; color: BadgeColor }> = {
 const getStatusInfo = (status: string) => {
   return statusConfig[status] || { label: status, color: "neutral" };
 };
+
+// Update profile modal
+const updateProfileModalOpen = ref(false);
 
 // Reset password modal
 const resetPasswordModalOpen = ref(false);
