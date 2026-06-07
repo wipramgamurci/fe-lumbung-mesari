@@ -24,6 +24,11 @@
       "member": "Member"
     },
     "status": "Status",
+    "updateProfileButton": "Edit profile",
+    "updateProfileFailed": "Failed to update profile. Please try again.",
+    "updateProfileSuccess": "Your profile has been updated.",
+    "updateProfileSuccessTitle": "Success",
+    "updateProfileTitle": "Update profile",
     "verified": "Verified"
   }
 }

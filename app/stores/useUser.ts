@@ -1,5 +1,5 @@
 import { defineStore } from "pinia";
-import type { User } from "~~/types/user";
+import type { UpdateUserRequest, User } from "~~/types/user";
 
 export const useUserStore = defineStore("user", {
   state: () => ({
@@ -30,6 +30,18 @@ export const useUserStore = defineStore("user", {
       } finally {
         this.isInitialized = true;
       }
+    },
+    async updateUser(data: UpdateUserRequest) {
+      const headers = import.meta.server
+        ? useRequestHeaders(["cookie"])
+        : undefined;
+      const updatedUser = await $fetch<User>("/api/users/me", {
+        method: "PATCH",
+        body: data,
+        headers,
+      });
+      this.user = updatedUser;
+      return updatedUser;
     },
     clearUser() {
       this.user = null;

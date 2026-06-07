@@ -24,6 +24,11 @@
       "member": "Anggota"
     },
     "status": "Status",
+    "updateProfileButton": "Ubah profil",
+    "updateProfileFailed": "Gagal memperbarui profil. Silakan coba lagi.",
+    "updateProfileSuccess": "Profil Anda telah diperbarui.",
+    "updateProfileSuccessTitle": "Berhasil",
+    "updateProfileTitle": "Perbarui profil",
     "verified": "Terverifikasi"
   }
 }
