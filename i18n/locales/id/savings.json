@@ -3,6 +3,7 @@
     "amount": "Jumlah",
     "createdAt": "Tanggal Dibuat",
     "errorMarkingAsPaid": "Gagal menandai simpanan sebagai dibayar. Silakan coba lagi.",
+    "filterByStatus": "Filter berdasarkan status",
     "markAsPaid": "Tandai Sebagai Dibayar",
     "markAsPaidDescription": "Apakah Anda yakin untuk menandai simpanan ini sebagai dibayar?",
     "memberName": "Nama Anggota",
@@ -15,6 +16,7 @@
     "period": "Periode",
     "processedBy": "Diproses Oleh",
     "savingsRecordMarkedAsPaidSuccessfully": "Simpanan telah ditandai sebagai dibayar.",
+    "searchPlaceholder": "Cari berdasarkan nama atau username anggota...",
     "selectPeriod": "Pilih Periode",
     "selectYear": "Pilih Tahun",
     "status": "Status",
@@ -23,6 +25,10 @@
       "due": "Belum Dibayar",
       "overdue": "Terlambat",
       "paid": "Lunas"
+    },
+    "summary": {
+      "membersCount": "{count} anggota",
+      "title": "Ringkasan Periode"
     },
     "updatedAt": "Tanggal Diperbarui",
     "username": "Nama Pengguna"

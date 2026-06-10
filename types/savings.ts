@@ -58,3 +58,18 @@ export interface SavingsSettleResponse {
   message: string;
   savingsId: string;
 }
+
+export interface SavingsStatusSummary {
+  count: number;
+  amount: string; // Decimal string, e.g., "2500000.0000"
+}
+
+export interface SavingsSummaryResponse {
+  totalMembers: number;
+  totalAmount: string;
+  collectedAmount: string;
+  outstandingAmount: string;
+  due: SavingsStatusSummary;
+  paid: SavingsStatusSummary;
+  overdue: SavingsStatusSummary;
+}

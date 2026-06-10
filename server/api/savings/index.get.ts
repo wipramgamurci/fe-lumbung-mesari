@@ -13,6 +13,8 @@ export default defineEventHandler(async (event): Promise<SavingsResponse> => {
     : query.sortOrder;
   const period = Array.isArray(query.period) ? query.period[0] : query.period;
   const yearStr = Array.isArray(query.year) ? query.year[0] : query.year;
+  const status = Array.isArray(query.status) ? query.status[0] : query.status;
+  const search = Array.isArray(query.search) ? query.search[0] : query.search;
 
   // Parse and set defaults
   const page = pageStr ? parseInt(pageStr, 10) || 1 : 1;
@@ -48,6 +50,12 @@ export default defineEventHandler(async (event): Promise<SavingsResponse> => {
       if (!isNaN(year)) {
         queryParams.push(`year=${year}`);
       }
+    }
+    if (status) {
+      queryParams.push(`status=${encodeURIComponent(status)}`);
+    }
+    if (search) {
+      queryParams.push(`search=${encodeURIComponent(search)}`);
     }
 
     const queryString = `?${queryParams.join("&")}`;

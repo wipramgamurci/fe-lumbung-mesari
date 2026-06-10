@@ -3,6 +3,7 @@
     "amount": "Amount",
     "createdAt": "Created At",
     "errorMarkingAsPaid": "Failed to mark savings as paid. Please try again.",
+    "filterByStatus": "Filter by status",
     "markAsPaid": "Mark as Paid",
     "markAsPaidDescription": "Are you sure you want to mark this savings as paid?",
     "memberName": "Member Name",
@@ -15,6 +16,7 @@
     "period": "Period",
     "processedBy": "Processed By",
     "savingsRecordMarkedAsPaidSuccessfully": "Savings record marked as paid successfully.",
+    "searchPlaceholder": "Search by member name or username...",
     "selectPeriod": "Select Period",
     "selectYear": "Select Year",
     "status": "Status",
@@ -23,6 +25,10 @@
       "due": "Due",
       "overdue": "Overdue",
       "paid": "Paid"
+    },
+    "summary": {
+      "membersCount": "{count} members",
+      "title": "Period Summary"
     },
     "updatedAt": "Updated At",
     "username": "Username"
