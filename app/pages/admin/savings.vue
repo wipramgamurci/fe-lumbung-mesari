@@ -77,7 +77,9 @@
             </p>
             <p class="text-2xl font-bold" :class="stat.colorClass">
               {{
-                summaryLoading ? $t("common.loading") : formatCurrency(stat.amount)
+                summaryLoading
+                  ? $t("common.loading")
+                  : formatCurrency(stat.amount)
               }}
             </p>
             <p class="text-sm text-gray-500 dark:text-gray-400">
@@ -314,7 +316,7 @@ const summaryStats = computed(() => [
     label: $t("savings.statusOptions.due"),
     count: summaryData.value?.due.count ?? 0,
     amount: summaryData.value?.due.amount ?? "0",
-    colorClass: "text-yellow-600 dark:text-yellow-400",
+    colorClass: "text-amber-600 dark:text-amber-400",
   },
   {
     key: "paid",
@@ -430,15 +432,13 @@ const columns: TableColumn<SavingsRecord>[] = [
 
 // Handlers
 const handlePeriodChange = () => {
-  page.value = 1;
-  fetchSavings();
   fetchSummary();
+  page.value === 1 ? fetchSavings() : (page.value = 1);
 };
 
 const handleYearChange = () => {
-  page.value = 1;
-  fetchSavings();
   fetchSummary();
+  page.value === 1 ? fetchSavings() : (page.value = 1);
 };
 
 const handleStatusChange = () => {
@@ -446,9 +446,8 @@ const handleStatusChange = () => {
 };
 
 const refreshData = () => {
-  page.value = 1;
-  fetchSavings();
   fetchSummary();
+  page.value === 1 ? fetchSavings() : (page.value = 1);
 };
 
 // Watch page changes

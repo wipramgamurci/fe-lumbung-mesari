@@ -68,7 +68,7 @@ export default defineEventHandler(async (event): Promise<SavingsResponse> => {
           "Content-Type": "application/json",
           Authorization: `Bearer ${accessToken}`,
         },
-      }
+      },
     );
 
     setResponseStatus(event, 200);
