@@ -7,6 +7,22 @@
     <!-- Filters Card -->
     <UCard>
       <div class="flex flex-wrap items-center gap-4">
+        <UInput
+          v-model="searchQuery"
+          :placeholder="$t('savings.searchPlaceholder')"
+          icon="i-heroicons-magnifying-glass"
+          class="flex-1 min-w-64"
+        />
+
+        <USelectMenu
+          v-model="selectedStatus"
+          :items="statusOptions"
+          value-key="value"
+          :placeholder="$t('savings.filterByStatus')"
+          class="w-48"
+          @update:model-value="handleStatusChange"
+        />
+
         <USelectMenu
           v-model="selectedPeriod"
           :items="monthOptions"
@@ -47,6 +63,36 @@
         </UButton>
       </div>
     </UCard>
+
+    <!-- Period Summary -->
+    <div>
+      <h2 class="text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+        {{ $t("savings.summary.title") }}
+      </h2>
+      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+        <UCard v-for="stat in summaryStats" :key="stat.key">
+          <div class="text-center">
+            <p class="text-sm text-gray-600 dark:text-gray-300">
+              {{ stat.label }}
+            </p>
+            <p class="text-2xl font-bold" :class="stat.colorClass">
+              {{
+                summaryLoading
+                  ? $t("common.loading")
+                  : formatCurrency(stat.amount)
+              }}
+            </p>
+            <p class="text-sm text-gray-500 dark:text-gray-400">
+              {{
+                summaryLoading
+                  ? ""
+                  : $t("savings.summary.membersCount", { count: stat.count })
+              }}
+            </p>
+          </div>
+        </UCard>
+      </div>
+    </div>
 
     <!-- Table Card -->
     <UCard>
@@ -177,10 +223,15 @@
 <script setup lang="ts">
 import { h, resolveComponent, computed } from "vue";
 import type { TableColumn } from "@nuxt/ui";
-import type { SavingsResponse, SavingsRecord } from "~~/types/savings";
+import type {
+  SavingsResponse,
+  SavingsRecord,
+  SavingsSummaryResponse,
+} from "~~/types/savings";
 import { useCashbookStore } from "~/stores/useCashbook";
 import {
   formatCurrency,
+  formatDate,
   formatDateTime,
   formatPeriod,
 } from "~~/utils/formatters";
@@ -211,6 +262,18 @@ const isSettling = computed(() => {
     : false;
 });
 const isDownloading = ref(false);
+const selectedStatus = ref<string | null>(null);
+const searchQuery = ref("");
+const summaryLoading = ref(false);
+const summaryData = ref<SavingsSummaryResponse | null>(null);
+
+// Status options
+const statusOptions = [
+  { label: $t("savings.statusOptions.allStatuses"), value: null },
+  { label: $t("savings.statusOptions.due"), value: "due" },
+  { label: $t("savings.statusOptions.paid"), value: "paid" },
+  { label: $t("savings.statusOptions.overdue"), value: "overdue" },
+];
 
 // Month options
 const monthOptions = [
@@ -245,6 +308,31 @@ const selectedPeriod = ref<string | undefined>(
   monthOptions[now.getMonth()]?.value,
 );
 const selectedYear = ref<number | undefined>(now.getFullYear());
+
+// Period summary stat cards
+const summaryStats = computed(() => [
+  {
+    key: "due",
+    label: $t("savings.statusOptions.due"),
+    count: summaryData.value?.due.count ?? 0,
+    amount: summaryData.value?.due.amount ?? "0",
+    colorClass: "text-amber-600 dark:text-amber-400",
+  },
+  {
+    key: "paid",
+    label: $t("savings.statusOptions.paid"),
+    count: summaryData.value?.paid.count ?? 0,
+    amount: summaryData.value?.paid.amount ?? "0",
+    colorClass: "text-green-600 dark:text-green-400",
+  },
+  {
+    key: "overdue",
+    label: $t("savings.statusOptions.overdue"),
+    count: summaryData.value?.overdue.count ?? 0,
+    amount: summaryData.value?.overdue.amount ?? "0",
+    colorClass: "text-red-600 dark:text-red-400",
+  },
+]);
 
 // Table columns
 const columns: TableColumn<SavingsRecord>[] = [
@@ -307,7 +395,7 @@ const columns: TableColumn<SavingsRecord>[] = [
   {
     accessorKey: "paidAt",
     header: $t("savings.paidDate"),
-    cell: ({ row }) => formatDateTime(row.original.paidAt),
+    cell: ({ row }) => formatDate(row.original.paidAt),
   },
   {
     accessorKey: "processedByUser",
@@ -344,23 +432,46 @@ const columns: TableColumn<SavingsRecord>[] = [
 
 // Handlers
 const handlePeriodChange = () => {
-  page.value = 1;
-  fetchSavings();
+  fetchSummary();
+  page.value === 1 ? fetchSavings() : (page.value = 1);
 };
 
 const handleYearChange = () => {
-  page.value = 1;
-  fetchSavings();
+  fetchSummary();
+  page.value === 1 ? fetchSavings() : (page.value = 1);
+};
+
+const handleStatusChange = () => {
+  page.value === 1 ? fetchSavings() : (page.value = 1);
 };
 
 const refreshData = () => {
-  page.value = 1;
-  fetchSavings();
+  fetchSummary();
+  page.value === 1 ? fetchSavings() : (page.value = 1);
 };
 
 // Watch page changes
 watch(page, () => {
   fetchSavings();
+});
+
+// Debounced member search
+let searchDebounceTimer: ReturnType<typeof setTimeout> | null = null;
+watch(searchQuery, () => {
+  if (searchDebounceTimer) {
+    clearTimeout(searchDebounceTimer);
+  }
+  searchDebounceTimer = setTimeout(() => {
+    searchDebounceTimer = null;
+    page.value === 1 ? fetchSavings() : (page.value = 1);
+  }, 400);
+});
+
+onBeforeUnmount(() => {
+  if (searchDebounceTimer) {
+    clearTimeout(searchDebounceTimer);
+    searchDebounceTimer = null;
+  }
 });
 
 // Fetch savings data
@@ -382,6 +493,14 @@ const fetchSavings = async () => {
       queryParams.year = selectedYear.value;
     }
 
+    if (selectedStatus.value) {
+      queryParams.status = selectedStatus.value;
+    }
+
+    if (searchQuery.value?.trim()) {
+      queryParams.search = searchQuery.value.trim();
+    }
+
     const queryString = new URLSearchParams(
       Object.entries(queryParams).map(([k, v]) => [k, String(v)]),
     ).toString();
@@ -398,6 +517,36 @@ const fetchSavings = async () => {
     savingsData.value = null;
   } finally {
     loading.value = false;
+  }
+};
+
+// Fetch period summary
+const fetchSummary = async () => {
+  summaryLoading.value = true;
+
+  try {
+    const queryParams: Record<string, string | number> = {};
+
+    if (selectedPeriod.value) {
+      queryParams.period = selectedPeriod.value;
+    }
+
+    if (selectedYear.value) {
+      queryParams.year = selectedYear.value;
+    }
+
+    const queryString = new URLSearchParams(
+      Object.entries(queryParams).map(([k, v]) => [k, String(v)]),
+    ).toString();
+
+    summaryData.value = await $fetch<SavingsSummaryResponse>(
+      `/api/savings/summary${queryString ? `?${queryString}` : ""}`,
+    );
+  } catch (err: any) {
+    console.error("Error fetching savings summary:", err);
+    summaryData.value = null;
+  } finally {
+    summaryLoading.value = false;
   }
 };
 
@@ -432,6 +581,7 @@ const confirmMarkAsPaid = async () => {
     selectedSavings.value = null;
     cashbookStore.invalidateDashboardCache();
     await fetchSavings();
+    await fetchSummary();
   } catch (err: any) {
     console.error("Error settling savings:", err);
     const toast = useToast();
@@ -473,5 +623,6 @@ const downloadReport = async () => {
 // Fetch on mount
 onMounted(() => {
   fetchSavings();
+  fetchSummary();
 });
 </script>
