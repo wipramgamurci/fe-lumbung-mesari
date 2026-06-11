@@ -5,9 +5,7 @@ export default defineEventHandler(
     const config = useRuntimeConfig();
     const query = getQuery(event);
 
-    const period = Array.isArray(query.period)
-      ? query.period[0]
-      : query.period;
+    const period = Array.isArray(query.period) ? query.period[0] : query.period;
     const yearStr = Array.isArray(query.year) ? query.year[0] : query.year;
 
     const accessToken = getCookie(event, "accessToken");
@@ -20,24 +18,22 @@ export default defineEventHandler(
     }
 
     try {
-      const queryParams: string[] = [];
+      const queryParams = new URLSearchParams();
 
       if (period) {
-        queryParams.push(`period=${period}`);
+        queryParams.set("period", String(period));
       }
       if (yearStr) {
         const year = parseInt(yearStr, 10);
         if (!isNaN(year)) {
-          queryParams.push(`year=${year}`);
+          queryParams.set("year", String(year));
         }
       }
 
-      const queryString = queryParams.length
-        ? `?${queryParams.join("&")}`
-        : "";
+      const queryString = queryParams.toString();
 
       const response = await $fetch<SavingsSummaryResponse>(
-        `${config.public.apiBaseUrl}/api/savings/summary${queryString}`,
+        `${config.public.apiBaseUrl}/api/savings/summary${queryString ? `?${queryString}` : ""}`,
         {
           method: "GET",
           headers: {

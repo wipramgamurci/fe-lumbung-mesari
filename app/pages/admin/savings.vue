@@ -462,8 +462,16 @@ watch(searchQuery, () => {
     clearTimeout(searchDebounceTimer);
   }
   searchDebounceTimer = setTimeout(() => {
+    searchDebounceTimer = null;
     page.value === 1 ? fetchSavings() : (page.value = 1);
   }, 400);
+});
+
+onBeforeUnmount(() => {
+  if (searchDebounceTimer) {
+    clearTimeout(searchDebounceTimer);
+    searchDebounceTimer = null;
+  }
 });
 
 // Fetch savings data
