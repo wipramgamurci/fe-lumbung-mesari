@@ -89,15 +89,6 @@
         >
           {{ $t("common.refresh") }}
         </UButton>
-        <UButton
-          color="primary"
-          variant="outline"
-          icon="i-heroicons-arrow-down-tray"
-          @click="testDownloadCashbookReport"
-          :loading="isDownloadingCashbookReport"
-        >
-          Test Cashbook Report
-        </UButton>
       </div>
     </UCard>
 
@@ -300,7 +291,6 @@ import {
   formatDateTime,
   formatCalendarDateToQuery,
 } from "~~/utils/formatters";
-import { downloadBlobReport } from "~~/utils/downloadBlob";
 import { useUserStore } from "~~/app/stores/useUser";
 import { useExpensesStore } from "~~/app/stores/useExpenses";
 import { useCashbookStore } from "~/stores/useCashbook";
@@ -338,7 +328,6 @@ const maxAmount = ref<number | null>(null);
 const deletingExpenseId = ref<string | null>(null);
 const deleteModalOpen = ref(false);
 const selectedExpenseForDelete = ref<Expense | null>(null);
-const isDownloadingCashbookReport = ref(false);
 const isDeletingSelectedExpense = computed(
   () =>
     !!selectedExpenseForDelete.value &&
@@ -370,31 +359,6 @@ const handleClearFilter = () => {
 const refreshData = () => {
   page.value === 1 ? fetchExpenses() : (page.value = 1);
   expensesStore.fetchCategories(true); // Force refresh
-};
-
-const testDownloadCashbookReport = async () => {
-  const now = new Date();
-  const month = now.getMonth() + 1;
-  const year = now.getFullYear();
-
-  isDownloadingCashbookReport.value = true;
-  try {
-    await downloadBlobReport("/api/reports/cashbook", {
-      query: { month, year },
-      fileName: `cashbook-${year}-${String(month).padStart(2, "0")}.xlsx`,
-      fallbackErrorMessage: t("common.downloadReportError"),
-    });
-  } catch (err: unknown) {
-    console.error("Error downloading cashbook report:", err);
-    toast.add({
-      title: t("common.error.title"),
-      description:
-        err instanceof Error ? err.message : t("common.downloadReportError"),
-      color: "error",
-    });
-  } finally {
-    isDownloadingCashbookReport.value = false;
-  }
 };
 
 const openDeleteModal = (expense: Expense) => {
