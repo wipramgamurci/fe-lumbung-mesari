@@ -1,6 +1,8 @@
 {
   "dashboard": {
     "capital": "Capital",
+    "cashbookReportModalDescription": "Select month and year for the cashbook report period.",
+    "cashbookReportModalTitle": "Download cashbook report",
     "lastFetchedAt": "Last fetched at: {datetime}",
     "mandatorySaving": {
       "detailCtaLink": "mandatory saving page",

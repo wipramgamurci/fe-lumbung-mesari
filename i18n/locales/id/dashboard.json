@@ -1,6 +1,8 @@
 {
   "dashboard": {
     "capital": "Modal",
+    "cashbookReportModalDescription": "Pilih bulan dan tahun untuk periode laporan buku kas.",
+    "cashbookReportModalTitle": "Unduh laporan buku kas",
     "lastFetchedAt": "Terakhir diperbarui: {datetime}",
     "mandatorySaving": {
       "detailCtaLink": "halaman simpanan wajib",

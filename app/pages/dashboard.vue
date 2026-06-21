@@ -15,93 +15,37 @@
           })
         }}
       </p>
-      <UButton
-        color="neutral"
-        variant="outline"
-        size="sm"
-        class="w-fit"
-        icon="i-heroicons-arrow-path"
-        :loading="loading || transactionsLoading"
-        @click="refreshCashbookData"
-      >
-        {{ $t("common.refresh") }}
-      </UButton>
+      <div class="flex flex-wrap items-center gap-2">
+        <UButton
+          v-if="isAdminUser"
+          color="primary"
+          variant="outline"
+          size="sm"
+          class="w-fit"
+          icon="i-heroicons-arrow-down-tray"
+          @click="isCashbookReportModalOpen = true"
+        >
+          {{ $t("common.downloadReport") }}
+        </UButton>
+        <UButton
+          color="neutral"
+          variant="outline"
+          size="sm"
+          class="w-fit"
+          icon="i-heroicons-arrow-path"
+          :loading="loading || transactionsLoading"
+          @click="refreshCashbookData"
+        >
+          {{ $t("common.refresh") }}
+        </UButton>
+      </div>
     </div>
 
-    <!-- Balance Summary -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-      <UCard>
-        <div class="text-center">
-          <p class="text-sm text-gray-600 dark:text-gray-300">
-            {{ $t("dashboard.totalBalance") }}
-          </p>
-          <p
-            class="text-2xl font-bold"
-            :class="
-              loading || error
-                ? 'text-gray-400 dark:text-gray-500'
-                : 'text-green-600 dark:text-green-400'
-            "
-          >
-            {{
-              loading
-                ? $t("common.loading")
-                : error
-                  ? $t("common.errorLoadingData")
-                  : formatCurrency(cashbookBalances?.total || 0)
-            }}
-          </p>
-        </div>
-      </UCard>
-
-      <UCard>
-        <div class="text-center">
-          <p class="text-sm text-gray-600 dark:text-gray-300">
-            {{ $t("dashboard.capital") }}
-          </p>
-          <p
-            class="text-2xl font-bold"
-            :class="
-              loading || error
-                ? 'text-gray-400 dark:text-gray-500'
-                : 'text-blue-600 dark:text-blue-400'
-            "
-          >
-            {{
-              loading
-                ? $t("common.loading")
-                : error
-                  ? $t("common.errorLoadingData")
-                  : formatCurrency(cashbookBalances?.capital || 0)
-            }}
-          </p>
-        </div>
-      </UCard>
-
-      <UCard>
-        <div class="text-center">
-          <p class="text-sm text-gray-600 dark:text-gray-300">
-            {{ $t("dashboard.shu") }}
-          </p>
-          <p
-            class="text-2xl font-bold"
-            :class="
-              loading || error
-                ? 'text-gray-400 dark:text-gray-500'
-                : 'text-purple-600 dark:text-purple-400'
-            "
-          >
-            {{
-              loading
-                ? $t("common.loading")
-                : error
-                  ? $t("common.errorLoadingData")
-                  : formatCurrency(cashbookBalances?.shu || 0)
-            }}
-          </p>
-        </div>
-      </UCard>
-    </div>
+    <DashboardBalanceSummary
+      :loading="loading"
+      :error="error"
+      :balances="cashbookBalances"
+    />
 
     <!-- Mandatory savings -->
     <!-- Member Only Section -->
@@ -303,6 +247,8 @@
         </div>
       </div>
     </UCard>
+
+    <DashboardCashbookReportModal v-model:open="isCashbookReportModalOpen" />
   </div>
 </template>
 
@@ -345,7 +291,12 @@ const {
 } = storeToRefs(userSavingsStore);
 const userStore = useUserStore();
 const isMember = computed(() => userStore.isMember);
+const isAdminUser = computed(
+  () => userStore.isAdmin || userStore.isSuperadministrator,
+);
 const currentUserId = computed(() => userStore.user?.id ?? null);
+
+const isCashbookReportModalOpen = ref(false);
 
 const getTransactionAmount = (transaction: CashbookTransaction): number => {
   return transaction.capitalAmount + transaction.shuAmount;
