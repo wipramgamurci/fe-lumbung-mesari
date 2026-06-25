@@ -54,15 +54,18 @@ definePageMeta({
 });
 
 const { logout } = useAuth();
-
+const toast = useToast();
 const handleLogout = async () => {
   await logout();
 };
 
 const handleContactAdmin = () => {
   // You can customize this to navigate to a contact page or open email
-  alert(
-    "Please contact the administrator for assistance regarding your account rejection."
-  );
+  toast.add({
+    title: "Info",
+    description:
+      "Please contact the administrator for assistance regarding your account rejection.",
+    color: "info",
+  });
 };
 </script>

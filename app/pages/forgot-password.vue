@@ -74,6 +74,7 @@ definePageMeta({
 });
 
 const { t } = useI18n();
+const toast = useToast();
 
 const formState = ref<ResetPasswordRequest>({
   email: "",
@@ -93,8 +94,13 @@ const handleSubmit = async () => {
     });
     success.value = true;
   } catch (error: any) {
-    const message = error?.data?.message || error?.message || "Unknown error";
-    alert(t("forgotPassword.error", { message }));
+    const message = error.data?.message || "Unknown error";
+    console.error("Forgot password error:", message);
+    toast.add({
+      title: "Error",
+      description: t("forgotPassword.error", { message }),
+      color: "error",
+    });
   } finally {
     isLoading.value = false;
   }

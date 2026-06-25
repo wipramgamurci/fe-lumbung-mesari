@@ -79,7 +79,7 @@ definePageMeta({
 
 // Use the auth composable
 const { login } = useAuth();
-
+const toast = useToast();
 const userStore = useUserStore();
 
 const formState = ref<LoginRequest>({
@@ -98,11 +98,12 @@ const handleLogin = async (): Promise<void> => {
     // Fetch user data after successful login (cookies are now set)
     await userStore.fetchUser();
   } catch (error: any) {
-    console.error("Login error:", error);
-    alert(
-      "Login failed: " +
-        (error.message || error.data?.message || "Unknown error"),
-    );
+    console.error("Login error:", error.data?.message);
+    toast.add({
+      title: "Error",
+      description: error.data?.message || "Unknown error",
+      color: "error",
+    });
   } finally {
     isLoading.value = false;
   }
