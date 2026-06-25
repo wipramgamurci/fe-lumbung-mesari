@@ -85,6 +85,7 @@ definePageMeta({
 });
 
 const { t } = useI18n();
+const toast = useToast();
 const route = useRoute();
 const { logoutSilent } = useAuth();
 
@@ -113,7 +114,11 @@ const handleSubmit = async () => {
   if (!token.value) return;
 
   if (formState.value.newPassword !== formState.value.confirmPassword) {
-    alert(t("register.error.passwordsDoNotMatch"));
+    toast.add({
+      title: "Error",
+      description: t("register.error.passwordsDoNotMatch"),
+      color: "error",
+    });
     return;
   }
 
@@ -135,8 +140,13 @@ const handleSubmit = async () => {
     // After resetting password, clear session so user must re-login
     await logoutSilent();
   } catch (error: any) {
-    const message = error?.data?.message || error?.message || "Unknown error";
-    alert(message);
+    const message = error.data?.message || "Unknown error";
+    console.error("Reset password error:", message);
+    toast.add({
+      title: "Error",
+      description: message,
+      color: "error",
+    });
   } finally {
     isLoading.value = false;
   }

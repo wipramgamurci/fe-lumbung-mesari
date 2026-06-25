@@ -228,7 +228,7 @@ const isSubmitting = ref(false);
 const loanPeriodOptions = computed(() => {
   return loanPeriods.value.map((period) => {
     return {
-      label: `${period.tenor} months`,
+      label: `${period.tenor} ${$t("common.months")}`,
       value: period.id,
     };
   });
@@ -365,11 +365,6 @@ const handleSubmit = async () => {
   }
 
   if (!validateForm()) {
-    return;
-  }
-
-  if (!calculationResult.value) {
-    alert("Please calculate the loan first");
     return;
   }
 
