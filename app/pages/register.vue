@@ -79,6 +79,7 @@
                   variant="link"
                   size="sm"
                   :icon="showPassword ? 'i-lucide-eye-off' : 'i-lucide-eye'"
+                  :title="showPassword ? $t('auth.hidePassword') : $t('auth.showPassword')"
                   :aria-label="showPassword ? $t('auth.hidePassword') : $t('auth.showPassword')"
                   @click="showPassword = !showPassword"
                 />
@@ -103,6 +104,7 @@
                   variant="link"
                   size="sm"
                   :icon="showPasswordConfirmation ? 'i-lucide-eye-off' : 'i-lucide-eye'"
+                  :title="showPasswordConfirmation ? $t('auth.hidePassword') : $t('auth.showPassword')"
                   :aria-label="showPasswordConfirmation ? $t('auth.hidePassword') : $t('auth.showPassword')"
                   @click="showPasswordConfirmation = !showPasswordConfirmation"
                 />
