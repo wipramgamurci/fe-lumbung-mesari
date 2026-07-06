@@ -1,90 +1,119 @@
 <template>
-  <div class="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col">
+  <div class="min-h-screen bg-muted dark:bg-default flex flex-col">
     <!-- Topbar -->
-    <div
-      class="fixed top-0 left-0 right-0 z-20 bg-white dark:bg-gray-800 shadow-md flex items-center justify-between px-4 py-3 h-14"
+    <header
+      class="fixed top-0 left-0 right-0 z-20 bg-default border-b border-default"
     >
-      <!-- App Title/Logo and Mobile Toggle -->
-      <div class="flex items-center space-x-2">
-        <template v-if="isUserReady">
-          <UDropdownMenu
-            :items="navItems"
-            :ui="{
-              content: 'w-auto',
-            }"
-          >
-            <UButton
-              class="lg:hidden"
-              icon="i-heroicons-bars-3"
-              color="neutral"
-              variant="ghost"
-            />
-          </UDropdownMenu>
-        </template>
-        <template v-else>
-          <USkeleton class="h-10 w-10 rounded-md lg:hidden" />
-        </template>
-        <NuxtLink to="/">
-          <span class="font-bold text-lg text-gray-900 dark:text-white">{{
-            $t("app.title")
-          }}</span>
-        </NuxtLink>
-      </div>
-
-      <div class="hidden lg:block">
-        <UNavigationMenu
-          v-if="isUserReady"
-          :items="navItems"
-          orientation="horizontal"
-          class="h-full"
-        />
-        <div v-else class="flex gap-2">
-          <USkeleton v-for="n in 5" :key="n" class="h-10 w-20 rounded-md" />
-        </div>
-      </div>
-
-      <!-- User Menu -->
-      <UPopover>
-        <button
-          class="flex items-center gap-2 px-2 py-1.5 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
-        >
+      <div class="flex items-center gap-3 px-4 lg:px-6 h-16">
+        <!-- Mobile menu + Brand -->
+        <div class="flex items-center gap-3 shrink-0">
           <template v-if="isUserReady">
-            <UAvatar :alt="userFullname" size="sm" />
-            <span
-              class="hidden sm:block font-medium text-gray-900 dark:text-white"
+            <UDropdownMenu
+              :items="navItems"
+              :ui="{ content: 'w-auto' }"
             >
-              {{ userUsername }}
-            </span>
+              <UButton
+                class="lg:hidden"
+                icon="i-heroicons-bars-3"
+                color="neutral"
+                variant="ghost"
+              />
+            </UDropdownMenu>
           </template>
           <template v-else>
-            <USkeleton class="h-8 w-8 rounded-full" />
-            <USkeleton class="hidden sm:block h-4 w-24 rounded" />
+            <USkeleton class="h-9 w-9 rounded-md lg:hidden" />
           </template>
-        </button>
 
-        <template #content>
-          <div class="p-4 space-y-2">
-            <UButton
-              :label="$t('common.profile')"
-              variant="ghost"
-              color="neutral"
-              block
-              to="/profile"
-            />
-            <UButton
-              :label="$t('common.signOut')"
-              variant="ghost"
-              color="neutral"
-              block
-              @click="logout"
-            />
+          <NuxtLink to="/" class="flex items-center gap-2.5">
+            <span
+              class="flex size-9 items-center justify-center rounded-xl bg-primary text-inverted font-bold text-lg shadow-sm"
+            >
+              {{ brandInitial }}
+            </span>
+            <span
+              class="flex flex-col leading-tight font-bold text-highlighted text-sm"
+            >
+              <span v-for="word in brandWords" :key="word">{{ word }}</span>
+            </span>
+          </NuxtLink>
+        </div>
+
+        <!-- Desktop navigation -->
+        <div class="hidden lg:flex flex-1 justify-center min-w-0">
+          <UNavigationMenu
+            v-if="isUserReady"
+            :items="navItems"
+            color="primary"
+            orientation="horizontal"
+            :ui="{
+              link: 'aria-[current=page]:before:bg-primary/10 data-[state=open]:before:bg-primary/10 rounded-lg',
+            }"
+          />
+          <div v-else class="flex gap-2">
+            <USkeleton v-for="n in 5" :key="n" class="h-9 w-24 rounded-lg" />
           </div>
-        </template>
-      </UPopover>
-    </div>
+        </div>
+
+        <!-- Actions: theme toggle + user -->
+        <div class="flex items-center gap-1.5 shrink-0 ms-auto lg:ms-0">
+          <UColorModeButton />
+
+          <div class="h-6 w-px bg-border mx-1 hidden sm:block" />
+
+          <UPopover>
+            <button
+              class="flex items-center gap-2.5 px-1.5 py-1 rounded-lg hover:bg-elevated/60 transition-colors"
+            >
+              <template v-if="isUserReady">
+                <UAvatar
+                  :alt="userFullname"
+                  size="sm"
+                  :ui="{ root: 'bg-inverted text-inverted' }"
+                />
+                <span class="hidden sm:flex flex-col items-start leading-tight">
+                  <span class="font-semibold text-sm text-highlighted truncate max-w-32">
+                    {{ userUsername }}
+                  </span>
+                  <span class="text-xs text-muted truncate max-w-32">
+                    {{ userRole }}
+                  </span>
+                </span>
+              </template>
+              <template v-else>
+                <USkeleton class="h-8 w-8 rounded-full" />
+                <USkeleton class="hidden sm:block h-4 w-24 rounded" />
+              </template>
+            </button>
+
+            <template #content>
+              <div class="p-2 w-44 space-y-1">
+                <UButton
+                  :label="$t('common.profile')"
+                  icon="i-heroicons-user"
+                  variant="ghost"
+                  color="neutral"
+                  block
+                  class="justify-start"
+                  to="/profile"
+                />
+                <UButton
+                  :label="$t('common.signOut')"
+                  icon="i-heroicons-arrow-right-on-rectangle"
+                  variant="ghost"
+                  color="neutral"
+                  block
+                  class="justify-start"
+                  @click="logout"
+                />
+              </div>
+            </template>
+          </UPopover>
+        </div>
+      </div>
+    </header>
 
     <!-- Main Content Area -->
-    <div class="flex-1 pt-14 relative z-0">
+    <div class="flex-1 pt-16 relative z-0">
       <div class="p-8 min-w-0">
         <slot />
       </div>
@@ -110,6 +139,13 @@ onMounted(() => {
 const isUserReady = computed(() => hasMounted.value && userStore.isInitialized);
 const userFullname = computed(() => currentUser.value?.fullname || "User");
 const userUsername = computed(() => currentUser.value?.username || "User");
+const userRole = computed(() => {
+  const roleId = currentUser.value?.roleId;
+  return roleId ? roleId.charAt(0).toUpperCase() + roleId.slice(1) : "";
+});
+
+const brandWords = computed(() => t("app.title").split(" "));
+const brandInitial = computed(() => t("app.title").charAt(0));
 
 const navItems = computed(() => {
   if (userStore.isAdmin || userStore.isSuperadministrator) {
