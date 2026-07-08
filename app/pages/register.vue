@@ -15,7 +15,7 @@
       <UForm :state="formState" @submit="handleRegister">
         <div class="space-y-6">
           <!-- Personal Information -->
-          <UFormField :label="$t('register.label.username')" name="username">
+          <UFormField :label="$t('register.label.username')" name="username" required>
             <UInput
               v-model="formState.username"
               :placeholder="$t('register.placeholder.username')"
@@ -24,7 +24,7 @@
             />
           </UFormField>
 
-          <UFormField :label="$t('register.label.fullname')" name="fullname">
+          <UFormField :label="$t('register.label.fullname')" name="fullname" required>
             <UInput
               v-model="formState.fullname"
               :placeholder="$t('register.placeholder.fullname')"
@@ -33,7 +33,7 @@
             />
           </UFormField>
 
-          <UFormField :label="$t('register.label.email')" name="email">
+          <UFormField :label="$t('register.label.email')" name="email" required>
             <UInput
               v-model="formState.email"
               type="email"
@@ -46,6 +46,7 @@
           <UFormField
             :label="$t('register.label.phoneNumber')"
             name="phoneNumber"
+            required
           >
             <UInput
               v-model="formState.phoneNumber"
@@ -56,7 +57,7 @@
             />
           </UFormField>
 
-          <UFormField :label="$t('register.label.address')" name="address">
+          <UFormField :label="$t('register.label.address')" name="address" required>
             <UInput
               v-model="formState.address"
               :placeholder="$t('register.placeholder.address')"
@@ -65,7 +66,7 @@
             />
           </UFormField>
 
-          <UFormField :label="$t('register.label.password')" name="password">
+          <UFormField :label="$t('register.label.password')" name="password" required>
             <UInput
               v-model="formState.password"
               :type="showPassword ? 'text' : 'password'"
@@ -90,6 +91,7 @@
           <UFormField
             :label="$t('register.label.passwordConfirmation')"
             name="passwordConfirmation"
+            required
           >
             <UInput
               v-model="formState.passwordConfirmation"
