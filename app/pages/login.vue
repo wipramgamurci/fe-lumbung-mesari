@@ -1,17 +1,17 @@
 <template>
   <div>
-    <!-- Logo/Header -->
-    <div class="text-center">
-      <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-        {{ $t("app.title") }}
-      </h2>
-      <p class="text-gray-600 dark:text-gray-300">
-        {{ $t("auth.signInToAccount") }}
-      </p>
-    </div>
-
     <!-- Login Form -->
-    <UCard class="mt-8">
+    <UCard>
+      <!-- Logo/Header -->
+      <div class="text-center mb-8">
+        <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+          {{ $t("app.title") }}
+        </h2>
+        <p class="text-gray-600 dark:text-gray-300">
+          {{ $t("auth.signInToAccount") }}
+        </p>
+      </div>
+
       <UForm :state="formState" @submit="handleLogin">
         <div class="space-y-6">
           <UFormField :label="$t('common.identifier')" name="identifier">
@@ -27,11 +27,23 @@
           <UFormField :label="$t('common.password')" name="password">
             <UInput
               v-model="formState.password"
-              type="password"
+              :type="showPassword ? 'text' : 'password'"
               :placeholder="$t('auth.enterPassword')"
               required
               class="w-full"
-            />
+            >
+              <template #trailing>
+                <UButton
+                  color="neutral"
+                  variant="link"
+                  size="sm"
+                  :icon="showPassword ? 'i-lucide-eye-off' : 'i-lucide-eye'"
+                  :title="showPassword ? $t('auth.hidePassword') : $t('auth.showPassword')"
+                  :aria-label="showPassword ? $t('auth.hidePassword') : $t('auth.showPassword')"
+                  @click="showPassword = !showPassword"
+                />
+              </template>
+            </UInput>
           </UFormField>
 
           <UButton type="submit" color="primary" block :loading="isLoading">
@@ -88,6 +100,7 @@ const formState = ref<LoginRequest>({
 });
 
 const isLoading = ref<boolean>(false);
+const showPassword = ref<boolean>(false);
 
 const handleLogin = async (): Promise<void> => {
   isLoading.value = true;

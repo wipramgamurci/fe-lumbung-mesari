@@ -1,20 +1,18 @@
 <template>
   <div>
-    <!-- Logo/Header -->
-    <div class="text-center">
-      <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-        {{ $t("verifyOtp.verifyYourAccount") }}
-      </h2>
-      <p class="text-gray-600 dark:text-gray-300">
-        {{ $t("verifyOtp.weveSentAVerificationCodeToYourEmail") }}
-      </p>
-      <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
-        {{ $t("verifyOtp.pleaseCheckYourEmailForTheVerificationCode") }}
-      </p>
-    </div>
-
-    <!-- OTP Verification Form -->
-    <UCard class="mt-8">
+    <UCard>
+      <!-- Logo/Header -->
+      <div class="text-center mb-8">
+        <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+          {{ $t("verifyOtp.verifyYourAccount") }}
+        </h2>
+        <p class="text-gray-600 dark:text-gray-300">
+          {{ $t("verifyOtp.weveSentAVerificationCodeToYourEmail") }}
+        </p>
+        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+          {{ $t("verifyOtp.pleaseCheckYourEmailForTheVerificationCode") }}
+        </p>
+      </div>
       <UForm :state="formState" @submit="handleVerifyOtp">
         <div class="space-y-6">
           <!-- OTP Input -->

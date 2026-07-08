@@ -1,21 +1,21 @@
 <template>
   <div>
-    <!-- Logo/Header -->
-    <div class="text-center">
-      <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-        {{ $t("app.title") }}
-      </h2>
-      <p class="text-gray-600 dark:text-gray-300">
-        {{ $t("register.createAccount") }}
-      </p>
-    </div>
-
     <!-- Registration Form -->
-    <UCard class="mt-8">
+    <UCard>
+      <!-- Logo/Header -->
+      <div class="text-center mb-8">
+        <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+          {{ $t("app.title") }}
+        </h2>
+        <p class="text-gray-600 dark:text-gray-300">
+          {{ $t("register.createAccount") }}
+        </p>
+      </div>
+
       <UForm :state="formState" @submit="handleRegister">
         <div class="space-y-6">
           <!-- Personal Information -->
-          <UFormField :label="$t('register.label.username')" name="username">
+          <UFormField :label="$t('register.label.username')" name="username" required>
             <UInput
               v-model="formState.username"
               :placeholder="$t('register.placeholder.username')"
@@ -24,7 +24,7 @@
             />
           </UFormField>
 
-          <UFormField :label="$t('register.label.fullname')" name="fullname">
+          <UFormField :label="$t('register.label.fullname')" name="fullname" required>
             <UInput
               v-model="formState.fullname"
               :placeholder="$t('register.placeholder.fullname')"
@@ -33,7 +33,7 @@
             />
           </UFormField>
 
-          <UFormField :label="$t('register.label.email')" name="email">
+          <UFormField :label="$t('register.label.email')" name="email" required>
             <UInput
               v-model="formState.email"
               type="email"
@@ -46,6 +46,7 @@
           <UFormField
             :label="$t('register.label.phoneNumber')"
             name="phoneNumber"
+            required
           >
             <UInput
               v-model="formState.phoneNumber"
@@ -56,7 +57,7 @@
             />
           </UFormField>
 
-          <UFormField :label="$t('register.label.address')" name="address">
+          <UFormField :label="$t('register.label.address')" name="address" required>
             <UInput
               v-model="formState.address"
               :placeholder="$t('register.placeholder.address')"
@@ -65,27 +66,52 @@
             />
           </UFormField>
 
-          <UFormField :label="$t('register.label.password')" name="password">
+          <UFormField :label="$t('register.label.password')" name="password" required>
             <UInput
               v-model="formState.password"
-              type="password"
+              :type="showPassword ? 'text' : 'password'"
               :placeholder="$t('register.placeholder.password')"
               required
               class="w-full"
-            />
+            >
+              <template #trailing>
+                <UButton
+                  color="neutral"
+                  variant="link"
+                  size="sm"
+                  :icon="showPassword ? 'i-lucide-eye-off' : 'i-lucide-eye'"
+                  :title="showPassword ? $t('auth.hidePassword') : $t('auth.showPassword')"
+                  :aria-label="showPassword ? $t('auth.hidePassword') : $t('auth.showPassword')"
+                  @click="showPassword = !showPassword"
+                />
+              </template>
+            </UInput>
           </UFormField>
 
           <UFormField
             :label="$t('register.label.passwordConfirmation')"
             name="passwordConfirmation"
+            required
           >
             <UInput
               v-model="formState.passwordConfirmation"
-              type="password"
+              :type="showPasswordConfirmation ? 'text' : 'password'"
               :placeholder="$t('register.placeholder.passwordConfirmation')"
               required
               class="w-full"
-            />
+            >
+              <template #trailing>
+                <UButton
+                  color="neutral"
+                  variant="link"
+                  size="sm"
+                  :icon="showPasswordConfirmation ? 'i-lucide-eye-off' : 'i-lucide-eye'"
+                  :title="showPasswordConfirmation ? $t('auth.hidePassword') : $t('auth.showPassword')"
+                  :aria-label="showPasswordConfirmation ? $t('auth.hidePassword') : $t('auth.showPassword')"
+                  @click="showPasswordConfirmation = !showPasswordConfirmation"
+                />
+              </template>
+            </UInput>
           </UFormField>
 
           <UButton type="submit" color="primary" block :loading="isLoading">
@@ -131,6 +157,8 @@ const formState = ref<RegisterRequest>({
 });
 
 const isLoading = ref<boolean>(false);
+const showPassword = ref<boolean>(false);
+const showPasswordConfirmation = ref<boolean>(false);
 
 const handleRegister = async (): Promise<void> => {
   if (formState.value.password !== formState.value.passwordConfirmation) {
