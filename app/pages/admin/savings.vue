@@ -9,6 +9,8 @@
         <UButton
           color="primary"
           variant="solid"
+          size="lg"
+          class="px-4 py-2.5"
           icon="i-heroicons-arrow-down-tray"
           @click="downloadReport"
           :loading="isDownloading"

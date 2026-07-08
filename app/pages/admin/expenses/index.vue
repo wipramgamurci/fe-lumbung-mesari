@@ -12,6 +12,8 @@
       <template #actions>
         <UButton
           color="primary"
+          size="lg"
+          class="px-4 py-2.5"
           icon="i-heroicons-plus"
           to="/admin/expenses/create"
         >
