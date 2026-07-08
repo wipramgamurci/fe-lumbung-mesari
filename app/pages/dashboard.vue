@@ -6,13 +6,6 @@
       :description="$t('dashboard.subtitle')"
     >
       <template #actions>
-        <p class="hidden text-sm text-muted sm:block me-1">
-          {{
-            $t("dashboard.lastFetchedAt", {
-              datetime: formatDateTime(cashbookLastFetchedAt),
-            })
-          }}
-        </p>
         <UButton
           v-if="isAdminUser"
           color="primary"
@@ -37,6 +30,14 @@
         </UButton>
       </template>
     </PageHeader>
+
+    <p class="hidden text-left text-sm text-muted sm:block lg:-mt-4 mb-6 lg:text-right">
+      {{
+        $t("dashboard.lastFetchedAt", {
+          datetime: formatDateTime(cashbookLastFetchedAt),
+        })
+      }}
+    </p>
 
     <DashboardBalanceSummary
       :loading="loading"
