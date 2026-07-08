@@ -6,7 +6,7 @@
       class="mb-3"
     />
     <div
-      class="flex flex-col gap-4 sm:flex-row sm:items-end sm:justify-between"
+      class="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between"
     >
       <div class="min-w-0">
         <div class="flex items-center gap-3">
