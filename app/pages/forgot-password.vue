@@ -1,20 +1,18 @@
 <template>
   <div>
-    <!-- Header -->
-    <div class="text-center">
-      <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-        {{ $t("app.title") }}
-      </h2>
-      <p class="text-gray-600 dark:text-gray-300">
-        {{ $t("forgotPassword.title") }}
-      </p>
-      <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
-        {{ $t("forgotPassword.description") }}
-      </p>
-    </div>
-
-    <!-- Form -->
-    <UCard class="mt-8">
+    <UCard>
+      <!-- Header -->
+      <div class="text-center mb-8">
+        <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+          {{ $t("app.title") }}
+        </h2>
+        <p class="text-gray-600 dark:text-gray-300">
+          {{ $t("forgotPassword.title") }}
+        </p>
+        <p class="text-sm text-gray-500 dark:text-gray-400 mt-1">
+          {{ $t("forgotPassword.description") }}
+        </p>
+      </div>
       <UForm v-if="!success" :state="formState" @submit="handleSubmit">
         <div class="space-y-6">
           <UFormField :label="$t('register.label.email')" name="email">

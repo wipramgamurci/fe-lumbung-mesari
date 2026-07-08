@@ -1,16 +1,15 @@
 <template>
   <div>
-    <!-- Header -->
-    <div class="text-center">
-      <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-        {{ $t("app.title") }}
-      </h2>
-      <p class="text-gray-600 dark:text-gray-300">
-        {{ $t("profile.resetPasswordTitle") }}
-      </p>
-    </div>
-
-    <UCard class="mt-8">
+    <UCard>
+      <!-- Header -->
+      <div class="text-center mb-8">
+        <h2 class="text-3xl font-bold text-gray-900 dark:text-white mb-2">
+          {{ $t("app.title") }}
+        </h2>
+        <p class="text-gray-600 dark:text-gray-300">
+          {{ $t("profile.resetPasswordTitle") }}
+        </p>
+      </div>
       <!-- Invalid / missing token -->
       <div v-if="!token" class="space-y-4">
         <UAlert
@@ -32,27 +31,54 @@
         @submit="handleSubmit"
         class="space-y-6"
       >
-        <UFormField :label="$t('register.label.password')" name="newPassword">
+        <UFormField :label="$t('register.label.password')" name="newPassword" required>
           <UInput
             v-model="formState.newPassword"
-            type="password"
+            :type="showPassword ? 'text' : 'password'"
+            :placeholder="$t('register.placeholder.password')"
             autocomplete="new-password"
             required
             class="w-full"
-          />
+          >
+            <template #trailing>
+              <UButton
+                color="neutral"
+                variant="link"
+                size="sm"
+                :icon="showPassword ? 'i-lucide-eye-off' : 'i-lucide-eye'"
+                :title="showPassword ? $t('auth.hidePassword') : $t('auth.showPassword')"
+                :aria-label="showPassword ? $t('auth.hidePassword') : $t('auth.showPassword')"
+                @click="showPassword = !showPassword"
+              />
+            </template>
+          </UInput>
         </UFormField>
 
         <UFormField
           :label="$t('register.label.passwordConfirmation')"
           name="confirmPassword"
+          required
         >
           <UInput
             v-model="formState.confirmPassword"
-            type="password"
+            :type="showPasswordConfirmation ? 'text' : 'password'"
+            :placeholder="$t('register.placeholder.passwordConfirmation')"
             autocomplete="new-password"
             required
             class="w-full"
-          />
+          >
+            <template #trailing>
+              <UButton
+                color="neutral"
+                variant="link"
+                size="sm"
+                :icon="showPasswordConfirmation ? 'i-lucide-eye-off' : 'i-lucide-eye'"
+                :title="showPasswordConfirmation ? $t('auth.hidePassword') : $t('auth.showPassword')"
+                :aria-label="showPasswordConfirmation ? $t('auth.hidePassword') : $t('auth.showPassword')"
+                @click="showPasswordConfirmation = !showPasswordConfirmation"
+              />
+            </template>
+          </UInput>
         </UFormField>
 
         <UButton type="submit" color="primary" block :loading="isLoading">
@@ -107,6 +133,8 @@ const formState = ref<
   confirmPassword: "",
 });
 
+const showPassword = ref(false);
+const showPasswordConfirmation = ref(false);
 const isLoading = ref(false);
 const success = ref(false);
 
