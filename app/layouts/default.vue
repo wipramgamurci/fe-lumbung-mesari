@@ -13,7 +13,7 @@
               :ui="{ content: 'w-auto' }"
             >
               <UButton
-                class="lg:hidden"
+                class="xl:hidden"
                 icon="i-heroicons-bars-3"
                 color="neutral"
                 variant="ghost"
@@ -21,7 +21,7 @@
             </UDropdownMenu>
           </template>
           <template v-else>
-            <USkeleton class="h-9 w-9 rounded-md lg:hidden" />
+            <USkeleton class="h-9 w-9 rounded-md xl:hidden" />
           </template>
 
           <NuxtLink to="/" class="flex items-center gap-2.5">
@@ -39,7 +39,7 @@
         </div>
 
         <!-- Desktop navigation -->
-        <div class="hidden lg:flex flex-1 justify-center min-w-0">
+        <div class="hidden xl:flex flex-1 justify-center min-w-0">
           <UNavigationMenu
             v-if="isUserReady"
             :items="navItems"
@@ -55,7 +55,7 @@
         </div>
 
         <!-- Actions: theme toggle + user -->
-        <div class="flex items-center gap-1.5 shrink-0 ms-auto lg:ms-0">
+        <div class="flex items-center gap-1.5 shrink-0 ms-auto xl:ms-0">
           <UColorModeButton />
 
           <div class="h-6 w-px bg-border mx-1 hidden sm:block" />
@@ -68,7 +68,7 @@
                 <UAvatar
                   :alt="userFullname"
                   size="sm"
-                  :ui="{ root: 'bg-inverted text-inverted' }"
+                  :ui="{ root: 'bg-elevated text-highlighted ring ring-default' }"
                 />
                 <span class="hidden sm:flex flex-col items-start leading-tight">
                   <span class="font-semibold text-sm text-highlighted truncate max-w-32">
