@@ -1,8 +1,23 @@
 <template>
   <div class="flex flex-col gap-4">
-    <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-8">
-      {{ $t("navigation.savingsManagement") }}
-    </h1>
+    <PageHeader
+      icon="i-heroicons-wallet"
+      :title="$t('navigation.savingsManagement')"
+      :description="$t('navigation.savingsManagementDesc')"
+    >
+      <template #actions>
+        <UButton
+          color="primary"
+          variant="solid"
+          icon="i-heroicons-arrow-down-tray"
+          @click="downloadReport"
+          :loading="isDownloading"
+          :disabled="!selectedYear"
+        >
+          {{ $t("common.downloadReport") }}
+        </UButton>
+      </template>
+    </PageHeader>
 
     <!-- Filters Card -->
     <UCard>
@@ -49,17 +64,6 @@
           :loading="loading"
         >
           {{ $t("common.refresh") }}
-        </UButton>
-
-        <UButton
-          color="primary"
-          variant="solid"
-          icon="i-heroicons-arrow-down-tray"
-          @click="downloadReport"
-          :loading="isDownloading"
-          :disabled="!selectedYear"
-        >
-          {{ $t("common.downloadReport") }}
         </UButton>
       </div>
     </UCard>

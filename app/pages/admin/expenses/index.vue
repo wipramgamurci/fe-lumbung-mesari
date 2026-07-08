@@ -1,19 +1,24 @@
 <template>
   <div class="flex flex-col gap-4">
-    <div
-      class="flex flex-col md:flex-row items-start md:items-center justify-between mb-8 gap-4"
+    <PageHeader
+      icon="i-heroicons-banknotes"
+      :title="$t('navigation.expenseList')"
+      :description="$t('navigation.expenseListDescription')"
+      :breadcrumb="[
+        { label: $t('navigation.expenseManagement'), icon: 'i-heroicons-banknotes' },
+        { label: $t('navigation.expenseList') },
+      ]"
     >
-      <h1 class="text-3xl font-bold text-gray-900 dark:text-white">
-        {{ $t("navigation.expenseList") }}
-      </h1>
-      <UButton
-        color="primary"
-        icon="i-heroicons-plus"
-        to="/admin/expenses/create"
-      >
-        {{ $t("expenses.createExpense") }}
-      </UButton>
-    </div>
+      <template #actions>
+        <UButton
+          color="primary"
+          icon="i-heroicons-plus"
+          to="/admin/expenses/create"
+        >
+          {{ $t("expenses.createExpense") }}
+        </UButton>
+      </template>
+    </PageHeader>
 
     <!-- Filters Card -->
     <UCard>
