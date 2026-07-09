@@ -1,8 +1,24 @@
 <template>
   <div class="flex flex-col gap-4">
-    <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-8">
-      {{ $t("navigation.loanManagement") }}
-    </h1>
+    <PageHeader
+      icon="i-heroicons-clipboard-document-list"
+      :title="$t('navigation.loanManagement')"
+      :description="$t('navigation.loanManagementDesc')"
+    >
+      <template #actions>
+        <UButton
+          color="primary"
+          variant="solid"
+          size="lg"
+          class="px-4 py-2.5"
+          icon="i-heroicons-arrow-down-tray"
+          @click="isReportModalOpen = true"
+          :loading="isDownloadingReport"
+        >
+          {{ $t("common.downloadReport") }}
+        </UButton>
+      </template>
+    </PageHeader>
 
     <!-- Filters Card -->
     <UCard>
@@ -32,16 +48,6 @@
           :loading="loading"
         >
           {{ $t("common.refresh") }}
-        </UButton>
-
-        <UButton
-          color="primary"
-          variant="solid"
-          icon="i-heroicons-arrow-down-tray"
-          @click="isReportModalOpen = true"
-          :loading="isDownloadingReport"
-        >
-          {{ $t("common.downloadReport") }}
         </UButton>
       </div>
     </UCard>

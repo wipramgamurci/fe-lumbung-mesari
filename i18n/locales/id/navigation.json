@@ -9,6 +9,7 @@
     "expenseListDescription": "Lihat daftar pengeluaran",
     "expenseManagement": "Manajemen Pengeluaran",
     "loanManagement": "Manajemen Pinjaman",
+    "loanManagementDesc": "Kelola pengajuan dan status pinjaman anggota",
     "loanRequest": "Ajukan Pinjaman",
     "loans": "Pinjaman",
     "memberManagement": "Manajemen Anggota",
@@ -16,6 +17,7 @@
     "myLoans": "Pinjaman Saya",
     "mandatorySavings": "Simpanan Wajib",
     "savingsManagement": "Manajemen Simpanan",
+    "savingsManagementDesc": "Pantau dan kelola simpanan wajib anggota",
     "usersManagement": "Manajemen Pengguna"
   }
 }

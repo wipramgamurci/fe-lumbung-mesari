@@ -1,8 +1,14 @@
 <template>
   <div class="flex flex-col gap-4">
-    <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-8">
-      {{ $t("navigation.administratorManagement") }}
-    </h1>
+    <PageHeader
+      icon="i-heroicons-briefcase"
+      :title="$t('navigation.administratorManagement')"
+      :description="$t('navigation.administratorManagementDesc')"
+      :breadcrumb="[
+        { label: $t('navigation.usersManagement'), icon: 'i-heroicons-user-group' },
+        { label: $t('navigation.administratorManagement') },
+      ]"
+    />
     <UCard>
       <UDropdownMenu :items="dropdownItems">
         <UButton icon="i-heroicons-funnel" label="Filter" />

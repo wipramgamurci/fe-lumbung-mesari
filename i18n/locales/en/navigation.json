@@ -9,6 +9,7 @@
     "expenseListDescription": "View expense list",
     "expenseManagement": "Expense Management",
     "loanManagement": "Loan Management",
+    "loanManagementDesc": "Manage member loan requests and status",
     "loanRequest": "Loan Request",
     "loans": "Loans",
     "memberManagement": "Member Management",
@@ -16,6 +17,7 @@
     "myLoans": "My Loans",
     "mandatorySavings": "Mandatory Savings",
     "savingsManagement": "Savings Management",
+    "savingsManagementDesc": "Monitor and manage members' mandatory savings",
     "usersManagement": "Users Management"
   }
 }

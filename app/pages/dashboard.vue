@@ -1,27 +1,17 @@
 <template>
   <div>
-    <h1 class="text-3xl font-bold text-gray-900 dark:text-white mb-8">
-      {{ $t("navigation.dashboard") }}
-    </h1>
-
-    <!-- Cashbook Header -->
-    <div
-      class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 mb-4"
+    <PageHeader
+      icon="i-heroicons-home"
+      :title="$t('navigation.dashboard')"
+      :description="$t('dashboard.subtitle')"
     >
-      <p class="text-sm text-gray-500 dark:text-gray-400">
-        {{
-          $t("dashboard.lastFetchedAt", {
-            datetime: formatDateTime(cashbookLastFetchedAt),
-          })
-        }}
-      </p>
-      <div class="flex flex-wrap items-center gap-2">
+      <template #actions>
         <UButton
           v-if="isAdminUser"
           color="primary"
           variant="outline"
-          size="sm"
-          class="w-fit"
+          size="lg"
+          class="px-4 py-2.5"
           icon="i-heroicons-arrow-down-tray"
           @click="isCashbookReportModalOpen = true"
         >
@@ -30,16 +20,24 @@
         <UButton
           color="neutral"
           variant="outline"
-          size="sm"
-          class="w-fit"
+          size="lg"
+          class="px-4 py-2.5"
           icon="i-heroicons-arrow-path"
           :loading="loading || transactionsLoading"
           @click="refreshCashbookData"
         >
           {{ $t("common.refresh") }}
         </UButton>
-      </div>
-    </div>
+      </template>
+    </PageHeader>
+
+    <p class="text-left text-sm text-muted lg:-mt-4 mb-6 lg:text-right">
+      {{
+        $t("dashboard.lastFetchedAt", {
+          datetime: formatDateTime(cashbookLastFetchedAt),
+        })
+      }}
+    </p>
 
     <DashboardBalanceSummary
       :loading="loading"

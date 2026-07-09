@@ -1,13 +1,14 @@
 <template>
   <div class="max-w-2xl mx-auto">
-    <div class="mb-6">
-      <h1 class="text-2xl font-bold text-gray-900 dark:text-white">
-        {{ $t("expenses.createExpense") }}
-      </h1>
-      <p class="text-gray-500 dark:text-gray-400 mt-1">
-        {{ $t("navigation.createExpenseDescription") }}
-      </p>
-    </div>
+    <PageHeader
+      icon="i-heroicons-credit-card"
+      :title="$t('expenses.createExpense')"
+      :description="$t('navigation.createExpenseDescription')"
+      :breadcrumb="[
+        { label: $t('navigation.expenseManagement'), icon: 'i-heroicons-banknotes' },
+        { label: $t('expenses.createExpense') },
+      ]"
+    />
 
     <UCard>
       <UForm :state="form" class="space-y-4" @submit="handleSubmit">
