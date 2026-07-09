@@ -31,7 +31,7 @@
       </template>
     </PageHeader>
 
-    <p class="hidden text-left text-sm text-muted sm:block lg:-mt-4 mb-6 lg:text-right">
+    <p class="text-left text-sm text-muted lg:-mt-4 mb-6 lg:text-right">
       {{
         $t("dashboard.lastFetchedAt", {
           datetime: formatDateTime(cashbookLastFetchedAt),
