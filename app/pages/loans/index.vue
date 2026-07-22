@@ -30,7 +30,7 @@
     color="error"
     variant="soft"
     :title="$t('common.errorLoadingData')"
-    :description="error.message || $t('common.pleaseTryAgainLater')"
+    :description="error.data.message || $t('common.pleaseTryAgainLater')"
   />
 
   <!-- Empty State -->
