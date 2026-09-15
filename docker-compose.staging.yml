@@ -1,0 +1,26 @@
+name: fe-lumbung-mesari-staging
+
+services:
+  frontend:
+    image: ${IMAGE_REF:?IMAGE_REF must be set to an immutable GHCR image reference}
+    env_file:
+      - .env.staging
+    environment:
+      HOST: 0.0.0.0
+      NODE_ENV: production
+      PORT: "3000"
+    ports:
+      - "127.0.0.1:${STAGING_HOST_PORT:-3002}:3000"
+    restart: unless-stopped
+    init: true
+    stop_grace_period: 30s
+    healthcheck:
+      test:
+        - CMD
+        - node
+        - -e
+        - "fetch('http://127.0.0.1:3000/').then((response) => process.exit(response.ok ? 0 : 1)).catch(() => process.exit(1))"
+      interval: 10s
+      timeout: 5s
+      retries: 5
+      start_period: 20s
