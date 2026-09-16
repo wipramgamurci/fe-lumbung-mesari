@@ -34,14 +34,24 @@ fi
 "${compose[@]}" pull frontend
 "${compose[@]}" up -d --force-recreate frontend
 
-for attempt in $(seq 1 30); do
-  if "${compose[@]}" exec -T frontend node -e "fetch('http://127.0.0.1:3000/').then((response) => process.exit(response.ok ? 0 : 1)).catch(() => process.exit(1))"; then
-    echo "Staging frontend deployment of ${image_ref} is ready."
-    exit 0
-  fi
-  echo "Waiting for staging frontend readiness (${attempt}/30)..." >&2
-  sleep 2
-done
+wait_for_readiness() {
+  local deployed_image_ref="$1"
+
+  for attempt in $(seq 1 30); do
+    if "${compose[@]}" exec -T frontend node -e "fetch('http://127.0.0.1:3000/').then((response) => process.exit(response.ok ? 0 : 1)).catch(() => process.exit(1))"; then
+      echo "Staging frontend deployment of ${deployed_image_ref} is ready."
+      return 0
+    fi
+    echo "Waiting for staging frontend readiness (${attempt}/30)..." >&2
+    sleep 2
+  done
+
+  return 1
+}
+
+if wait_for_readiness "$image_ref"; then
+  exit 0
+fi
 
 echo "Staging frontend deployment of ${image_ref} failed readiness verification." >&2
 "${compose[@]}" ps frontend >&2 || true
@@ -49,8 +59,13 @@ echo "Staging frontend deployment of ${image_ref} failed readiness verification.
 
 if [[ -n "$previous_image_ref" ]]; then
   echo "Restoring previous staging frontend image ${previous_image_ref}." >&2
-  IMAGE_REF="$previous_image_ref" "${compose[@]}" pull frontend
-  IMAGE_REF="$previous_image_ref" "${compose[@]}" up -d --force-recreate frontend
+  export IMAGE_REF="$previous_image_ref"
+  "${compose[@]}" pull frontend
+  "${compose[@]}" up -d --force-recreate frontend
+  if ! wait_for_readiness "$previous_image_ref"; then
+    echo "Rollback frontend image ${previous_image_ref} also failed readiness verification." >&2
+    "${compose[@]}" logs --tail=100 frontend >&2 || true
+  fi
 fi
 
 exit 1
