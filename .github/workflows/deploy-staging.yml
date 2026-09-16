@@ -43,6 +43,9 @@ jobs:
     needs: publish
     runs-on: ubuntu-latest
     environment: staging
+    env:
+      GHCR_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GHCR_USERNAME: ${{ github.actor }}
 
     steps:
       - name: Deploy immutable staging image to VPS
@@ -53,6 +56,7 @@ jobs:
           key: ${{ secrets.SSH_PRIVATE_KEY }}
           port: ${{ secrets.SSH_PORT }}
           fingerprint: ${{ secrets.SSH_HOST_FINGERPRINT }}
+          envs: GHCR_TOKEN,GHCR_USERNAME
           script: |
             set -euo pipefail
             SOURCE_SHA='${{ github.sha }}'

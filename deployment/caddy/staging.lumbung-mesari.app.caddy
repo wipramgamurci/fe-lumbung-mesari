@@ -1,12 +1,12 @@
 staging.lumbung-mesari.app {
-  reverse_proxy 127.0.0.1:3002
+	reverse_proxy 127.0.0.1:3002
 
-  log {
-    output file /var/log/caddy/staging.lumbung-mesari.app.access.log {
-      roll_size 10mb
-      roll_keep 5
-      roll_keep_for 336h
-    }
-    format json
-  }
+	log {
+		output file /var/log/caddy/staging.lumbung-mesari.app.access.log {
+			roll_size 10mb
+			roll_keep 5
+			roll_keep_for 336h
+		}
+		format json
+	}
 }
