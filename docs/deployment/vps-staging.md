@@ -15,12 +15,12 @@ git clone https://github.com/wipramgamurci/fe-lumbung-mesari.git ~/apps/fe-lumbu
 cd ~/apps/fe-lumbung-mesari-staging
 # Before the first main merge, obtain the template from the reviewed PR branch.
 git checkout feat/vps-staging-image
-cp .env.staging.example .env.staging
-chmod 600 .env.staging
+cp .env.example .env
+chmod 600 .env
 git checkout main
 ```
 
-Set `NUXT_PUBLIC_API_BASE_URL` to the staging API domain. It is public runtime configuration, not a secret.
+Set `NUXT_PUBLIC_API_BASE_URL=https://staging-api.lumbung-mesari.app`. It is public runtime configuration, not a secret. Each separate production/staging checkout owns its own ignored `.env` file.
 
 Copy `deployment/caddy/staging.lumbung-mesari.app.caddy` to `/etc/caddy/sites/`. Confirm the active Caddy entrypoint imports site fragments, then validate and reload:
 

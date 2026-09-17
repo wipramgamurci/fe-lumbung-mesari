@@ -4,7 +4,7 @@ services:
   frontend:
     image: ${IMAGE_REF:?IMAGE_REF must be set to an immutable GHCR image reference}
     env_file:
-      - .env.staging
+      - .env
     environment:
       HOST: 0.0.0.0
       NODE_ENV: production

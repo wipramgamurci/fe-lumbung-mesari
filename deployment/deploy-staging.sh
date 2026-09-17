@@ -11,12 +11,12 @@ fi
 
 image_ref="$1"
 # IMAGE_REF is deployment input for every Compose invocation, not application
-# configuration persisted in .env.staging.
+# configuration persisted in .env.
 export IMAGE_REF="$image_ref"
-compose=(docker compose --project-name fe-lumbung-mesari-staging --env-file .env.staging -f docker-compose.staging.yml)
+compose=(docker compose --project-name fe-lumbung-mesari-staging --env-file .env -f docker-compose.staging.yml)
 
-if [[ ! -f .env.staging ]]; then
-  echo 'Staging deployment failed: .env.staging is missing.' >&2
+if [[ ! -f .env ]]; then
+  echo 'Staging deployment failed: .env is missing.' >&2
   exit 78
 fi
 
