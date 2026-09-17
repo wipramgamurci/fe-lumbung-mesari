@@ -10,9 +10,17 @@
       ]"
     />
     <UCard>
-      <UDropdownMenu :items="dropdownItems">
-        <UButton icon="i-heroicons-funnel" label="Filter" />
-      </UDropdownMenu>
+      <div class="flex items-center justify-between gap-3">
+        <UDropdownMenu :items="dropdownItems">
+          <UButton icon="i-heroicons-funnel" label="Filter" />
+        </UDropdownMenu>
+        <UButton
+          v-if="userStore.isSuperadministrator"
+          icon="i-heroicons-user-plus"
+          label="Tambah Administrator"
+          @click="createModalOpen = true"
+        />
+      </div>
     </UCard>
     <UCard>
       <UTable
@@ -46,12 +54,74 @@
         />
       </template>
     </UCard>
+
+    <UModal
+      v-if="userStore.isSuperadministrator"
+      v-model:open="createModalOpen"
+      title="Tambah Administrator"
+      description="Administrator baru akan langsung aktif. Hanya superadministrator yang dapat membuat akun ini."
+    >
+      <template #body>
+        <UForm id="create-administrator-form" :state="formState" @submit="createAdministrator">
+          <div class="space-y-4">
+            <UFormField label="Nama lengkap" name="fullname" required>
+              <UInput v-model="formState.fullname" class="w-full" required />
+            </UFormField>
+            <UFormField label="Username" name="username" required>
+              <UInput v-model="formState.username" class="w-full" required />
+            </UFormField>
+            <UFormField label="Email" name="email" required>
+              <UInput v-model="formState.email" type="email" class="w-full" required />
+            </UFormField>
+            <UFormField label="Nomor telepon" name="phoneNumber" required>
+              <UInput v-model="formState.phoneNumber" type="tel" class="w-full" required />
+            </UFormField>
+            <UFormField label="Alamat" name="address" required>
+              <UInput v-model="formState.address" class="w-full" required />
+            </UFormField>
+            <UFormField label="Kata sandi" name="password" required>
+              <UInput
+                v-model="formState.password"
+                type="password"
+                autocomplete="new-password"
+                class="w-full"
+                required
+              />
+            </UFormField>
+            <UFormField label="Konfirmasi kata sandi" name="passwordConfirmation" required>
+              <UInput
+                v-model="formState.passwordConfirmation"
+                type="password"
+                autocomplete="new-password"
+                class="w-full"
+                required
+              />
+            </UFormField>
+          </div>
+        </UForm>
+      </template>
+      <template #footer>
+        <div class="flex justify-end gap-2">
+          <UButton color="neutral" variant="outline" @click="closeCreateModal">
+            Batal
+          </UButton>
+          <UButton
+            type="submit"
+            form="create-administrator-form"
+            :loading="isCreating"
+          >
+            Tambah Administrator
+          </UButton>
+        </div>
+      </template>
+    </UModal>
   </div>
 </template>
 
 <script setup lang="ts">
 import { h, resolveComponent } from "vue";
 import type { TableColumn } from "@nuxt/ui";
+import type { CreateAdministratorRequest } from "~~/types/managed-administrator";
 import type { User } from "~~/types/user";
 
 definePageMeta({
@@ -61,6 +131,20 @@ definePageMeta({
 });
 
 const selectedFilter = ref("administrator");
+const userStore = useUserStore();
+const toast = useToast();
+const createModalOpen = ref(false);
+const isCreating = ref(false);
+const emptyForm = (): CreateAdministratorRequest & { passwordConfirmation: string } => ({
+  fullname: "",
+  username: "",
+  email: "",
+  phoneNumber: "",
+  address: "",
+  password: "",
+  passwordConfirmation: "",
+});
+const formState = ref(emptyForm());
 
 const onDropdownSelect = (value: string) => {
   selectedFilter.value = value;
@@ -98,6 +182,56 @@ const {
   page,
   limit,
 });
+
+const closeCreateModal = () => {
+  createModalOpen.value = false;
+  formState.value = emptyForm();
+};
+
+const createAdministrator = async () => {
+  if (!userStore.isSuperadministrator) {
+    return;
+  }
+
+  if (formState.value.password !== formState.value.passwordConfirmation) {
+    toast.add({
+      title: "Gagal membuat administrator",
+      description: "Konfirmasi kata sandi tidak cocok.",
+      color: "error",
+    });
+    return;
+  }
+
+  isCreating.value = true;
+  try {
+    await $fetch("/api/users", {
+      method: "POST",
+      body: {
+        fullname: formState.value.fullname,
+        username: formState.value.username,
+        email: formState.value.email,
+        phoneNumber: formState.value.phoneNumber,
+        address: formState.value.address,
+        password: formState.value.password,
+      },
+    });
+    toast.add({
+      title: "Administrator berhasil dibuat",
+      description: "Akun administrator baru sudah aktif.",
+      color: "success",
+    });
+    closeCreateModal();
+    await refresh();
+  } catch (error: any) {
+    toast.add({
+      title: "Gagal membuat administrator",
+      description: error.data?.message ?? "Silakan periksa data dan coba lagi.",
+      color: "error",
+    });
+  } finally {
+    isCreating.value = false;
+  }
+};
 
 const columns: TableColumn<User>[] = [
   {
